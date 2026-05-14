@@ -40,7 +40,11 @@ if php artisan migrate --force 2>&1; then
     echo "✅ Migrations successful."
 else
     echo "⚠️ Normal migrate failed. Trying fresh migration..."
-    php artisan migrate:fresh --force 2>&1 || echo "❌ Fresh migration failed as well."
+    if php artisan migrate:fresh --force --seed 2>&1; then
+        echo "✅ Fresh migrations and seeding successful."
+    else
+        echo "❌ Fresh migration failed as well."
+    fi
 fi
 
 # 6. Final Cache

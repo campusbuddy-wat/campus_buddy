@@ -34,7 +34,7 @@ class UsersTableSeeder extends Seeder
                 'profile_image' => 'profile_images/iytPMNGOEOYHsXyCBIqSF3i5PC3VMDD2yHfT3dPf.jpg',
                 'major' => 'DS',
                 'email_verified_at' => NULL,
-                'password' => '$2y$12$LIb1MQE2INwB8/HLyjh7huTi51duJKJxXzOn3bdxCnRRaqXT0kReG',
+                'password' => \Hash::make('admin123'),
                 'remember_token' => NULL,
                 'created_at' => '2026-03-03 13:08:03',
                 'updated_at' => '2026-05-04 23:43:34',
