@@ -21,10 +21,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     libpq-dev \
     libzip-dev \
+    libicu-dev \
     nginx \
     supervisor \
     tesseract-ocr \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         pdo_pgsql \
@@ -35,6 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         bcmath \
         gd \
         zip \
+        intl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -63,7 +66,7 @@ COPY . .
 # ----------------------------------------------------------
 # 6. Install PHP dependencies (production)
 # ----------------------------------------------------------
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # ----------------------------------------------------------
 # 7. Install NPM dependencies & build Vite assets
