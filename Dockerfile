@@ -4,7 +4,7 @@
 # Uses PHP 8.2 + Nginx + Node.js (for Vite build) + Tesseract OCR
 # ============================================================
 
-FROM php:8.2-cli AS base
+FROM php:8.2-fpm AS base
 
 # ----------------------------------------------------------
 # 1. Install system dependencies
