@@ -38,6 +38,9 @@ echo "🗃️ Running database migrations..."
 # Using the non-pooled URL is CRITICAL for this step to succeed.
 if php artisan migrate --force 2>&1; then
     echo "✅ Migrations successful."
+    echo "🌱 Filling database with data..."
+    php artisan db:seed --force
+    echo "✅ Seeding successful."
 else
     echo "⚠️ Normal migrate failed. Trying fresh migration..."
     if php artisan migrate:fresh --force --seed 2>&1; then
