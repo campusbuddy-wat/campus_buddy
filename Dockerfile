@@ -91,6 +91,7 @@ COPY .render/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 80
 
 # ----------------------------------------------------------
-# 11. Start Supervisor (manages Nginx + PHP together)
+# 11. Start the application
 # ----------------------------------------------------------
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+RUN chmod +x /var/www/.render/start.sh
+CMD ["/var/www/.render/start.sh"]
