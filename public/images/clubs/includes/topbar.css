@@ -1,0 +1,69 @@
+/* ================= CAMPUS BUDDY TOPBAR STYLES ================= */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 70px;
+  width: 100%;
+  background: #eaf5fb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+.logo {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 2px !important;
+  font-weight: bold !important;
+  color: #1b5c7a !important;
+  font-size: 18px !important;
+  text-transform: capitalize !important;
+  font-family: "Segoe UI", Arial, sans-serif !important;
+  line-height: 1 !important;
+}
+
+.logo-img {
+  height: 50px;
+  width: auto;
+  transition: transform 0.2s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+.logo-text {
+  display: block !important; /* Show text below logo */
+  font-size: 14px !important;
+  margin-top: 0px !important;
+  font-weight: bold !important;
+  color: #1b5c7a !important;
+  text-transform: capitalize !important;
+  font-family: "Segoe UI", Arial, sans-serif !important;
+  line-height: 1 !important;
+}
+
+.top-icons {
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.top-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+  filter: brightness(0.8);
+}
+
+.top-icon:hover {
+  transform: scale(1.1);
+  filter: brightness(1);
+}

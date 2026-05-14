@@ -1,0 +1,310 @@
+/* ================= PROFESSIONAL UNIVERSAL FOOTER ================= */
+.main-footer {
+    background: #0f172a; /* Deep slate / Navy */
+    color: #cbd5e1;
+    padding: 80px 0 40px;
+    margin-top: 100px;
+    font-family: 'Inter', sans-serif;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    z-index: 100;
+}
+
+/* Base Container */
+.footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* Top Section (Grid) */
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 60px;
+    margin-bottom: 60px;
+}
+
+/* Brand Section */
+.footer-brand {
+    flex: 1;
+    min-width: 300px;
+}
+
+.footer-logo {
+    display: inline-flex;
+    align-items: flex-end; /* Align text with bottom of logo */
+    gap: 12px;
+    margin-bottom: 25px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.footer-logo:hover {
+    transform: scale(1.02);
+}
+
+.footer-logo img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1); /* Ensure logo image is white as requested earlier */
+}
+
+.footer-logo-text {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.5px;
+    line-height: 1; /* Match bottom alignment */
+    margin-bottom: 4px; /* Slight nudge for visual alignment */
+}
+
+.footer-logo-text span:last-child {
+    color: #00AAFF; /* Brand Buddy Color */
+}
+
+.brand-description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #94a3b8;
+    margin-bottom: 30px;
+    max-width: 400px;
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-icon:hover {
+    background: #38bdf8;
+    color: white;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+}
+
+/* Navigation Columns */
+.footer-nav {
+    flex: 2;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    min-width: 600px;
+}
+
+.footer-col h4 {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 25px;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: flex-start; /* Align with first line of text */
+    gap: 12px;
+    padding: 2px 0;
+    line-height: 1.5;
+}
+
+.footer-col ul li a i {
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+    opacity: 0.7;
+    margin-top: 3px; /* Nudge to align with cap height of first line */
+}
+
+.footer-col ul li a:hover {
+    color: #38bdf8;
+    transform: translateX(5px);
+}
+
+/* Bottom Section */
+.footer-bottom {
+    padding-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.copyright {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.footer-bottom-links {
+    display: flex;
+    gap: 30px;
+}
+
+.footer-bottom-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.footer-bottom-links a:hover {
+    color: white;
+}
+
+/* Responsiveness */
+@media (max-width: 1100px) {
+    .footer-nav {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .main-footer {
+        padding: 60px 0 40px;
+    }
+    
+    .footer-container {
+        padding: 0 30px;
+    }
+
+    .footer-top {
+        gap: 40px;
+    }
+
+    .footer-nav {
+        flex: 1;
+        min-width: 100%;
+        gap: 30px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-bottom-links {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-nav {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-brand {
+        text-align: center;
+    }
+
+    .footer-logo, .social-links {
+        justify-content: center;
+    }
+
+    .brand-description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Prevent layout shift during loading */
+.layout {
+    min-height: calc(100vh - 400px); /* Rough estimation */
+}
+
+/* ================= ACCESS CONTROL TOAST ================= */
+.footer-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #1e293b;
+    border-left: 5px solid #ef4444;
+    color: white;
+    padding: 18px 30px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 10000;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    max-width: 400px;
+}
+
+.footer-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.footer-toast i {
+    color: #ef4444;
+    font-size: 20px;
+    animation: pulseRed 2s infinite;
+}
+
+@keyframes pulseRed {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.footer-toast span {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Locked Link Aesthetics */
+.restricted-link {
+    cursor: not-allowed !important;
+}
+
+.restricted-link:hover i {
+    color: #ef4444 !important;
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}

@@ -1,0 +1,67 @@
+# ==========================================
+# CAMPUS BUDDY - SYSTEM REQUIREMENTS
+# ==========================================
+# This project is built using Laravel (PHP) and does not use Python. 
+# Therefore, it does NOT use a Python 'requirements.txt' for deployment via pip.
+# 
+# Instead, dependencies are managed via Composer (for PHP) and NPM (for frontend JS).
+# Below is a detailed list of system and software requirements needed to deploy this app.
+
+[1. SYSTEM REQUIREMENTS]
+- OS: Linux (Ubuntu 20.04+ recommended) or macOS
+- Web Server: Nginx or Apache
+- Database: MySQL 8.0+ / SQLite (current local DB is sqlite)
+- RAM: Minimum 1GB (2GB+ recommended)
+
+[2. LANGUAGE & RUNTIME REQUIREMENTS]
+- PHP: Version >= 8.2
+- Node.js: Version >= 18.x
+- NPM: Version >= 9.x
+- Composer: Version >= 2.x
+
+[3. SYSTEM LEVEL PACKAGES (CRITICAL)]
+# Since the project uses the thiagoalessio/tesseract_ocr package, 
+# you MUST install the Tesseract OCR engine on the deployment server:
+- tesseract-ocr (Linux: `sudo apt-get install tesseract-ocr`)
+- tesseract-ocr-eng (English language data)
+
+[4. PHP EXTENSIONS REQUIRED]
+- cURL PHP Extension
+- DOM PHP Extension
+- Fileinfo PHP Extension
+- Filter PHP Extension
+- Hash PHP Extension
+- Mbstring PHP Extension
+- OpenSSL PHP Extension
+- PCRE PHP Extension
+- PDO PHP Extension
+- Session PHP Extension
+- Tokenizer PHP Extension
+- XML PHP Extension
+- SQLite3 Extension (if using SQLite)
+
+[5. PRIMARY BACKEND DEPENDENCIES (Composer)]
+# Installed automatically via `composer install`
+- laravel/framework: ^12.0
+- filament/filament: ^3.2
+- smalot/pdfparser: ^2.12
+- thiagoalessio/tesseract_ocr: ^2.13
+
+[6. PRIMARY FRONTEND DEPENDENCIES (NPM)]
+# Installed automatically via `npm install`
+- tailwindcss
+- vite
+- axios
+- alpinejs
+
+[7. DEPLOYMENT COMMANDS CHEATSHEET]
+1. Install PHP deps:      composer install --optimize-autoloader --no-dev
+2. Install JS deps:       npm install
+3. Build assets:          npm run build
+4. Environment setup:     cp .env.example .env (then configure DB/Groq keys)
+5. Generate App Key:      php artisan key:generate
+6. Run Migrations:        php artisan migrate --force
+7. Link Storage:          php artisan storage:link
+8. Cache Config:          php artisan config:cache
+9. Cache Routes:          php artisan route:cache
+10. Cache Views:          php artisan view:cache

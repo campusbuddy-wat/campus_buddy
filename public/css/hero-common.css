@@ -1,0 +1,263 @@
+/* ===============================================================
+   UNIFIED HERO BANNER STYLES — shared across ALL pages
+   This ensures consistent text position, size, and color scheme
+   =============================================================== */
+
+/* ================= LAYOUT ================= */
+.hero-banner {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 10%;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+/* Background image */
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(3px);
+    z-index: 0;
+}
+
+/* Dark gradient overlay — consistent across all pages */
+.hero-overlay-dark,
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(10, 20, 30, 0.85), rgba(0, 80, 130, 0.65));
+    z-index: 1;
+}
+
+/* Content wrapper */
+.hero-content-wrapper {
+    position: relative;
+    z-index: 10;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Inner content block */
+.hero-content,
+.hero-inner {
+    position: relative;
+    z-index: 11;
+    text-align: left;
+    max-width: 800px;
+}
+
+/* ================= DECORATIVE DOTS ================= */
+.hero-deco {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.hero-deco-1 {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.08);
+    top: -15px;
+    right: 340px;
+}
+
+.hero-deco-2 {
+    width: 22px;
+    height: 22px;
+    background: #10b981;
+    bottom: 40px;
+    left: 42%;
+}
+
+.hero-deco-3 {
+    width: 14px;
+    height: 14px;
+    background: #3b82f6;
+    top: 45px;
+    right: 180px;
+}
+
+.hero-deco-4 {
+    width: 10px;
+    height: 10px;
+    background: #f59e0b;
+    top: 30px;
+    left: 55%;
+}
+
+/* ================= TEXT STYLES — UNIFIED ================= */
+
+/* Date line */
+.hero-date {
+    display: block;
+    font-size: 13px;
+    color: #ffffff;
+    opacity: 0.7;
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+/* Tag / label */
+.hero-tag {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #7dd3fc;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+/* Main headline */
+.hero-content h1,
+.hero-inner h1,
+.hero-title,
+.hero-left h1,
+.hero-text h1 {
+    font-size: 38px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 12px;
+}
+
+/* Accent / highlighted text within h1 */
+.hero-content h1 span,
+.hero-inner h1 span,
+.hero-left h1 span,
+.hero-text h1 span,
+.title-accent {
+    color: #38bdf8;
+}
+
+/* Italic emphasis within h1 */
+.hero-content h1 em,
+.hero-inner h1 em,
+.hero-left h1 em,
+.hero-text h1 em {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+}
+
+/* Description paragraph */
+.hero-desc,
+.hero-subtitle,
+.hero-left p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    font-weight: 500;
+}
+
+/* Hero text container positioning */
+.hero-text {
+    position: relative;
+    z-index: 3;
+    color: #fff;
+    max-width: 80%;
+}
+
+/* ================= HERO ANIMATION ================= */
+@keyframes heroFadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-content h1,
+.hero-inner h1,
+.hero-text h1 {
+    animation: heroFadeSlideUp 0.8s ease-out forwards;
+}
+
+/* ================= HERO BUTTONS ================= */
+.hero-btn {
+    display: inline-block;
+    padding: 13px 30px;
+    background: #00AAFF;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 14px rgba(0, 170, 255, 0.3);
+}
+
+.hero-btn:hover {
+    background: #0088cc;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 170, 255, 0.4);
+}
+
+/* ================= RESPONSIVE — HERO ================= */
+@media (max-width: 1024px) {
+    .hero-content h1,
+    .hero-inner h1,
+    .hero-title,
+    .hero-left h1,
+    .hero-text h1 {
+        font-size: 34px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        min-height: 400px;
+        padding: 0 5%;
+    }
+
+    .hero-content h1,
+    .hero-inner h1,
+    .hero-title,
+    .hero-left h1,
+    .hero-text h1 {
+        font-size: 28px;
+    }
+
+    .hero-desc,
+    .hero-subtitle,
+    .hero-left p {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .hero-tag {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-banner {
+        min-height: 340px;
+    }
+
+    .hero-content h1,
+    .hero-inner h1,
+    .hero-title,
+    .hero-left h1,
+    .hero-text h1 {
+        font-size: 24px;
+    }
+}

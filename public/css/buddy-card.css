@@ -1,0 +1,149 @@
+/* ============================================================
+   UNIVERSAL BUDDY CARD STYLES
+   Used across Routine, PDF/Notes, and Question Bank
+   ============================================================ */
+
+.buddy-section {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.buddy-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 14px;
+    margin: 20px 0;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    /* overflow: hidden; removed to prevent clipping and allow scrollbars to display fully */
+    cursor: default; /* changed from pointer to default for universal use */
+}
+
+.buddy-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 170, 255, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    animation: buddyPulse 3s ease-in-out infinite;
+    pointer-events: none; /* Allows clicks to pass through to buttons/inputs */
+    z-index: 0;
+}
+
+@keyframes buddyPulse {
+    0%, 100% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.buddy-card:hover::before {
+    opacity: 1;
+}
+
+.buddy-card:hover {
+    background: #f8fafc;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+}
+
+.buddy-card h3 {
+    color: #1b5c7a;
+    margin-top: 5px; /* Added to prevent clipping */
+    margin-bottom: 15px;
+    font-size: 18px;
+    line-height: 1.4; /* Fixed cut-off text issue */
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.buddy-card p {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.4;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.buddy-card:hover p {
+    transform: translateY(-2px);
+    color: #1a5c7a;
+}
+
+.buddy-card .btn {
+    background: #00AAFF;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.buddy-card .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+    z-index: -1;
+}
+
+.buddy-card .btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.buddy-card .btn:hover {
+    background: #00AAFF;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 170, 255, 0.4);
+}
+
+.buddy-card .btn:active {
+    transform: translateY(-1px);
+}
+
+/* Reveal Animation */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .buddy-card {
+        padding: 15px;
+    }
+}

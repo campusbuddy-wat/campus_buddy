@@ -1,0 +1,603 @@
+/* ================= CLUBS PAGE STYLES ================= */
+/* Layout wrapper handled globally in app.blade.php */
+.main {
+    padding-bottom: 80px;
+}
+
+/* Animations */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.floating {
+    animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulsePrimary {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 170, 255, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(0, 170, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 170, 255, 0);
+    }
+}
+
+/* ================= HERO SECTION — page-specific ================= */
+/* Base hero layout/text/colors now in hero-common.css */
+
+.hero-stats {
+    display: flex;
+    justify-content: flex-start;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.stat-box .stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #00d4ff;
+    line-height: 1;
+}
+
+.stat-box .stat-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.btn-primary {
+    background: #00AAFF;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0, 170, 255, 0.3);
+}
+
+.btn-primary:hover {
+    background: #00d4ff;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(0, 212, 255, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 14px 30px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    transform: translateY(-2px);
+}
+
+/* ================= CLUBS SECTION ================= */
+.clubs-section {
+    padding: 80px 0;
+    margin: 0 auto;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 50px;
+}
+
+.section-title h2 {
+    font-size: 38px;
+    font-weight: 800;
+    color: #1a1e29;
+}
+
+.section-title p {
+    color: #666;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Filters */
+.club-filters {
+    display: flex;
+    gap: 15px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    color: #00AAFF;
+}
+
+.filter-btn.active {
+    background: white;
+    color: #00AAFF;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Club Grid */
+.clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+}
+
+.club-card {
+    background: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 170, 255, 0.08);
+    box-shadow: 0 4px 24px rgba(26, 35, 126, 0.06);
+    transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.club-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(0,170,255,0), rgba(0,170,255,0));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: background 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.club-card:hover {
+    transform: translateY(-10px) scale(1.015);
+    box-shadow: 0 24px 48px rgba(0, 170, 255, 0.14), 0 8px 16px rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 170, 255, 0.15);
+}
+
+.club-card:hover::before {
+    background: linear-gradient(135deg, rgba(0,170,255,0.3), rgba(0,212,255,0.15), rgba(139,92,246,0.2));
+}
+
+/* Accent strip at top of card */
+.club-accent-strip {
+    height: 5px;
+    background: linear-gradient(90deg, #00AAFF, #00d4ff, #6366f1, #8b5cf6);
+    background-size: 300% 100%;
+    animation: shimmerStrip 4s ease infinite;
+}
+
+@keyframes shimmerStrip {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Logo showcase - displays full logo */
+.club-logo-showcase {
+    position: relative;
+    margin: 14px 14px 0;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e8ecf1;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* Bottom gradient fade like the reference */
+.club-logo-showcase::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(200, 205, 215, 0.25) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.club-logo-showcase .club-logo-glow {
+    display: none;
+}
+
+.club-logo-showcase img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.club-card:hover .club-logo-showcase img {
+    transform: scale(1.05);
+}
+
+/* Category badge */
+.club-category-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #00AAFF;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1px solid rgba(0, 170, 255, 0.15);
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 170, 255, 0.1);
+}
+
+.club-body {
+    padding: 24px 28px 28px;
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #f0f2f5;
+}
+
+.club-info h3 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a1e29;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+    transition: color 0.3s ease;
+}
+
+.club-card:hover .club-info h3 {
+    color: #00AAFF;
+}
+
+.club-info p {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.65;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.club-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #f5f5f5;
+}
+
+/* Members badge */
+.club-members-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0f7ff;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.club-members-badge svg {
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+/* Visit button */
+.club-visit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #00AAFF, #0099e6);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 170, 255, 0.25);
+}
+
+.club-visit-btn:hover {
+    background: linear-gradient(135deg, #0099e6, #0077cc);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 170, 255, 0.35);
+}
+
+.club-visit-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.club-visit-btn:hover svg {
+    transform: translate(2px, -2px);
+}
+
+/* ================= CTA BANNER ================= */
+.create-club-banner {
+    margin: 0 auto 80px;
+    padding: 0;
+}
+
+.cc-container {
+    background: linear-gradient(135deg, #1a1e29 0%, #2a3143 100%);
+    border-radius: 20px;
+    padding: 50px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.cc-decor {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    height: 100%;
+    background: radial-gradient(circle at bottom right, rgba(0, 170, 255, 0.2) 0%, transparent 70%);
+}
+
+.cc-content {
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+}
+
+.cc-content h2 {
+    color: white;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.cc-content p {
+    color: #a0aec0;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.cc-action {
+    position: relative;
+    z-index: 2;
+}
+
+/* Make grid responsive */
+@media (max-width: 1024px) {
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .hero-title {
+        font-size: 48px;
+    }
+
+    .clubs-hero {
+        padding: 0 5%;
+    }
+}
+
+@media (max-width: 768px) {
+    .clubs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .club-filters {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+        width: 100%;
+    }
+
+    .clubs-hero {
+        min-height: 480px;
+        padding: 40px 20px;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .hero-content-wrapper {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .hero-inner {
+        max-width: 100%;
+    }
+
+    .hero-title {
+        font-size: 36px;
+    }
+
+    .hero-stats {
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .cc-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+        padding: 40px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 28px;
+    }
+
+    .hero-subtitle {
+        font-size: 14px;
+    }
+
+    .stat-box .stat-value {
+        font-size: 22px;
+    }
+}
+
+/* ================= TARGET HIGHLIGHT ================= */
+.club-card {
+    scroll-margin-top: 120px;
+    /* Offset for fixed topbar */
+}
+
+.club-card:target {
+    animation: targetHighlight 2s ease-out forwards;
+    border-color: #00AAFF;
+    border-width: 2px;
+}
+
+@keyframes targetHighlight {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 170, 255, 0.4);
+        transform: scale(1);
+    }
+
+    15% {
+        box-shadow: 0 0 0 20px rgba(0, 170, 255, 0);
+        transform: scale(1.03);
+        background: #f0faff;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 170, 255, 0);
+        transform: scale(1);
+        background: white;
+    }
+}
+
+/* ================= HIGHLIGHTED SPORTS CARD ================= */
+.club-card.highlighted {
+    border-color: #00AAFF !important;
+    border-width: 2px;
+    animation: highlightPulse 1.2s ease-in-out 3;
+    position: relative;
+    z-index: 5;
+}
+
+.club-card.highlighted::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 26px;
+    border: 2px solid #00AAFF;
+    opacity: 0;
+    animation: highlightBorderPulse 1.2s ease-in-out 3;
+    pointer-events: none;
+}
+
+@keyframes highlightPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 170, 255, 0.5);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px 8px rgba(0, 170, 255, 0.25), 0 0 60px 15px rgba(0, 170, 255, 0.1);
+        transform: scale(1.025);
+        background: #f0faff;
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 170, 255, 0);
+        transform: scale(1);
+        background: white;
+    }
+}
+
+@keyframes highlightBorderPulse {
+    0% { opacity: 0; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.02); }
+}
