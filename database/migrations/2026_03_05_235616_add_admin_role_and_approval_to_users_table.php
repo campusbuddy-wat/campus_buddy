@@ -8,16 +8,22 @@ use Illuminate\Support\Facades\DB;
 return new class extends Migration {
     /**
      * Run the migrations.
+     * Changed from MySQL MODIFY to PostgreSQL-compatible ALTER COLUMN.
+     * Since the base migration now uses string('role', 20), this migration
+     * just changes the default and adds is_approved — no type change needed.
      */
     public function up(): void
     {
-        // Change role from ENUM to string to support 'admin' role
-        DB::statement("ALTER TABLE users MODIFY role VARCHAR(20) NOT NULL DEFAULT 'student'");
+        // PostgreSQL-compatible: change the default on the role column
+        DB::statement("ALTER TABLE users ALTER COLUMN role SET DEFAULT 'student'");
+        DB::statement("ALTER TABLE users ALTER COLUMN role TYPE VARCHAR(20)");
 
         // Add is_approved column for CR approval workflow
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_approved')->default(true)->after('role');
-        });
+        if (!Schema::hasColumn('users', 'is_approved')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->boolean('is_approved')->default(true)->after('role');
+            });
+        }
     }
 
     /**
@@ -29,6 +35,7 @@ return new class extends Migration {
             $table->dropColumn('is_approved');
         });
 
-        DB::statement("ALTER TABLE users MODIFY role ENUM('student', 'cr') NOT NULL DEFAULT 'student'");
+        // Restore original default
+        DB::statement("ALTER TABLE users ALTER COLUMN role SET DEFAULT 'student'");
     }
 };

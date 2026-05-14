@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('student_id')->unique();
-            $table->enum('role', ['student', 'cr'])->default('student');
+            $table->string('role', 20)->default('student');
             $table->string('department')->nullable();
             $table->string('batch')->nullable();
             $table->string('semester')->nullable();
