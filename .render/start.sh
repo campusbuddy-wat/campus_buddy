@@ -52,9 +52,8 @@ else
     fi
 fi
 
-# 6. Final Cache & Assets
-php artisan route:cache 2>/dev/null || true
-php artisan view:cache 2>/dev/null || true
+# 6. Final Optimizations (skip route/view cache — breaks Livewire)
+php artisan optimize:clear 2>/dev/null || true
 
 echo "🎨 Publishing Filament assets..."
 php artisan filament:assets 2>/dev/null || true
