@@ -40,10 +40,12 @@ if php artisan migrate --force 2>&1; then
     echo "✅ Migrations successful."
     echo "🌱 Filling database with data..."
     php artisan db:seed --force
+    echo "📊 EVENT COUNT: $(php artisan tinker --execute='echo \App\Models\Event::count();')"
     echo "✅ Seeding successful."
 else
     echo "⚠️ Normal migrate failed. Trying fresh migration..."
     if php artisan migrate:fresh --force --seed 2>&1; then
+        echo "📊 EVENT COUNT: $(php artisan tinker --execute='echo \App\Models\Event::count();')"
         echo "✅ Fresh migrations and seeding successful."
     else
         echo "❌ Fresh migration failed as well."
