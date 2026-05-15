@@ -24,8 +24,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (config('app.env') === 'production') {
-            \URL::forceScheme('https');
-            \URL::forceRootUrl(config('app.url'));
+            // Detect the real hostname from Render's forwarded headers.
+            // This is bulletproof regardless of how APP_URL is configured.
+            $host = $_SERVER['HTTP_X_FORWARDED_HOST']
+                 ?? $_SERVER['HTTP_HOST']
+                 ?? parse_url(config('app.url'), PHP_URL_HOST)
+                 ?? null;
+
+            if ($host) {
+                \URL::forceScheme('https');
+                \URL::forceRootUrl('https://' . $host);
+            } else {
+                \URL::forceScheme('https');
+            }
         }
 
         View::composer(
