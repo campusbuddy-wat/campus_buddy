@@ -53,8 +53,9 @@ else
 fi
 
 # 6. Publish assets
-echo "🎨 Publishing Filament assets..."
-php artisan filament:assets 2>/dev/null || true
+echo "🎨 Publishing assets..."
+php artisan filament:assets --force 2>/dev/null || true
+php artisan livewire:publish --assets --force 2>/dev/null || true
 php artisan icons:cache 2>/dev/null || true
 
 echo "🌐 Starting Nginx & PHP-FPM..."
