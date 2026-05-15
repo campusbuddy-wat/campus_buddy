@@ -59,6 +59,14 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->renderHooks([
+                'panels::body.end' => [
+                    fn () => new \Illuminate\Support\HtmlString('
+                        <script src="/vendor/livewire/livewire.js"></script>
+                        <script src="/vendor/filament/filament/app.js"></script>
+                    '),
+                ],
             ]);
     }
 }
