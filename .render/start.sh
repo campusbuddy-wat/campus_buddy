@@ -52,9 +52,13 @@ else
     fi
 fi
 
-# 6. Final Cache
-php artisan route:cache
-php artisan view:cache
+# 6. Final Cache & Assets
+php artisan route:cache 2>/dev/null || true
+php artisan view:cache 2>/dev/null || true
+
+echo "🎨 Publishing Filament assets..."
+php artisan filament:assets 2>/dev/null || true
+php artisan icons:cache 2>/dev/null || true
 
 echo "🌐 Starting Nginx & PHP-FPM..."
 echo "----------------------------------------------------"
