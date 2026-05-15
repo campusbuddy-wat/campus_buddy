@@ -24,27 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (config('app.env') === 'production') {
-            // Read the real host from Render's forwarded headers.
-            $host = $_SERVER['HTTP_X_FORWARDED_HOST']
-                 ?? $_SERVER['HTTP_HOST']
-                 ?? parse_url(config('app.url'), PHP_URL_HOST)
-                 ?? null;
-
-            if ($host) {
-                $baseUrl = 'https://' . $host;
-
-                // Force the URL generator (affects route(), url())
-                \URL::forceScheme('https');
-                \URL::forceRootUrl($baseUrl);
-
-                // Also override configs so asset() and Livewire use HTTPS
-                // asset() reads app.url, Livewire reads livewire.asset_url
-                config(['app.url'           => $baseUrl]);
-                config(['app.asset_url'     => $baseUrl]);
-                config(['livewire.asset_url' => $baseUrl]);
-            } else {
-                \URL::forceScheme('https');
-            }
+            \URL::forceScheme('https');
         }
 
         View::composer(

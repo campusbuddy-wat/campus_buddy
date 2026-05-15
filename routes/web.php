@@ -23,11 +23,6 @@ use Illuminate\Support\Facades\Route;
 // Landing Page
 Route::get('/', [PageController::class, 'landing'])->name('landing');
 
-// Fallback for Filament 405 errors (happens when Livewire JS fails to load)
-Route::post('/admin/login', function () {
-    return back()->withErrors(['email' => 'JavaScript is not loading correctly. Please refresh or check your connection.']);
-});
-
 // Buddy Visitor (no auth required)
 Route::get('/buddy-visitor', [PageController::class, 'buddyVisitor'])->name('buddy-visitor');
 
