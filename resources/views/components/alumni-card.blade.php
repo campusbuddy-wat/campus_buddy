@@ -77,8 +77,17 @@ if ($alumni) {
         
         <div class="premium-badge" style="{{ $badgeStyle }}">{{ $badge }}</div>
         
-        <div class="profile-img-wrap">
-            <img src="{{ $profileImg }}" alt="{{ $name }}" class="{{ $profileImgClass }}" style="{{ $profileImgStyle }}">
+        <div class="profile-img-wrap" style="position: relative; display: flex; align-items: center; justify-content: center; background: #e2e8f0; border-radius: 50%; overflow: hidden; width: 80px; height: 80px;">
+            @if($alumni && $alumni->profile_image && \Storage::disk('public')->exists($alumni->profile_image))
+                <img src="{{ asset('storage/' . $alumni->profile_image) }}" alt="{{ $name }}" class="{{ $profileImgClass }}" style="{{ $profileImgStyle }}; width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="user-avatar-initials" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 28px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif; position: absolute; top: 0; left: 0;">
+                    {{ substr($name, 0, 1) }}
+                </div>
+            @else
+                <div class="user-avatar-initials" style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 28px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
+                    {{ substr($name, 0, 1) }}
+                </div>
+            @endif
         </div>
         
         <div class="card-category">{{ $cardCategory }}</div>

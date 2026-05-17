@@ -469,11 +469,16 @@
                     <div class="card-top-bg" style="background: white; height: 150px; position: relative;">
                         <div class="lanyard-hole" style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 45px; height: 10px; background: #e2e8f0; border-radius: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); z-index: 10;"></div>
                         
-                        <div class="id-avatar-wrap" style="position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 100px; height: 100px; border-radius: 50%; border: 4px solid #0ea5e9; overflow: hidden; z-index: 5; background: white; box-shadow: 0 8px 15px rgba(14, 165, 233, 0.25);">
-                            @if($talent->user->profile_image)
-                                <img src="{{ asset('storage/' . $talent->user->profile_image) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="id-avatar-wrap" style="position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 100px; height: 100px; border-radius: 50%; border: 4px solid #0ea5e9; overflow: hidden; z-index: 5; background: #e2e8f0; box-shadow: 0 8px 15px rgba(14, 165, 233, 0.25); display: flex; align-items: center; justify-content: center;">
+                            @if($talent->user->profile_image && \Storage::disk('public')->exists($talent->user->profile_image))
+                                <img src="{{ asset('storage/' . $talent->user->profile_image) }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="user-avatar-initials" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 32px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
+                                    {{ substr($talent->user->name, 0, 1) }}
+                                </div>
                             @else
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($talent->user->name) }}&background=0ea5e9&color=fff" style="width: 100%; height: 100%; object-fit: cover;">
+                                <div class="user-avatar-initials" style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 32px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
+                                    {{ substr($talent->user->name, 0, 1) }}
+                                </div>
                             @endif
                         </div>
 

@@ -317,11 +317,16 @@
                 <div class="card-top-bg">
                     <div class="lanyard-hole"></div>
                     
-                    <div class="id-avatar-wrap">
-                        @if($talent->user->profile_image)
-                            <img src="{{ asset('storage/' . $talent->user->profile_image) }}" alt="{{ $talent->user->name }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($talent->user->name) }}&background=16a34a&color=fff'">
+                    <div class="id-avatar-wrap" style="background: #e2e8f0; display: flex; align-items: center; justify-content: center; position: relative;">
+                        @if($talent->user->profile_image && \Storage::disk('public')->exists($talent->user->profile_image))
+                            <img src="{{ asset('storage/' . $talent->user->profile_image) }}" alt="{{ $talent->user->name }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="user-avatar-initials" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 36px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
+                                {{ substr($talent->user->name, 0, 1) }}
+                            </div>
                         @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($talent->user->name) }}&background=16a34a&color=fff" alt="{{ $talent->user->name }}">
+                            <div class="user-avatar-initials" style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 36px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
+                                {{ substr($talent->user->name, 0, 1) }}
+                            </div>
                         @endif
                     </div>
 

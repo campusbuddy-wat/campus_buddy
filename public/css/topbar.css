@@ -494,14 +494,14 @@
 /* Small Laptops (Menu starts to get crowded) */
 @media (max-width: 1350px) {
     .desktop-nav {
-        gap: 8px;
-        padding: 0 10px;
+        gap: 4px;
+        padding: 0 4px;
     }
 
     .desktop-nav a,
     .more-btn {
-        padding: 6px 12px;
-        font-size: 14px;
+        padding: 4px 8px;
+        font-size: 13px;
     }
 
     /* Hide user info to save space, keep avatar */

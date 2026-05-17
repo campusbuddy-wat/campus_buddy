@@ -38,11 +38,14 @@
             <label class="section-label">Profile picture</label>
             <span class="section-desc">PNG, JPEG under 15MB</span>
             <div class="profile-pic-group">
-                @if($user->profile_image)
-                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile" class="current-avatar">
+                @if($user->profile_image && \Storage::disk('public')->exists($user->profile_image))
+                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile" class="current-avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="user-avatar-initials current-avatar" style="display: none; width: 80px; height: 80px; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 28px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
+                        {{ substr($user->name, 0, 1) }}
+                    </div>
                 @else
-                    <div class="avatar-placeholder">
-                        <i class="fas fa-user"></i>
+                    <div class="user-avatar-initials current-avatar" style="display: flex; width: 80px; height: 80px; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 28px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
+                        {{ substr($user->name, 0, 1) }}
                     </div>
                 @endif
                 <div class="pic-actions">
