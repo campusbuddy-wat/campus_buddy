@@ -6,11 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Campus Buddy')</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/topbar.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/base-ui.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/hero-common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/topbar.css') }}?v=2.0">
+    <link rel="stylesheet" href="{{ asset('css/base-ui.css') }}?v=2.0">
+    <link rel="stylesheet" href="{{ asset('css/menu.css') }}?v=2.0">
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}?v=2.0">
+    <link rel="stylesheet" href="{{ asset('css/hero-common.css') }}?v=2.0">
     @stack('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
