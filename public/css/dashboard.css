@@ -77,7 +77,8 @@
 
 .hero-glass-card {
     position: relative;
-    width: 480px;
+    width: 100%;
+    max-width: 480px;
     height: 280px;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(25px);
@@ -944,7 +945,7 @@
     }
 }
 
-@media (max-width: 1380px) {
+@media (max-width: 1480px) {
     .dashboard-container {
         padding: 0 20px;
     }

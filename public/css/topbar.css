@@ -515,7 +515,7 @@
 }
 
 /* Very Small Laptops (Switch to Hamburger or hide text) */
-@media (max-width: 1380px) {
+@media (max-width: 1480px) {
     .topbar {
         height: 65px;
         padding: 0 15px;
@@ -590,7 +590,7 @@ body .main {
     }
 }
 
-@media (max-width: 1380px) {
+@media (max-width: 1480px) {
     /* Adjust layout padding for the new 65px topbar height */
     body .layout {
         padding-top: 65px !important;
