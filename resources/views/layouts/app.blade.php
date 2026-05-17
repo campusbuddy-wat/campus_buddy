@@ -14,8 +14,16 @@
     @stack('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
-<body>
+<body style="overflow-x: hidden; width: 100%;">
     @include('includes.menu')
 
     <div class="layout">
