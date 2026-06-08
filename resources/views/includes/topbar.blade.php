@@ -91,17 +91,8 @@
         <!-- Profile -->
         <div class="user-profile-container">
             <div class="user-profile-trigger" id="userProfileIcon">
-                <div class="user-avatar-circle" style="position: relative; display: flex; align-items: center; justify-content: center; background: #e2e8f0; border-radius: 50%; width: 40px; height: 40px; overflow: hidden;">
-                    @if(Auth::user()->profile_image && \Storage::disk('public')->exists(Auth::user()->profile_image))
-                        <img src="{{ asset('storage/'.Auth::user()->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="user-avatar-initials" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 16px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                            {{ substr(Auth::user()->name, 0, 1) }}
-                        </div>
-                    @else
-                        <div class="user-avatar-initials" style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 16px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                            {{ substr(Auth::user()->name, 0, 1) }}
-                        </div>
-                    @endif
+                <div class="user-avatar-circle">
+                    <img src="{{ Auth::user()->profile_image ? asset('storage/'.Auth::user()->profile_image) : asset('images/eventImage/profile.png') }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
                 <div class="user-info">
                     <span class="user-name">{{ Auth::user()->name }}</span>

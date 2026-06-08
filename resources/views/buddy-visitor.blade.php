@@ -3,7 +3,7 @@
 @section('title', 'Campus Buddy | DIU Admission Help')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/buddy-chat.css') }}?v=2.0">
+    <link rel="stylesheet" href="{{ asset('css/buddy-chat.css') }}">
     <style>
         /* Force full screen filling and hide footer by default on this page */
         footer, .footer {

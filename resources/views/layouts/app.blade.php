@@ -6,24 +6,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Campus Buddy')</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/topbar.css') }}?v=3.0">
-    <link rel="stylesheet" href="{{ asset('css/base-ui.css') }}?v=2.0">
-    <link rel="stylesheet" href="{{ asset('css/menu.css') }}?v=2.0">
-    <link rel="stylesheet" href="{{ asset('css/footer.css') }}?v=2.0">
-    <link rel="stylesheet" href="{{ asset('css/hero-common.css') }}?v=2.0">
+    <link rel="stylesheet" href="{{ asset('css/topbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/base-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/hero-common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive-device.css') }}">
     @stack('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
 </head>
-<body style="overflow-x: hidden; width: 100%;">
+<body>
     @include('includes.menu')
 
     <div class="layout">
@@ -82,5 +75,48 @@
     </script>
     
     @stack('scripts')
+
+    {{-- ═══════════════════════════════════════
+         DEVICE INDICATOR BADGE
+         Shows current viewport/device in bottom-right corner.
+         Click to minimize/expand.
+    ═══════════════════════════════════════ --}}
+    <div id="device-indicator" title="Current device type — click to minimize">
+        <span class="device-icon" id="device-icon">🖥️</span>
+        <span class="device-label" id="device-label">Desktop</span>
+    </div>
+
+    <script>
+    (function() {
+        const indicator = document.getElementById('device-indicator');
+        const iconEl    = document.getElementById('device-icon');
+        const labelEl   = document.getElementById('device-label');
+
+        const DEVICES = [
+            { min: 1600, cls: 'device-desktop', icon: '🖥️',  label: 'Desktop' },
+            { min: 1024, cls: 'device-laptop',  icon: '💻',  label: 'Laptop'  },
+            { min:  768, cls: 'device-tablet',  icon: '📱',  label: 'Tablet'  },
+            { min:    0, cls: 'device-mobile',  icon: '📲',  label: 'Mobile'  },
+        ];
+
+        function updateDevice() {
+            const w = window.innerWidth;
+            const d = DEVICES.find(d => w >= d.min);
+            // Remove all device classes
+            indicator.classList.remove(...DEVICES.map(x => x.cls));
+            indicator.classList.add(d.cls);
+            iconEl.textContent  = d.icon;
+            labelEl.textContent = d.label + ' (' + w + 'px)';
+        }
+
+        // Toggle minimize on click
+        indicator.addEventListener('click', function() {
+            this.classList.toggle('minimized');
+        });
+
+        updateDevice();
+        window.addEventListener('resize', updateDevice);
+    })();
+    </script>
 </body>
 </html>

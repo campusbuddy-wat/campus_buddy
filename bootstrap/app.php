@@ -11,13 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Trust all proxies — required for Render's HTTPS load balancer
-        // Without this, Laravel generates http:// asset URLs behind https:// proxy
-        $middleware->trustProxies(at: '*');
-
         $middleware->validateCsrfTokens(except: [
             'api/*',
-            'livewire/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

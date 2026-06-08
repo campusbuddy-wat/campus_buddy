@@ -494,14 +494,14 @@
 /* Small Laptops (Menu starts to get crowded) */
 @media (max-width: 1350px) {
     .desktop-nav {
-        gap: 4px;
-        padding: 0 4px;
+        gap: 8px;
+        padding: 0 10px;
     }
 
     .desktop-nav a,
     .more-btn {
-        padding: 4px 8px;
-        font-size: 13px;
+        padding: 6px 12px;
+        font-size: 14px;
     }
 
     /* Hide user info to save space, keep avatar */
@@ -515,7 +515,7 @@
 }
 
 /* Very Small Laptops (Switch to Hamburger or hide text) */
-@media (max-width: 1480px) {
+@media (max-width: 1200px) {
     .topbar {
         height: 65px;
         padding: 0 15px;
@@ -590,7 +590,7 @@ body .main {
     }
 }
 
-@media (max-width: 1480px) {
+@media (max-width: 1200px) {
     /* Adjust layout padding for the new 65px topbar height */
     body .layout {
         padding-top: 65px !important;

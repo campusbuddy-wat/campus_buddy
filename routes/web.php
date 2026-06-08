@@ -158,3 +158,13 @@ Route::post('/api/ai/summarize-notes', [AIFeaturesController::class, 'summarizeN
 Route::post('/api/ai/practice-generator', [AIFeaturesController::class, 'practiceGenerator'])
     ->middleware(['auth', 'throttle:15,1'])
     ->name('api.ai.practice-generator');
+
+// ==================== AUTOMATED ROUTINE IMPORT ROUTES ====================
+Route::post('/api/routine/parse-file', [\App\Http\Controllers\RoutineImportController::class, 'parseFile'])
+    ->middleware(['auth', 'throttle:10,1'])
+    ->name('api.routine.parse-file');
+
+Route::post('/api/routine/auto-sync-web', [\App\Http\Controllers\RoutineImportController::class, 'autoSyncWeb'])
+    ->middleware(['auth', 'throttle:10,1'])
+    ->name('api.routine.auto-sync-web');
+

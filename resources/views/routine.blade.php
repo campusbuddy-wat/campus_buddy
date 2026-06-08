@@ -3,9 +3,23 @@
   $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   $timeSlots = ['8.30 am-10.00 am', '10.00 am-11.30 am', '11.30 am-1.00 pm', '1.00 pm-2.30 pm', '2.30 pm-4.00 pm', '4.00 pm-5.30 pm'];
   
+  if (!function_exists('normalizeTimeSlot')) {
+      function normalizeTimeSlot($slot) {
+          if (empty($slot)) return '';
+          $slot = strtolower(trim($slot));
+          $slot = str_replace(':', '.', $slot);
+          $slot = preg_replace('/\b0(\d)/', '$1', $slot);
+          $slot = str_replace(' ', '', $slot);
+          $slot = str_replace(' - ', '-', $slot);
+          return $slot;
+      }
+  }
+
   $scheduleMap = [];
   foreach($schedules as $s) {
-      $scheduleMap[$s->day][$s->time_slot] = $s;
+      $dayKey = strtolower(trim($s->day));
+      $slotKey = normalizeTimeSlot($s->time_slot);
+      $scheduleMap[$dayKey][$slotKey] = $s;
   }
   
   if (!function_exists('parseRoutineTime')) {
@@ -25,7 +39,9 @@
 
   // Today's schedule for sidebar
   $todayName = now()->format('l');
-  $todaysClasses = $schedules->where('day', $todayName)
+  $todaysClasses = $schedules->filter(function($item) use ($todayName) {
+      return strtolower(trim($item->day)) === strtolower($todayName);
+  })
     ->unique(function ($item) {
         return $item->course_title . $item->time_slot;
     })
@@ -151,7 +167,9 @@
             <div class="day-group {{ $todayName == $day ? 'active' : '' }}" id="group-{{ strtolower($day) }}">
               <h3 class="day-heading">{{ $day }}</h3>
 
-              @php $dayClasses = $schedules->where('day', $day)
+              @php $dayClasses = $schedules->filter(function($item) use ($day) {
+                  return strtolower(trim($item->day)) === strtolower($day);
+              })
               ->unique(function ($item) {
               return $item->course_title . $item->time_slot;
               })
@@ -241,13 +259,18 @@
                     <td class="col-time">{{ $slot }}</td>
                     @foreach($days as $day)
                     <td>
-                      @if(isset($scheduleMap[$day][$slot]))
+                      @php
+                        $dayKey = strtolower(trim($day));
+                        $slotKey = normalizeTimeSlot($slot);
+                      @endphp
+                      @if(isset($scheduleMap[$dayKey][$slotKey]))
+                      @php $class = $scheduleMap[$dayKey][$slotKey]; @endphp
                       <div class="table-class">
-                        <strong>{{ $scheduleMap[$day][$slot]->course_code }}{{ $scheduleMap[$day][$slot]->lab_section ?
-                          '('.$scheduleMap[$day][$slot]->lab_section.')' : '' }} ({{ $scheduleMap[$day][$slot]->section
+                        <strong>{{ $class->course_code }}{{ $class->lab_section ?
+                          '('.$class->lab_section.')' : '' }} ({{ $class->section
                           }})</strong><br>
-                        <span>{{ $scheduleMap[$day][$slot]->teacher_initial }}</span>
-                        <small>Room: {{ $scheduleMap[$day][$slot]->room_no }}</small>
+                        <span>{{ $class->teacher_initial }}</span>
+                        <small>Room: {{ $class->room_no }}</small>
                       </div>
                       @endif
                     </td>
@@ -261,6 +284,40 @@
 
         </div>
       </section>
+
+      @if(auth()->user()->role === 'cr' || auth()->user()->role === 'admin')
+      <!-- ================= SMART ROUTINE SYNC & IMPORTER ================= -->
+      <div class="buddy-card-container" id="smartRoutineImporterSection">
+        <div class="buddy-section reveal">
+          <div class="buddy-card" style="cursor: default; text-align: left; background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(118, 75, 162, 0.08)); border: 1px solid rgba(99, 102, 241, 0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <h3 style="margin: 0; color: #4f46e5;">✨ AI OCR Routine Importer</h3>
+              <span class="badge" style="background: rgba(99, 102, 241, 0.15); color: #4f46e5; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;">CR & Admin Only</span>
+            </div>
+            <p style="margin-bottom: 16px; opacity: 0.85; font-size: 14px;">Upload any official DIU Master Routine PDF, Excel sheet, or a screenshot. The Llama 3.3 model will automatically parse, clean, and sync classes strictly matching your student profile (<b>Dept:</b> {{ auth()->user()->department }}, <b>Batch:</b> {{ auth()->user()->batch }}, <b>Sec:</b> {{ auth()->user()->section }}).</p>
+            
+            <div style="background: rgba(255,255,255,0.4); padding: 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.5);">
+              <h4 style="margin: 0 0 8px 0; font-size: 15px; color: #334155;">📄 AI OCR Routine Upload</h4>
+              <p style="font-size: 13px; opacity: 0.75; margin-bottom: 14px;">Select your 6-7 page master routine PDF or schedule image to automatically overwrite and update your profile schedule.</p>
+              
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <input type="file" id="routineFile" accept=".pdf,.png,.jpg,.jpeg" style="display: none;" onchange="handleFileSelected(this)">
+                <button onclick="document.getElementById('routineFile').click()" id="uploadBtn" style="flex: 1; min-width: 150px; padding: 10px; border-radius: 8px; border: 1px dashed #4f46e5; background: rgba(99,102,241,0.05); color: #4f46e5; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s;">
+                  Choose file...
+                </button>
+                <button onclick="triggerFileImport()" id="importBtn" style="padding: 10px 24px; border-radius: 8px; border: none; background: #764ba2; color: #fff; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s;" disabled>
+                  Import ✨
+                </button>
+              </div>
+              <div id="selectedFileName" style="font-size: 12px; color: #4f46e5; font-weight: 500; margin-top: 8px; word-break: break-all;"></div>
+            </div>
+
+            <!-- Status Indicator -->
+            <div id="importerStatus" style="display: none; margin-top: 14px; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 500;"></div>
+          </div>
+        </div>
+      </div>
+      @endif
 
       <!-- ================= AI ROUTINE ADVISOR ================= -->
       <div class="buddy-card-container" id="routineAdvisorSection">
@@ -510,6 +567,67 @@
         }
       });
     });
+
+    // ==================== SMART ROUTINE IMPORTER ====================
+    let selectedFile = null;
+
+    window.handleFileSelected = function(input) {
+      if (input.files && input.files[0]) {
+        selectedFile = input.files[0];
+        document.getElementById('selectedFileName').innerText = 'Selected: ' + selectedFile.name;
+        document.getElementById('importBtn').removeAttribute('disabled');
+      }
+    };
+
+
+    window.triggerFileImport = async function() {
+      if (!selectedFile) return;
+
+      const btn = document.getElementById('importBtn');
+      const statusBox = document.getElementById('importerStatus');
+      
+      btn.setAttribute('disabled', 'true');
+      btn.innerText = 'Parsing...';
+
+      statusBox.style.display = 'block';
+      statusBox.style.background = 'rgba(118,75,162,0.08)';
+      statusBox.style.color = '#764ba2';
+      statusBox.style.border = '1px solid rgba(118,75,162,0.15)';
+      statusBox.innerHTML = '⌛ Uploading file and running Llama 3.3 AI OCR extraction...';
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        const res = await fetch('/api/routine/parse-file', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+          },
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          statusBox.style.background = 'rgba(16,185,129,0.08)';
+          statusBox.style.color = '#10b981';
+          statusBox.style.border = '1px solid rgba(16,185,129,0.15)';
+          statusBox.innerHTML = `✅ ${data.message} Reloading routine...`;
+          setTimeout(() => window.location.reload(), 1500);
+        } else {
+          throw new Error(data.error || 'Parsing failed.');
+        }
+      } catch (e) {
+        statusBox.style.background = 'rgba(239,68,68,0.08)';
+        statusBox.style.color = '#ef4444';
+        statusBox.style.border = '1px solid rgba(239,68,68,0.15)';
+        statusBox.innerHTML = '❌ ' + (e.message || 'AI extraction failed. Ensure file is clear and readable.');
+        btn.removeAttribute('disabled');
+        btn.innerText = 'Import ✨';
+      }
+    };
 
     // ==================== AI ROUTINE ADVISOR ====================
     async function askRoutineAI(message) {

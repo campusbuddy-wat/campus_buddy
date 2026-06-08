@@ -3,7 +3,7 @@
 @section('title', 'Campus Buddy | Student Dashboard')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v=4.0">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 @endpush
 
 @section('content')
@@ -357,16 +357,11 @@ Standardized structure matching all pages
                 @forelse($latestPosts as $index => $post)
                 <div class="feed-post-item">
                   <div class="post-user-info">
-                      <div class="post-avatar" style="position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #E2E8F0; flex-shrink: 0;">
-                          @if($post->user->profile_image && \Storage::disk('public')->exists($post->user->profile_image))
-                              <img src="{{ asset('storage/' . $post->user->profile_image) }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                              <div class="user-avatar-initials" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 14px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                                  {{ substr($post->user->name, 0, 1) }}
-                              </div>
+                      <div class="post-avatar">
+                          @if($post->user->profile_image)
+                              <img src="{{ asset('storage/' . $post->user->profile_image) }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&color=00AAFF&background=E0F7FA'">
                           @else
-                              <div class="user-avatar-initials" style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 14px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                                  {{ substr($post->user->name, 0, 1) }}
-                              </div>
+                              👨‍🎓
                           @endif
                       </div>
                       <div class="post-user-details">

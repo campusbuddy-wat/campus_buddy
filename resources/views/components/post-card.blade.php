@@ -3,16 +3,11 @@
 <div class="post" id="post-{{ $post->id }}" style="background: transparent; padding: 12px 10px; border-bottom: 1px solid #E2E8F0; border-radius: 0; box-shadow: none; margin-bottom: 8px; transition: transform 0.2s ease;">
     <div class="post-top">
         <!-- Avatar with Flex Fallback -->
-        <div class="avatar" style="position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #E2E8F0; flex-shrink: 0;">
-            @if($post->user->profile_image && \Storage::disk('public')->exists($post->user->profile_image))
-                <img src="{{ asset('storage/' . $post->user->profile_image) }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="user-avatar-initials" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 14px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                    {{ substr($post->user->name, 0, 1) }}
-                </div>
+        <div class="avatar">
+            @if($post->user->profile_image)
+                <img src="{{ asset('storage/' . $post->user->profile_image) }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&color=00AAFF&background=E0F7FA'">
             @else
-                <div class="user-avatar-initials" style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 14px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                    {{ substr($post->user->name, 0, 1) }}
-                </div>
+                👨‍🎓
             @endif
         </div>
         <div>
@@ -54,16 +49,11 @@
         <div class="comments-list" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
             @forelse($post->comments->where('parent_id', null) as $comment)
                 <div class="comment-item" id="comment-{{ $comment->id }}" style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px;">
-                    <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 50%; overflow: hidden; background: #E2E8F0; display: flex; align-items: center; justify-content: center; position: relative;">
-                        @if($comment->user->profile_image && \Storage::disk('public')->exists($comment->user->profile_image))
-                            <img src="{{ asset('storage/' . $comment->user->profile_image) }}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="user-avatar-initials" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 12px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                                {{ substr($comment->user->name, 0, 1) }}
-                            </div>
+                    <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 50%; overflow: hidden; background: #E2E8F0; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                        @if($comment->user->profile_image)
+                            <img src="{{ asset('storage/' . $comment->user->profile_image) }}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($comment->user->name) }}&color=00AAFF&background=E0F7FA'">
                         @else
-                            <div class="user-avatar-initials" style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 12px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                                {{ substr($comment->user->name, 0, 1) }}
-                            </div>
+                            🎓
                         @endif
                     </div>
                     <div style="flex: 1;">
@@ -90,16 +80,11 @@
                         <div class="replies-list" id="replies-{{ $comment->id }}" style="margin-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
                             @foreach($comment->replies as $reply)
                                 <div class="comment-item" id="comment-{{ $reply->id }}" style="display: flex; gap: 8px; align-items: flex-start;">
-                                     <div style="width: 24px; height: 24px; min-width: 24px; border-radius: 50%; overflow: hidden; background: #E2E8F0; display: flex; align-items: center; justify-content: center; position: relative;">
-                                        @if($reply->user->profile_image && \Storage::disk('public')->exists($reply->user->profile_image))
-                                            <img src="{{ asset('storage/' . $reply->user->profile_image) }}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                            <div class="user-avatar-initials" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 10px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                                                {{ substr($reply->user->name, 0, 1) }}
-                                            </div>
+                                    <div style="width: 24px; height: 24px; min-width: 24px; border-radius: 50%; overflow: hidden; background: #E2E8F0; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                                        @if($reply->user->profile_image)
+                                            <img src="{{ asset('storage/' . $reply->user->profile_image) }}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($reply->user->name) }}&color=00AAFF&background=E0F7FA'">
                                         @else
-                                            <div class="user-avatar-initials" style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #00AAFF, #0066cc); color: white; font-weight: 700; font-size: 10px; border-radius: 50%; text-transform: uppercase; font-family: 'Inter', sans-serif;">
-                                                {{ substr($reply->user->name, 0, 1) }}
-                                            </div>
+                                            🎓
                                         @endif
                                     </div>
                                     <div style="flex: 1;">

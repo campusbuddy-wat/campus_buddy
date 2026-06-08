@@ -1068,7 +1068,7 @@
 /* ═══════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════ */
-@media (max-width: 1480px) {
+@media (max-width: 1200px) {
     .chat-context-panel, .options-sidebar {
         display: none;
     }
