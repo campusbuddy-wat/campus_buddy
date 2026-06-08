@@ -207,7 +207,7 @@ $currentRoute = Route::currentRouteName() ?? '';
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const hamburgerBtn = document.getElementById('mobileHamburgerBtn');
+        const hamburgerBtn = document.getElementById('mobileMenuToggle') || document.getElementById('mobileHamburgerBtn');
         const sidebar = document.getElementById('mobileSidebar');
         const overlay = document.getElementById('mobileSidebarOverlay');
         const closeBtn = document.getElementById('sidebarCloseBtn');
