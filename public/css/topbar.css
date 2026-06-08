@@ -465,7 +465,7 @@
 }
 
 /* Laptop View */
-@media (max-width: 1599px) {
+@media (max-width: 1380px) {
     .topbar {
         padding: 0 24px;
         height: 90px;
@@ -589,7 +589,7 @@ body .main {
     margin: 0;
 }
 
-@media (max-width: 1599px) {
+@media (max-width: 1380px) {
     body .layout {
         padding-top: 90px !important;
     }
