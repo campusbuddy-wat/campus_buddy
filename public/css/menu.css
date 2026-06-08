@@ -70,7 +70,7 @@ body {
 }
 
 /* ================= MOBILE RESPONSIVE FOR MAIN CONTENT ================= */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .main {
         padding: 0 !important;
     }
@@ -180,7 +180,7 @@ nav.mobile-menu a.active::after {
 
 
 /* ================= MOBILE RESPONSIVE ================= */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .sidebar {
         display: none;
     }
@@ -199,7 +199,7 @@ nav.mobile-menu a.active::after {
 }
 
 /* ================= DESKTOP RESPONSIVE ================= */
-@media (min-width: 769px) {
+@media (min-width: 768px) {
     .mobile-menu {
         display: none !important;
     }
