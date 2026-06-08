@@ -89,7 +89,6 @@
 
 /* ================================================================
    DESKTOP (≥ 1600px) — Wide screen defaults
-   Threshold raised to 1600px so MacBook Air M4 (~1470px) shows as Laptop
    ================================================================ */
 @media (min-width: 1600px) {
     /* Layout */
@@ -130,7 +129,7 @@
 }
 
 /* ================================================================
-   LAPTOP (1024px – 1599px) — Covers MacBook Air M4 (~1470px viewport)
+   LAPTOP (1024px – 1599px)
    ================================================================ */
 @media (min-width: 1024px) and (max-width: 1599px) {
 

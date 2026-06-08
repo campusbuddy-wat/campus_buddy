@@ -458,41 +458,19 @@
 
 /* ================= DESKTOP RESPONSIVENESS ================= */
 /* Large Desktop (Extra wide) */
-@media (min-width: 1601px) {
+@media (min-width: 1600px) {
     .topbar {
         padding: 0 48px;
     }
 }
 
-/* Medium Desktop (Laptops) */
-@media (max-width: 1600px) {
+/* Laptop View */
+@media (max-width: 1599px) {
     .topbar {
         padding: 0 24px;
         height: 90px;
     }
 
-    .desktop-nav {
-        gap: 15px;
-        padding: 0 20px;
-    }
-
-    .desktop-nav a,
-    .more-btn {
-        padding: 8px 14px;
-        font-size: 15px;
-    }
-
-    .logo-img {
-        height: 44px;
-    }
-
-    .logo-text {
-        font-size: 18px !important;
-    }
-}
-
-/* Small Laptops (Menu starts to get crowded) */
-@media (max-width: 1350px) {
     .desktop-nav {
         gap: 8px;
         padding: 0 10px;
@@ -502,6 +480,14 @@
     .more-btn {
         padding: 6px 12px;
         font-size: 14px;
+    }
+
+    .logo-img {
+        height: 44px;
+    }
+
+    .logo-text {
+        font-size: 18px !important;
     }
 
     /* Hide user info to save space, keep avatar */
@@ -578,13 +564,7 @@ body .main {
     margin: 0;
 }
 
-@media (max-width: 1600px) {
-    body .layout {
-        padding-top: 90px !important;
-    }
-}
-
-@media (max-width: 1350px) {
+@media (max-width: 1599px) {
     body .layout {
         padding-top: 90px !important;
     }
@@ -603,7 +583,7 @@ body .main {
 }
 
 /* ================= MOBILE RESPONSIVE ================= */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .topbar {
         height: 60px;
         padding: 0 12px;
@@ -796,7 +776,7 @@ body .main {
 }
 
 /* Mobile adjustments */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .notification-dropdown {
         position: fixed;
         top: 70px;
