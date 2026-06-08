@@ -337,7 +337,7 @@ PROMPT;
                         ->orWhere('major', '');
                 });
             })
-            ->orderByRaw("FIELD(day, 'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday')")
+            ->orderByRaw("CASE day WHEN 'Sunday' THEN 1 WHEN 'Monday' THEN 2 WHEN 'Tuesday' THEN 3 WHEN 'Wednesday' THEN 4 WHEN 'Thursday' THEN 5 WHEN 'Friday' THEN 6 WHEN 'Saturday' THEN 7 ELSE 8 END")
             ->orderBy('time_slot')
             ->get(['course_title', 'course_code', 'time_slot', 'room_no', 'teacher_initial', 'day', 'type']);
 
@@ -597,7 +597,8 @@ PROMPT;
                 $questionsStr .= "Semester: {$q->year_semester}\n";
             }
         } else {
-            $questionsStr = "No questions found in the database" . ($courseCode ? " for course {$courseCode}" : "") . ".";
+            $filterCourse = $filters['course_code'] ?? null;
+            $questionsStr = "No questions found in the database" . ($filterCourse ? " for course {$filterCourse}" : "") . ".";
         }
 
         return <<<PROMPT

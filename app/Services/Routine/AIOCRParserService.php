@@ -116,7 +116,7 @@ class AIOCRParserService implements RoutineExtractorInterface
         // Handle Image formats (png, jpg, jpeg) using Tesseract OCR
         $ocr = new TesseractOCR($filePath);
         if (file_exists('/opt/homebrew/bin/tesseract')) {
-            $ocr->executable('/opt/opt/homebrew/bin/tesseract');
+            $ocr->executable('/opt/homebrew/bin/tesseract');
         } elseif (file_exists('/usr/bin/tesseract')) {
             $ocr->executable('/usr/bin/tesseract');
         }
