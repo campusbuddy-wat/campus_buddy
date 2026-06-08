@@ -143,8 +143,8 @@
 
     /* --- Layout --- */
     .page-container {
-        max-width: 1800px !important;
-        width: 84% !important;
+        width: 94% !important;
+        max-width: 1280px !important;
         padding: 0 15px !important;
         margin: 24px auto !important;
     }
@@ -189,7 +189,7 @@
     /* --- Hero --- */
     .hero-banner {
         min-height: 440px !important;
-        padding: 0 10% !important;
+        padding: 0 8% !important;
     }
 
     .hero-content h1,
