@@ -476,8 +476,7 @@
         padding: 0 10px;
     }
 
-    .desktop-nav a,
-    .more-btn {
+    .desktop-nav a {
         padding: 6px 12px;
         font-size: 14px;
     }
@@ -497,6 +496,32 @@
 
     .user-profile-trigger {
         padding: 6px;
+    }
+
+    .auth-buttons .btn {
+        padding: 10px 18px;
+        font-size: 13px;
+    }
+}
+
+/* Small Laptop Fixes */
+@media (min-width: 1024px) and (max-width: 1280px) {
+    .topbar {
+        padding: 0 10px !important;
+    }
+    .desktop-nav {
+        gap: 2px !important;
+        margin-left: 10px !important;
+    }
+    .desktop-nav a {
+        padding: 4px 6px !important;
+        font-size: 12px !important;
+    }
+    .logo-text {
+        font-size: 13px !important;
+    }
+    .logo-img {
+        height: 36px !important;
     }
 }
 
