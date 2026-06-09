@@ -6,14 +6,14 @@
     top: 0;
     left: 0;
     right: 0;
-    height: clamp(65px, 8vh, 100px);
+    height: 100px;
     width: 100%;
     box-sizing: border-box;
     background: #ffffff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 clamp(15px, 3vw, 48px);
+    padding: 0 48px;
     z-index: 50;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border-bottom: 1px solid #e5e7eb;
@@ -30,7 +30,7 @@
 }
 
 .logo-img {
-    height: clamp(34px, 4vh, 50px);
+    height: 50px;
     width: auto;
     transition: transform 0.2s ease;
 }
@@ -43,7 +43,7 @@
     display: flex !important;
     flex-direction: row !important;
     gap: 4px !important;
-    font-size: clamp(13px, 1.2vw + 4px, 16px) !important;
+    font-size: 16px !important;
     font-weight: 800 !important;
     color: #2d3748 !important;
     font-family: 'Inter', sans-serif !important;
@@ -73,20 +73,20 @@
 .desktop-nav {
     display: flex;
     align-items: center;
-    gap: clamp(4px, 1.5vw, 24px);
+    gap: 24px;
     flex: 1;
     justify-content: center;
-    padding: 0 clamp(5px, 1vw, 20px);
-    margin-left: clamp(10px, 2vw, 40px);
+    padding: 0 20px;
+    margin-left: 40px;
 }
 
 .desktop-nav a {
     position: relative;
     text-decoration: none;
     color: #4a5568;
-    font-size: clamp(12px, 1vw + 4px, 16px);
+    font-size: 16px;
     font-weight: 600;
-    padding: clamp(4px, 0.5vw, 6px) clamp(6px, 1vw, 18px);
+    padding: 6px 18px;
     border-radius: 20px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
@@ -457,10 +457,65 @@
 }
 
 /* ================= DESKTOP RESPONSIVENESS ================= */
-/* Base styles have been converted to fluid values. Media queries removed. */
+/* Large Desktop (Extra wide) */
+@media (min-width: 1281px) {
+    .topbar {
+        padding: 0 48px;
+    }
+}
+
+/* Medium Desktop (Laptops) */
+@media (max-width: 1280px) {
+    .topbar {
+        padding: 0 24px;
+        height: 90px;
+    }
+
+    .desktop-nav {
+        gap: 15px;
+        padding: 0 20px;
+    }
+
+    .desktop-nav a,
+    .more-btn {
+        padding: 8px 14px;
+        font-size: 15px;
+    }
+
+    .logo-img {
+        height: 44px;
+    }
+
+    .logo-text {
+        font-size: 18px !important;
+    }
+}
+
+/* Small Laptops (Menu starts to get crowded) */
+@media (max-width: 1080px) {
+    .desktop-nav {
+        gap: 8px;
+        padding: 0 10px;
+    }
+
+    .desktop-nav a,
+    .more-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    /* Hide user info to save space, keep avatar */
+    .user-info {
+        display: none !important;
+    }
+
+    .user-profile-trigger {
+        padding: 6px;
+    }
+}
 
 /* Very Small Laptops (Switch to Hamburger or hide text) */
-@media (max-width: 1023px) {
+@media (max-width: 960px) {
     .topbar {
         height: 65px;
         padding: 0 15px;
@@ -514,7 +569,7 @@ body .layout {
     width: 100%;
     margin: 0;
     min-height: 100vh;
-    padding-top: clamp(65px, 8vh, 100px) !important;
+    padding-top: 100px !important;
 }
 
 body .main {
@@ -523,13 +578,32 @@ body .main {
     margin: 0;
 }
 
+@media (max-width: 1280px) {
+    body .layout {
+        padding-top: 90px !important;
+    }
+}
+
+@media (max-width: 1080px) {
+    body .layout {
+        padding-top: 90px !important;
+    }
+}
+
+@media (max-width: 960px) {
+    /* Adjust layout padding for the new 65px topbar height */
+    body .layout {
+        padding-top: 65px !important;
+    }
+}
+
 /* Ensure heroes don't overlap if they have specific heights */
 .hero-banner, .routine-hero, .cr-hero {
     margin-top: 0 !important;
 }
 
 /* ================= MOBILE RESPONSIVE ================= */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .topbar {
         height: 60px;
         padding: 0 12px;
@@ -722,7 +796,7 @@ body .main {
 }
 
 /* Mobile adjustments */
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .notification-dropdown {
         position: fixed;
         top: 70px;

@@ -13,15 +13,17 @@
         body, html {
             overflow: hidden;
             background: #ffffff !important;
+            height: 100%;
         }
 
         .main {
             padding-bottom: 0 !important;
+            height: 100%;
         }
 
         /* Normal Mode Layout */
         .layout {
-            height: 100vh;
+            height: 100%;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -30,7 +32,7 @@
         }
 
         .buddy-chat-wrapper {
-            height: calc(100vh - 100px) !important;
+            height: calc(100% - 100px) !important;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -48,7 +50,7 @@
             padding-top: 0 !important;
         }
         body.topbar-hidden .buddy-chat-wrapper {
-            height: 100vh !important;
+            height: 100% !important;
         }
 
         /* Sidebar toggle states */
@@ -142,21 +144,21 @@
         /* Responsive Topbar Height Adjustments */
         @media (max-width: 1600px) {
             .layout { padding-top: 90px !important; }
-            .buddy-chat-wrapper { height: calc(100vh - 90px) !important; }
+            .buddy-chat-wrapper { height: calc(100% - 90px) !important; }
             body.topbar-hidden .layout { padding-top: 0 !important; }
-            body.topbar-hidden .buddy-chat-wrapper { height: 100vh !important; }
+            body.topbar-hidden .buddy-chat-wrapper { height: 100% !important; }
         }
         @media (max-width: 1200px) {
             .layout { padding-top: 65px !important; }
-            .buddy-chat-wrapper { height: calc(100vh - 65px) !important; }
+            .buddy-chat-wrapper { height: calc(100% - 65px) !important; }
             body.topbar-hidden .layout { padding-top: 0 !important; }
-            body.topbar-hidden .buddy-chat-wrapper { height: 100vh !important; }
+            body.topbar-hidden .buddy-chat-wrapper { height: 100% !important; }
         }
         @media (max-width: 768px) {
             .layout { padding-top: 60px !important; }
-            .buddy-chat-wrapper { height: calc(100vh - 60px) !important; }
+            .buddy-chat-wrapper { height: calc(100% - 60px) !important; }
             body.topbar-hidden .layout { padding-top: 0 !important; }
-            body.topbar-hidden .buddy-chat-wrapper { height: 100vh !important; }
+            body.topbar-hidden .buddy-chat-wrapper { height: 100% !important; }
         }
     </style>
 @endpush

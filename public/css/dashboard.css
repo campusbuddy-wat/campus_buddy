@@ -307,32 +307,27 @@
 }
 
 /* ============================================================
-   MAIN GRID (Fluid Flex)
+   MAIN GRID
    ============================================================ */
 .dashboard-grid {
     display: flex;
-    flex-wrap: wrap;
-    gap: clamp(16px, 2vw, 36px);
+    gap: 30px;
     align-items: flex-start;
     width: 100%;
 }
 
 .main-col {
-    /* The 999 flex-grow ensures main-col takes almost all extra space, 
-       while minimum basis of 500px forces a wrap on smaller screens */
-    flex: 999 1 min(100%, 500px);
-    min-width: 0; 
+    flex: 1;
+    min-width: 0; /* Ensures it can shrink */
 }
 
 .side-col {
-    /* Base width of 350px, will wrap and become 100% when main-col forces it */
-    flex: 1 1 350px;
-    max-width: 100%;
+    width: 380px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    /* Sticky can remain; if wrapped it will just stick at the bottom/top of its new row */
     position: sticky;
-    top: 120px; 
+    top: 120px; /* Adjust for topbar height */
     max-height: calc(100vh - 140px);
 }
 
@@ -380,16 +375,15 @@
    ============================================================ */
 .stat-row {
     display: grid;
-    /* Auto-fit makes cards wrap naturally without media queries */
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: clamp(12px, 2vw, 16px);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
     margin-bottom: 24px;
 }
 
 .stat-card {
     background: var(--surface);
     border-radius: var(--r-card);
-    padding: clamp(16px, 2vw, 24px) clamp(12px, 1.5vw, 20px);
+    padding: 20px 18px;
     text-align: center;
     box-shadow: var(--shadow-card);
     border: 3px solid transparent;
@@ -397,7 +391,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: clamp(180px, 20vw, 220px);
+    min-height: 220px;
     justify-content: center;
     position: relative;
     text-decoration: none;
@@ -927,8 +921,160 @@
 }
 
 /* ============================================================
-   RESPONSIVE (Intrinsic Design Overrides)
+   RESPONSIVE
    ============================================================ */
+@media (max-width: 1100px) {
+    .dashboard-container {
+        padding: 0 20px;
+    }
+
+    .dashboard-grid {
+        flex-direction: column;
+    }
+
+    .side-col {
+        width: 100%;
+        position: static;
+        max-height: none;
+    }
+
+    .community-feed-card {
+        max-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 30px 20px 40px !important;
+        overflow-x: hidden !important;
+    }
+
+    .main-col {
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    .stat-row {
+        display: flex !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 20px;
+        gap: 15px;
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: 20px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        width: 100% !important;
+        margin: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .stat-row::-webkit-scrollbar {
+        display: none;
+    }
+
+    .stat-card {
+        flex: 0 0 80% !important;
+        /* Fixed width for better control */
+        min-height: 160px !important;
+        padding: 15px 12px !important;
+        scroll-snap-align: start;
+    }
+
+    .stat-value {
+        font-size: 15px !important;
+    }
+
+    .stat-sub {
+        font-size: 10px !important;
+    }
+
+    .stat-label {
+        font-size: 9px !important;
+    }
+
+    /* Shrink Priority Task card intervals on mobile */
+    .task-card.stat-card .card-header {
+        padding: 10px 15px !important;
+    }
+
+    .task-card.stat-card .card-timeline {
+        padding: 8px 12px !important;
+        margin: 0 12px 10px 12px !important;
+    }
+
+    .task-card.stat-card .card-topic {
+        padding: 8px 15px !important;
+    }
+
+    .task-card.stat-card .stat-label {
+        padding: 8px 15px !important;
+    }
+
+    .task-card.stat-card .card-title {
+        font-size: 14px !important;
+    }
+
+    .timeline-value {
+        font-size: 11px !important;
+    }
+
+    .event-scroll-container {
+        display: flex !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        gap: 15px;
+        padding-bottom: 20px;
+        scroll-snap-type: x mandatory;
+        scroll-padding-left: 20px;
+        width: 100% !important;
+        margin: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .event-card-scroll {
+        flex: 0 0 80% !important;
+        height: 250px !important;
+        scroll-snap-align: start;
+    }
+
+    .hero-banner {
+        flex-direction: column;
+        padding: 30px 24px 0;
+        text-align: center;
+    }
+
+    .hero-text {
+        max-width: 100%;
+    }
+
+    .hero-mascot {
+        margin: 0;
+        align-self: center;
+    }
+
+    .hero-mascot img {
+        height: 160px;
+    }
+
+    .side-col {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+
+    body,
+    .layout,
+    .main,
+    .main-content {
+        overflow-x: hidden !important;
+    }
+}
+
+
 /* ============================================================
    FULL SCREEN IMAGE VIEWER
    ============================================================ */

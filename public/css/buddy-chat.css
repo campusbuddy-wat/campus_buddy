@@ -76,7 +76,7 @@
 
 .buddy-chat-wrapper {
     display: flex;
-    height: calc(100vh - 56px);
+    height: calc(100% - 56px);
     width: 100%;
     overflow: hidden;
     background: #ffffff;
@@ -1390,7 +1390,7 @@ body.focus-mode .layout {
 }
 
 body.focus-mode .buddy-chat-wrapper {
-    height: 100vh;
+    height: 100%;
 }
 
 /* Floating Restore Button */
