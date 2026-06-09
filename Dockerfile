@@ -71,7 +71,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-pl
 # ----------------------------------------------------------
 # 7. Install NPM dependencies & build Vite assets
 # ----------------------------------------------------------
-RUN npm ci && npm run build && rm -rf node_modules
+RUN npm ci --include=dev && npm run build && rm -rf node_modules
 
 # ----------------------------------------------------------
 # 8. Set correct permissions
