@@ -42,7 +42,7 @@ class DocsTeamMemberResource extends Resource
                             ->maxLength(255),
                         Forms\Components\FileUpload::make('profile_image')
                             ->image()
-                            ->saveUploadedFileUsing(fn ($file) => $file->storeOnCloudinary('docs/team')->getSecurePath())
+                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->upload($file->getRealPath(), ['folder' => 'docs/team'])->getSecurePath())
                             ->imageResizeMode('cover')
                             ->imageCropAspectRatio('1:1')
                             ->imageResizeTargetWidth('400')

@@ -41,7 +41,7 @@ class EventResource extends Resource
                         Forms\Components\FileUpload::make('image_path')
                             ->label('Event Image')
                             ->image()
-                            ->saveUploadedFileUsing(fn ($file) => $file->storeOnCloudinary('events')->getSecurePath())
+                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->upload($file->getRealPath(), ['folder' => 'events'])->getSecurePath())
                             ->required(),
                     ])
             ]);
