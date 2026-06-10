@@ -98,15 +98,8 @@ php artisan config:cache
 echo "🗃️ Running database migrations..."
 if php artisan migrate --force 2>&1; then
     echo "✅ Migrations successful."
-    echo "🌱 Seeding database..."
-    php artisan db:seed --force 2>&1 || echo "⚠️ Seeding skipped (data may already exist)."
 else
-    echo "⚠️ Normal migrate failed. Trying fresh migration..."
-    if php artisan migrate:fresh --force --seed 2>&1; then
-        echo "✅ Fresh migrations and seeding successful."
-    else
-        echo "❌ Fresh migration failed. Check DB credentials in Render env vars."
-    fi
+    echo "⚠️ Normal migrate failed. Check DB credentials in Render env vars."
 fi
 
 # ============================================================

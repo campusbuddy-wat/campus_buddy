@@ -8,7 +8,7 @@
 
 @section('content')
     <!-- ================= HERO SECTION ================= -->
-    <section class="classtask-hero reveal active">
+    <section class="hero-banner classtask-hero reveal active">
         <img src="{{ asset('images/community/dashboardBG.jpg') }}" alt="Class Tasks" class="hero-bg">
         <div class="hero-overlay-dark"></div>
 
