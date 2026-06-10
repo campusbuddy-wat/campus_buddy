@@ -71,13 +71,13 @@ class AlumniController extends Controller
         // Handle profile image upload
         if ($request->hasFile('profile_image')) {
             $validated['profile_image'] = $request->file('profile_image')
-                ->store('alumni/profiles', 'public');
+                ->storeOnCloudinary('alumni/profiles')->getSecurePath();
         }
 
         // Handle company logo upload
         if ($request->hasFile('company_logo')) {
             $validated['company_logo'] = $request->file('company_logo')
-                ->store('alumni/logos', 'public');
+                ->storeOnCloudinary('alumni/logos')->getSecurePath();
         }
 
         $validated['status'] = 'pending';

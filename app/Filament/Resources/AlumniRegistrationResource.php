@@ -31,7 +31,7 @@ class AlumniRegistrationResource extends Resource
                         Forms\Components\TextInput::make('full_name')->required(),
                         Forms\Components\TextInput::make('email')->email()->required(),
                         Forms\Components\TextInput::make('phone')->nullable(),
-                        Forms\Components\FileUpload::make('profile_image')->image()->directory('alumni/profiles')->nullable(),
+                        Forms\Components\FileUpload::make('profile_image')->image()->saveUploadedFileUsing(fn ($file) => $file->storeOnCloudinary('alumni/profiles')->getSecurePath())->nullable(),
                     ])->columns([
                         'default' => 2,
                     ]),
@@ -44,7 +44,7 @@ class AlumniRegistrationResource extends Resource
                         Forms\Components\TextInput::make('graduation_year')->required(),
                         Forms\Components\TextInput::make('current_position')->placeholder('e.g. Lead Developer')->required(),
                         Forms\Components\TextInput::make('company')->placeholder('e.g. Brain Station 23')->required(),
-                        Forms\Components\FileUpload::make('company_logo')->image()->directory('alumni/logos')->nullable(),
+                        Forms\Components\FileUpload::make('company_logo')->image()->saveUploadedFileUsing(fn ($file) => $file->storeOnCloudinary('alumni/logos')->getSecurePath())->nullable(),
                         Forms\Components\TextInput::make('category')->placeholder('e.g. software-engineering')->required(),
                         Forms\Components\TextInput::make('linkedin_url')->url()->nullable(),
                     ])->columns([

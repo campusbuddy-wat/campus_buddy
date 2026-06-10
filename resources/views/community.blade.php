@@ -382,9 +382,9 @@
         <div class="district-grid" id="district-cards-container">
             @foreach($districtAssociations as $district)
                 <div class="district-card" data-division="{{ $district->division }}" data-district="{{ strtolower($district->district) }}">
-                    <div class="card-cover" style="{{ $district->cover_image ? 'background: url(\'' . asset('storage/' . $district->cover_image) . '\') center/cover no-repeat;' : '' }}"></div>
+                    <div class="card-cover" style="{{ $district->cover_image ? 'background: url(\'' . (Str::startsWith($district->cover_image, 'http') ? $district->cover_image : asset('storage/' . $district->cover_image)) . '\') center/cover no-repeat;' : '' }}"></div>
                     <div class="district-logo-wrap">
-                        <img src="{{ $district->image ? asset('storage/' . $district->image) : asset('images/alumni/profile_1.png') }}" alt="{{ $district->name }}"
+                        <img src="{{ $district->image ? (Str::startsWith($district->image, 'http') ? $district->image : asset('storage/' . $district->image)) : asset('images/alumni/profile_1.png') }}" alt="{{ $district->name }}"
                             onerror="this.src='{{ asset('images/alumni/profile_1.png') }}'">
                     </div>
                     
@@ -471,7 +471,7 @@
                         
                         <div class="id-avatar-wrap" style="position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 100px; height: 100px; border-radius: 50%; border: 4px solid #0ea5e9; overflow: hidden; z-index: 5; background: white; box-shadow: 0 8px 15px rgba(14, 165, 233, 0.25);">
                             @if($talent->user->profile_image)
-                                <img src="{{ asset('storage/' . $talent->user->profile_image) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="{{ Str::startsWith($talent->user->profile_image, 'http') ? $talent->user->profile_image : asset('storage/' . $talent->user->profile_image) }}" style="width: 100%; height: 100%; object-fit: cover;">
                             @else
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode($talent->user->name) }}&background=0ea5e9&color=fff" style="width: 100%; height: 100%; object-fit: cover;">
                             @endif

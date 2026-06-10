@@ -316,7 +316,7 @@ Standardized structure matching all pages
                    data-title="{{ $event->title }}" 
                    data-description="{{ $event->description }}" 
                    data-date="{{ $event->event_date ? $event->event_date->format('M d, Y') : 'N/A' }}">
-                <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}">
+                <img src="{{ Str::startsWith($event->image_path, 'http') ? $event->image_path : asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}">
                 <div class="event-card-overlay">
                   <div class="event-card-date">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -359,7 +359,7 @@ Standardized structure matching all pages
                   <div class="post-user-info">
                       <div class="post-avatar">
                           @if($post->user->profile_image)
-                              <img src="{{ asset('storage/' . $post->user->profile_image) }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&color=00AAFF&background=E0F7FA'">
+                              <img src="{{ Str::startsWith($post->user->profile_image, 'http') ? $post->user->profile_image : asset('storage/' . $post->user->profile_image) }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&color=00AAFF&background=E0F7FA'">
                           @else
                               👨‍🎓
                           @endif

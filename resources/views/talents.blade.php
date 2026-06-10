@@ -319,7 +319,7 @@
                     
                     <div class="id-avatar-wrap">
                         @if($talent->user->profile_image)
-                            <img src="{{ asset('storage/' . $talent->user->profile_image) }}" alt="{{ $talent->user->name }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($talent->user->name) }}&background=16a34a&color=fff'">
+                            <img src="{{ Str::startsWith($talent->user->profile_image, 'http') ? $talent->user->profile_image : asset('storage/' . $talent->user->profile_image) }}" alt="{{ $talent->user->name }}" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($talent->user->name) }}&background=16a34a&color=fff'">
                         @else
                             <img src="https://ui-avatars.com/api/?name={{ urlencode($talent->user->name) }}&background=16a34a&color=fff" alt="{{ $talent->user->name }}">
                         @endif

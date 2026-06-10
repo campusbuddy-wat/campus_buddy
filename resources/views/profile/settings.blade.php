@@ -39,7 +39,7 @@
             <span class="section-desc">PNG, JPEG under 15MB</span>
             <div class="profile-pic-group">
                 @if($user->profile_image)
-                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile" class="current-avatar">
+                    <img src="{{ $user->profile_image ? (Str::startsWith($user->profile_image, 'http') ? $user->profile_image : asset('storage/' . $user->profile_image)) : asset('images/default-avatar.png') }}" alt="Profile" class="current-avatar">
                 @else
                     <div class="avatar-placeholder">
                         <i class="fas fa-user"></i>

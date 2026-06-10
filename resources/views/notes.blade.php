@@ -191,7 +191,7 @@
                                         onclick="summarizeFromBtn(this)" title="AI Summary">
                                         ✨
                                     </button>
-                                    <a href="{{ asset('storage/' . $material->file_path) }}" target="_blank"
+                                    <a href="{{ Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path) }}" target="_blank"
                                         class="mini-view-btn pdf">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
@@ -199,7 +199,7 @@
                                             <circle cx="12" cy="12" r="3" />
                                         </svg>
                                     </a>
-                                    <a href="{{ asset('storage/' . $material->file_path) }}" download
+                                    <a href="{{ Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path) }}" download
                                         class="mini-dl-btn pdf">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
@@ -286,7 +286,7 @@
                                         onclick="summarizeFromBtn(this)" title="AI Summary">
                                         ✨
                                     </button>
-                                    <a href="{{ asset('storage/' . $material->file_path) }}" target="_blank"
+                                    <a href="{{ Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path) }}" target="_blank"
                                         class="mini-view-btn note">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
@@ -294,7 +294,7 @@
                                             <circle cx="12" cy="12" r="3" />
                                         </svg>
                                     </a>
-                                    <a href="{{ asset('storage/' . $material->file_path) }}" download
+                                    <a href="{{ Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path) }}" download
                                         class="mini-dl-btn note">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">

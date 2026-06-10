@@ -52,8 +52,8 @@ class SignupController extends Controller
 
         $profileImagePath = null;
         if ($request->hasFile('profile_image')) {
-            // Store the image in the 'profile_images' directory on the 'public' disk
-            $profileImagePath = $request->file('profile_image')->store('profile_images', 'public');
+            // Store the image in the 'profile_images' directory on Cloudinary
+            $profileImagePath = $request->file('profile_image')->storeOnCloudinary('profile_images')->getSecurePath();
         }
 
         $user = User::create([

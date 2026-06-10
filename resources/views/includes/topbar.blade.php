@@ -92,7 +92,7 @@
         <div class="user-profile-container">
             <div class="user-profile-trigger" id="userProfileIcon">
                 <div class="user-avatar-circle">
-                    <img src="{{ Auth::user()->profile_image ? asset('storage/'.Auth::user()->profile_image) : asset('images/eventImage/profile.png') }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <img src="{{ Auth::user()->profile_image ? (Str::startsWith(Auth::user()->profile_image, 'http') ? Auth::user()->profile_image : asset('storage/'.Auth::user()->profile_image)) : asset('images/eventImage/profile.png') }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
                 <div class="user-info">
                     <span class="user-name">{{ Auth::user()->name }}</span>

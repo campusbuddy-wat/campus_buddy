@@ -41,7 +41,7 @@ class PostController extends Controller
 
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('posts/attachments', 'public');
+            $attachmentPath = $request->file('attachment')->storeOnCloudinary('posts/attachments')->getSecurePath();
         }
 
         Post::create([

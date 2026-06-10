@@ -63,6 +63,9 @@ GROQ_API_KEY="${GROQ_API_KEY}"
 GROQ_MODEL="${GROQ_MODEL:-llama-3.3-70b-versatile}"
 GROQ_MAX_TOKENS="${GROQ_MAX_TOKENS:-1536}"
 GROQ_TEMPERATURE="${GROQ_TEMPERATURE:-0.7}"
+
+# ==================== CLOUDINARY ====================
+CLOUDINARY_URL="${CLOUDINARY_URL}"
 ENVEOF
 
 echo "✅ .env written. DB_HOST=${DB_HOST:-ep-broad-feather-aqxvds3v-pooler.c-8.us-east-1.aws.neon.tech}"

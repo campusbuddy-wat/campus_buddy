@@ -31,12 +31,12 @@ if ($alumni) {
     
     if (!$topImg) {
         if ($alumni->company_logo) {
-            $topImg = asset('storage/' . $alumni->company_logo);
+            $topImg = Str::startsWith($alumni->company_logo, 'http') ? $alumni->company_logo : asset('storage/' . $alumni->company_logo);
             $topImgClass = $alumni->top_img_class ?: 'img-contain-80';
             $containerClass = $alumni->container_class ?: 'card-top-logo-container';
             $topBg = $topBg ?: 'background: #ffffff;';
         } elseif ($alumni->card_bg_image) {
-            $topImg = asset('storage/' . $alumni->card_bg_image);
+            $topImg = Str::startsWith($alumni->card_bg_image, 'http') ? $alumni->card_bg_image : asset('storage/' . $alumni->card_bg_image);
             $topImgClass = $alumni->top_img_class ?: 'img-cover-full';
             $topImgStyle = $topImgStyle ?: 'width: 100%; height: 100%; object-fit: cover;';
         } else {
@@ -53,7 +53,7 @@ if ($alumni) {
     $subtitle = $subtitle ?: $alumni->subtitle;
     
     if (!$profileImg) {
-        $profileImg = $alumni->profile_image ? asset('storage/' . $alumni->profile_image) : asset('images/alumni/profile_placeholder.png');
+        $profileImg = $alumni->profile_image ? (Str::startsWith($alumni->profile_image, 'http') ? $alumni->profile_image : asset('storage/' . $alumni->profile_image)) : asset('images/alumni/profile_placeholder.png');
     }
     
     if (empty($details)) {

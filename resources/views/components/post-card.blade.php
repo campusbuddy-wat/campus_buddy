@@ -5,7 +5,7 @@
         <!-- Avatar with Flex Fallback -->
         <div class="avatar">
             @if($post->user->profile_image)
-                <img src="{{ asset('storage/' . $post->user->profile_image) }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&color=00AAFF&background=E0F7FA'">
+                <img src="{{ Str::startsWith($post->user->profile_image, 'http') ? $post->user->profile_image : asset('storage/' . $post->user->profile_image) }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&color=00AAFF&background=E0F7FA'">
             @else
                 👨‍🎓
             @endif
@@ -17,7 +17,7 @@
     </div>
 
     @if($post->attachment)
-        <a class="file" href="{{ asset('storage/' . $post->attachment) }}" target="_blank" style="margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: rgba(0,170,255,0.08); color: #00AAFF; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none;">
+        <a class="file" href="{{ Str::startsWith($post->attachment, 'http') ? $post->attachment : asset('storage/' . $post->attachment) }}" target="_blank" style="margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: rgba(0,170,255,0.08); color: #00AAFF; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none;">
             <i class="fas fa-paperclip"></i> View File
         </a>
     @endif
@@ -51,7 +51,7 @@
                 <div class="comment-item" id="comment-{{ $comment->id }}" style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px;">
                     <div style="width: 32px; height: 32px; min-width: 32px; border-radius: 50%; overflow: hidden; background: #E2E8F0; display: flex; align-items: center; justify-content: center; font-size: 16px;">
                         @if($comment->user->profile_image)
-                            <img src="{{ asset('storage/' . $comment->user->profile_image) }}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($comment->user->name) }}&color=00AAFF&background=E0F7FA'">
+                            <img src="{{ Str::startsWith($comment->user->profile_image, 'http') ? $comment->user->profile_image : asset('storage/' . $comment->user->profile_image) }}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($comment->user->name) }}&color=00AAFF&background=E0F7FA'">
                         @else
                             🎓
                         @endif
@@ -82,7 +82,7 @@
                                 <div class="comment-item" id="comment-{{ $reply->id }}" style="display: flex; gap: 8px; align-items: flex-start;">
                                     <div style="width: 24px; height: 24px; min-width: 24px; border-radius: 50%; overflow: hidden; background: #E2E8F0; display: flex; align-items: center; justify-content: center; font-size: 12px;">
                                         @if($reply->user->profile_image)
-                                            <img src="{{ asset('storage/' . $reply->user->profile_image) }}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($reply->user->name) }}&color=00AAFF&background=E0F7FA'">
+                                            <img src="{{ Str::startsWith($reply->user->profile_image, 'http') ? $reply->user->profile_image : asset('storage/' . $reply->user->profile_image) }}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($reply->user->name) }}&color=00AAFF&background=E0F7FA'">
                                         @else
                                             🎓
                                         @endif

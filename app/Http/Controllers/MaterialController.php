@@ -24,7 +24,7 @@ class MaterialController extends Controller
         $user = Auth::user();
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
-        $path = $file->store('materials', 'public');
+        $path = $file->storeOnCloudinary('materials')->getSecurePath();
 
         $department = $request->department ?: $user->department;
         $batch = $request->batch ?: $user->batch;

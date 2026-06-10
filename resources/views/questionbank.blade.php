@@ -107,7 +107,7 @@
                         <button type="button" class="action-btn view-btn">View</button>
                         @if($question->file_path && is_array($question->file_path))
                             @if(count($question->file_path) === 1)
-                                <a href="{{ asset('storage/' . $question->file_path[0]) }}" 
+                                <a href="{{ Str::startsWith($question->file_path[0], 'http') ? $question->file_path[0] : asset('storage/' . $question->file_path[0]) }}" 
                                    class="action-btn download-btn stop-prop" 
                                    download onclick="event.stopPropagation()">
                                     Download

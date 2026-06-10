@@ -29,7 +29,7 @@ class ProfileController extends Controller
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_image);
             }
 
-            $path = $request->file('profile_image')->store('profile_images', 'public');
+            $path = $request->file('profile_image')->storeOnCloudinary('profile_images')->getSecurePath();
             $data['profile_image'] = $path;
         }
 
