@@ -20,6 +20,91 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // AJAX Post Creation
+    const createPostForm = document.getElementById('create-post-form');
+    if (createPostForm) {
+        createPostForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+
+            const formData = new FormData(this);
+            const actionUrl = this.getAttribute('action') || '/community/post';
+
+            fetch(actionUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    createPostForm.reset();
+
+                    if (postModal) {
+                        postModal.style.display = 'none';
+                    }
+
+                    const postsContainer = document.querySelector('.posts');
+                    if (postsContainer) {
+                        const noPosts = postsContainer.querySelector('.no-posts');
+                        if (noPosts) {
+                            noPosts.remove();
+                        }
+
+                        postsContainer.insertAdjacentHTML('afterbegin', data.html);
+
+                        const newPost = postsContainer.firstElementChild;
+                        if (newPost) {
+                            newPost.style.opacity = '0';
+                            newPost.style.transform = 'translateY(25px) scale(0.98)';
+                            newPost.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                            setTimeout(() => {
+                                newPost.style.opacity = '1';
+                                newPost.style.transform = 'translateY(0) scale(1)';
+                                newPost.classList.add('animate-in');
+                            }, 50);
+                        }
+                    }
+
+                    const successMsgDiv = document.getElementById('post-success-message');
+                    if (successMsgDiv) {
+                        successMsgDiv.innerText = data.message || 'Post created successfully!';
+                        successMsgDiv.style.display = 'block';
+
+                        successMsgDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                        setTimeout(() => {
+                            successMsgDiv.style.display = 'none';
+                        }, 5000);
+                    }
+                } else {
+                    alert(data.message || 'Something went wrong. Please try again.');
+                }
+            })
+            .catch(err => {
+                console.error('Error submitting post:', err);
+                alert('An error occurred. Please try again.');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+    }
+
     // Talent Modal Logic
     const openTalentBtn = document.getElementById('open-talent-modal');
     const closeTalentBtn = document.getElementById('close-talent-modal');
@@ -277,25 +362,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ==================== COMMENTS ====================
-    document.querySelectorAll('.comment-trigger').forEach(trigger => {
-        trigger.addEventListener('click', function () {
-            const postId = this.dataset.id;
+    // Comment Toggle (Delegated)
+    document.addEventListener('click', function (e) {
+        const trigger = e.target.closest('.comment-trigger');
+        if (trigger) {
+            const postId = trigger.dataset.id;
             const commentSec = document.getElementById(`comments-${postId}`);
             if (commentSec) {
                 const isHidden = commentSec.style.display === 'none';
                 commentSec.style.display = isHidden ? 'block' : 'none';
             }
-        });
+        }
     });
 
-    // Comment Submit (AJAX)
-    document.querySelectorAll('.comment-form').forEach(form => {
-        form.addEventListener('submit', function (e) {
+    // Comment Submit (AJAX - Delegated)
+    document.addEventListener('submit', function (e) {
+        const form = e.target.closest('.comment-form');
+        if (form) {
             e.preventDefault();
 
-            const postId = this.dataset.id;
-            const input = this.querySelector('input[name="content"]');
-            const parentInput = this.querySelector('input[name="parent_id"]');
+            const postId = form.dataset.id;
+            const input = form.querySelector('input[name="content"]');
+            const parentInput = form.querySelector('input[name="parent_id"]');
             const content = input.value;
             const parentId = parentInput ? parentInput.value : null;
 
@@ -377,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(err => console.error('Error posting comment:', err));
-        });
+        }
     });
 
     // ==================== EDIT, DELETE, LIKE, REPLY COMMENTS ====================
@@ -492,12 +580,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ==================== LIKE POST ====================
-    document.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const postId = this.dataset.id;
-            const heartIcon = this.querySelector('i');
-            const countSpan = this.querySelector('.count');
+    // ==================== LIKE POST (Delegated) ====================
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.like-btn');
+        if (btn) {
+            const postId = btn.dataset.id;
+            const heartIcon = btn.querySelector('i');
+            const countSpan = btn.querySelector('.count');
 
             fetch(`/community/post/${postId}/like`, {
                 method: 'POST',
@@ -519,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(err => console.error('Error liking post:', err));
-        });
+        }
     });
 
     // ==================== VIEW MORE POSTS ====================

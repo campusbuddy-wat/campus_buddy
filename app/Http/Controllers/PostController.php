@@ -44,7 +44,7 @@ class PostController extends Controller
             $attachmentPath = cloudinary()->uploadApi()->upload($request->file('attachment')->getRealPath(), ['folder' => 'posts/attachments'])['secure_url'];
         }
 
-        Post::create([
+        $post = Post::create([
             'user_id' => Auth::id(),
             'content' => $request->input('content'),
             'attachment' => $attachmentPath,
@@ -53,7 +53,17 @@ class PostController extends Controller
             'action_link' => $request->action_link,
         ]);
 
-        return redirect()->back()->with('success', 'Post created successfully!');
+        if ($request->expectsJson()) {
+            $post->load(['user', 'likes', 'comments.user']);
+            $postCardHtml = view('components.post-card', compact('post'))->render();
+            return response()->json([
+                'success' => true,
+                'html' => $postCardHtml,
+                'message' => 'Post created successfully!',
+            ]);
+        }
+
+        return redirect()->back()->with('success_post', 'Post created successfully!');
     }
 
     /**

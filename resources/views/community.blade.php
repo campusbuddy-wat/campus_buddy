@@ -211,6 +211,14 @@
         </div>
     </div>
 
+    <div id="post-success-message" style="display: none; background: #c6f6d5; color: #22c55e; padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: center; font-weight: 600; transition: all 0.3s ease;"></div>
+
+    @if(session('success_post'))
+        <div style="background: #c6f6d5; color: #22c55e; padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: center; font-weight: 600;">
+            {{ session('success_post') }}
+        </div>
+    @endif
+
     <section class="posts">
         @forelse($posts as $post)
             <x-post-card :post="$post" />
@@ -592,7 +600,7 @@
             <button id="close-post-modal" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888;">&times;</button>
             <h3 style="margin-bottom: 20px; color: #2C3E50; font-weight: 800; display: flex; align-items: center; gap: 8px;"><i class="fas fa-feather" style="color: #00AAFF;"></i> Share on Community</h3>
 
-            <form action="{{ route('community.post.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="create-post-form" action="{{ route('community.post.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div style="margin-bottom: 15px;">
                     <textarea name="content" rows="4" style="width: 100%; padding: 15px; border: 1px solid #E0E6ED; border-radius: 15px; resize: none; font-size: 14px; font-family: inherit;" placeholder="What's causing the buzz today? Add notes, ask questions, or just share..." required></textarea>
