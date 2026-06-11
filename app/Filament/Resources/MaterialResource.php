@@ -77,7 +77,7 @@ class MaterialResource extends Resource
                             ->required()
                             ->label('Uploaded By'),
                         Forms\Components\FileUpload::make('file_path')
-                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->upload($file->getRealPath(), ['folder' => 'materials'])->getSecurePath())
+                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'materials'])['secure_url'])
                             ->required()
                             ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
                             ->label('Material File'),

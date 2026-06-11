@@ -82,7 +82,7 @@ class QuestionBankResource extends Resource
                             ->label('Uploaded By'),
                         Forms\Components\FileUpload::make('file_path')
                             ->label('Question Files (PDF/Images)')
-                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->upload($file->getRealPath(), ['folder' => 'question_banks'])->getSecurePath())
+                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'question_banks'])['secure_url'])
                             ->multiple()
                             ->reorderable()
                             ->appendFiles()

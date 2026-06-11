@@ -45,7 +45,7 @@ class ClubResource extends Resource
                             ->rows(3),
                         Forms\Components\FileUpload::make('image_path')
                             ->label('Club Logo')
-                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->upload($file->getRealPath(), ['folder' => 'clubs'])->getSecurePath())
+                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'clubs'])['secure_url'])
                             ->image()
                             ->required(),
                         Forms\Components\TextInput::make('website_link')
