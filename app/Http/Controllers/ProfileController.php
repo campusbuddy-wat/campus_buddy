@@ -24,12 +24,10 @@ class ProfileController extends Controller
         $data = $request->only(['department', 'batch', 'semester', 'section', 'major']);
 
         if ($request->hasFile('profile_image')) {
-            // Delete old image if it exists
-            if ($user->profile_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->profile_image)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_image);
-            }
-
-            $path = $request->file('profile_image')->storeOnCloudinary('profile_images')->getSecurePath();
+            $path = cloudinary()->uploadApi()->upload(
+                $request->file('profile_image')->getRealPath(),
+                ['folder' => 'profile_images']
+            )['secure_url'];
             $data['profile_image'] = $path;
         }
 
@@ -81,8 +79,7 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->profile_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->profile_image)) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_image);
+        if ($user->profile_image) {
             $user->update(['profile_image' => null]);
             return back()->with('success', 'Profile picture deleted.');
         }

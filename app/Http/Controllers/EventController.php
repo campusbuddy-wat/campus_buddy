@@ -17,7 +17,7 @@ class EventController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->storeOnCloudinary('events')->getSecurePath();
+            $imagePath = cloudinary()->uploadApi()->upload($request->file('image')->getRealPath(), ['folder' => 'events'])['secure_url'];
         }
 
         Event::create([

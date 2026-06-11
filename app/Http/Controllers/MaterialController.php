@@ -24,7 +24,7 @@ class MaterialController extends Controller
         $user = Auth::user();
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
-        $path = $file->storeOnCloudinary('materials')->getSecurePath();
+        $path = cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'materials', 'resource_type' => 'raw'])['secure_url'];
 
         $department = $request->department ?: $user->department;
         $batch = $request->batch ?: $user->batch;

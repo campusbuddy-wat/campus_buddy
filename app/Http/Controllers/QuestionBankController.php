@@ -56,7 +56,7 @@ class QuestionBankController extends Controller
         $filePaths = [];
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
-                $filePaths[] = $file->storeOnCloudinary('question_banks')->getSecurePath();
+                $filePaths[] = cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'question_banks', 'resource_type' => 'auto'])['secure_url'];
             }
         }
         $data['file_path'] = $filePaths;
