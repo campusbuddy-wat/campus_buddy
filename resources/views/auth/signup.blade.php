@@ -1,22 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Join the Buddy!</title>
+@section('title', 'Join the Buddy!')
+
+@push('styles')
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/topbar.css') }}">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .hidden {
             display: none;
         }
     </style>
-</head>
+@endpush
 
-<body>
+@section('content')
     @include('includes.topbar')
 
     <main class="page">
@@ -101,7 +96,7 @@
                         @error('major') <p class="error" role="alert">{{ $message }}</p> @enderror
                     </div>
                 </div>
-                
+
                 <div class="field" style="margin-top: 14px;">
                     <label for="profile_image" class="label">Profile Picture (Optional)</label>
                     <input id="profile_image" name="profile_image" type="file" class="input @error('profile_image') input--error @enderror" accept="image/*" style="padding-top: 8px;">
@@ -130,8 +125,9 @@
             </p>
         </section>
     </main>
+@endsection
 
-
+@push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const isMajorSelect = document.getElementById('is_major');
@@ -149,6 +145,4 @@
             }
         });
     </script>
-</body>
-
-</html>
+@endpush

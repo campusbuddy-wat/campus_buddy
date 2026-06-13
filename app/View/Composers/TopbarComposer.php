@@ -7,6 +7,7 @@ use App\Models\Announcement;
 use App\Models\ClassTask;
 use App\Models\Material;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
@@ -14,7 +15,7 @@ class TopbarComposer
 {
     /**
      * Bind notification data to the topbar view.
-     * This keeps business logic out of the Blade template (SRP).
+     * Queries are cached per-user for 60s to avoid hitting Neon on every page load.
      */
     public function compose(View $view): void
     {
@@ -31,52 +32,59 @@ class TopbarComposer
 
         // Only fetch notifications for authenticated users on internal pages
         if (Auth::check() && !$isLandingPage && !$isAuthPage) {
-            $recentAnnouncements = Announcement::latest()->take(2)->get()->map(function ($item) {
-                $item->notif_type = 'announcement';
-                $item->notif_icon = 'dashboard';
-                $item->notif_label = 'CR Announcement';
-                return $item;
-            });
+            $userId = Auth::id();
+            $cacheKey = "topbar_notifications_{$userId}";
 
-            $recentTasks = ClassTask::latest()->take(2)->get()->map(function ($item) {
-                $item->notif_type = 'task';
-                $item->notif_icon = 'submission';
-                $item->notif_label = 'New ClassTask';
-                return $item;
-            });
+            // Cache all 4 DB queries together for 60 seconds per user
+            $notifications = Cache::remember($cacheKey, 60, function () use ($userId) {
+                $recentAnnouncements = Announcement::latest()->take(2)->get()->map(function ($item) {
+                    $item->notif_type = 'announcement';
+                    $item->notif_icon = 'dashboard';
+                    $item->notif_label = 'CR Announcement';
+                    return $item;
+                });
 
-            $recentMaterials = Material::latest()->take(1)->get()->map(function ($item) {
-                $item->notif_type = 'material';
-                $item->notif_icon = 'alert';
-                $item->notif_label = 'New Material';
-                return $item;
-            });
+                $recentTasks = ClassTask::latest()->take(2)->get()->map(function ($item) {
+                    $item->notif_type = 'task';
+                    $item->notif_icon = 'submission';
+                    $item->notif_label = 'New ClassTask';
+                    return $item;
+                });
 
-            // Alumni Approval Notification
-            $alumniNotif = collect();
-            $approvedAlumni = AlumniRegistration::where('email', Auth::user()->email)
-                ->where('status', 'approved')
-                ->orderBy('updated_at', 'desc')
-                ->first();
+                $recentMaterials = Material::latest()->take(1)->get()->map(function ($item) {
+                    $item->notif_type = 'material';
+                    $item->notif_icon = 'alert';
+                    $item->notif_label = 'New Material';
+                    return $item;
+                });
 
-            if ($approvedAlumni) {
-                if (!$approvedAlumni->is_notified || $approvedAlumni->updated_at->diffInHours(now()) < 24) {
-                    $alumniNotif = collect([(object)[
-                        'notif_type' => 'alumni',
-                        'notif_icon' => 'alert',
-                        'notif_label' => 'System',
-                        'title' => 'Alumni registration approved!',
-                        'created_at' => $approvedAlumni->updated_at,
-                        'id' => $approvedAlumni->id
-                    ]]);
+                // Alumni Approval Notification
+                $alumniNotif = collect();
+                $userEmail = Auth::user()->email;
+                $approvedAlumni = AlumniRegistration::where('email', $userEmail)
+                    ->where('status', 'approved')
+                    ->orderBy('updated_at', 'desc')
+                    ->first();
+
+                if ($approvedAlumni) {
+                    if (!$approvedAlumni->is_notified || $approvedAlumni->updated_at->diffInHours(now()) < 24) {
+                        $alumniNotif = collect([(object)[
+                            'notif_type' => 'alumni',
+                            'notif_icon' => 'alert',
+                            'notif_label' => 'System',
+                            'title' => 'Alumni registration approved!',
+                            'created_at' => $approvedAlumni->updated_at,
+                            'id' => $approvedAlumni->id
+                        ]]);
+                    }
                 }
-            }
 
-            $notifications = $recentAnnouncements->concat($recentTasks)
-                ->concat($recentMaterials)
-                ->concat($alumniNotif)
-                ->sortByDesc('created_at')
-                ->values();
+                return $recentAnnouncements->concat($recentTasks)
+                    ->concat($recentMaterials)
+                    ->concat($alumniNotif)
+                    ->sortByDesc('created_at')
+                    ->values();
+            });
 
             $unreadCount = $notifications->count();
         }

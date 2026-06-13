@@ -1,18 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome Buddy!</title>
-    <!-- Use Laravel asset helper for the CSS path -->
+@section('title', 'Welcome Buddy!')
+
+@push('styles')
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/topbar.css') }}">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
+@endpush
 
-<body>
+@section('content')
     @include('includes.topbar')
 
     <main class="page">
@@ -70,12 +64,9 @@
             </form>
 
             <p class="signup">
-                Don’t have an account?
+                Don't have an account?
                 <a class="link link--strong" href="{{ route('signup') }}">Sign Up</a>
             </p>
         </section>
     </main>
-
-</body>
-
-</html>
+@endsection

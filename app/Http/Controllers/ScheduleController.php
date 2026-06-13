@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Schedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ScheduleController extends Controller
 {
     public function index()
     {
         $user = auth()->user();
+        $uid = $user->id;
 
-        if ($user && $user->role === 'admin') {
-            // Admin can view all schedules
-            $schedules = Schedule::orderBy('day')->get();
-        } else {
-            // Filter schedules by user's group and major
-            $schedules = Schedule::where('department', $user->department)
+        $schedules = Cache::remember("routine_{$uid}", 60, function () use ($user) {
+            if ($user && $user->role === 'admin') {
+                return Schedule::orderBy('day')->get();
+            }
+            return Schedule::where('department', $user->department)
                 ->where('batch', $user->batch)
                 ->where('section', $user->section)
                 ->where(function ($query) use ($user) {
@@ -27,7 +28,7 @@ class ScheduleController extends Controller
                     }
                 })
                 ->get();
-        }
+        });
 
         return view('routine', compact('schedules'));
     }
