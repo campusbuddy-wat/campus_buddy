@@ -63,12 +63,17 @@ class DistrictAssociationResource extends Resource
                     ->required()
                     ->searchable()
                     ->label('District'),
+                Forms\Components\Placeholder::make('current_logo')
+                    ->label('Current Logo')
+                    ->content(fn ($record) => $record && $record->image ? new \Illuminate\Support\HtmlString('<img src="'.(\Illuminate\Support\Str::startsWith($record->image, 'http') ? $record->image : asset('storage/'.$record->image)).'" style="max-height: 150px; border-radius: 8px;">') : 'No logo uploaded')
+                    ->visible(fn ($record) => $record && $record->image !== null),
                 Forms\Components\FileUpload::make('image')
                     ->id('logo_image_field')
                     ->image()
                     ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'community/district_associations/logos'])['secure_url'])
                     ->pasteable(false)
-                    ->label('Logo Image'),
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->label('Upload New Logo Image (Leave empty to keep current)'),
                 Forms\Components\TextInput::make('link')
                     ->maxLength(255)
                     ->default(null),
@@ -76,12 +81,17 @@ class DistrictAssociationResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(0),
+                Forms\Components\Placeholder::make('current_hero')
+                    ->label('Current Hero Image')
+                    ->content(fn ($record) => $record && $record->cover_image ? new \Illuminate\Support\HtmlString('<img src="'.(\Illuminate\Support\Str::startsWith($record->cover_image, 'http') ? $record->cover_image : asset('storage/'.$record->cover_image)).'" style="max-height: 150px; border-radius: 8px;">') : 'No hero image uploaded')
+                    ->visible(fn ($record) => $record && $record->cover_image !== null),
                 Forms\Components\FileUpload::make('cover_image')
                     ->id('hero_image_field')
                     ->image()
                     ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'community/district_associations/covers'])['secure_url'])
                     ->pasteable(false)
-                    ->label('Hero Image (Blue Portion)'),
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->label('Upload New Hero Image (Leave empty to keep current)'),
             ]);
     }
 
