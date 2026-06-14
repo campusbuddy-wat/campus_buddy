@@ -11,8 +11,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // Change role from ENUM to string to support 'admin' role
-        DB::statement("ALTER TABLE users MODIFY role VARCHAR(20) NOT NULL DEFAULT 'student'");
+        $driver = Schema::getConnection()->getDriverName();
+
+        if ($driver === 'pgsql') {
+            DB::statement("ALTER TABLE users ALTER COLUMN role TYPE VARCHAR(20) USING role::varchar");
+            DB::statement("ALTER TABLE users ALTER COLUMN role SET DEFAULT 'student'");
+            DB::statement("ALTER TABLE users ALTER COLUMN role SET NOT NULL");
+        } else {
+            DB::statement("ALTER TABLE users MODIFY role VARCHAR(20) NOT NULL DEFAULT 'student'");
+        }
 
         // Add is_approved column for CR approval workflow
         Schema::table('users', function (Blueprint $table) {
@@ -29,6 +36,9 @@ return new class extends Migration {
             $table->dropColumn('is_approved');
         });
 
-        DB::statement("ALTER TABLE users MODIFY role ENUM('student', 'cr') NOT NULL DEFAULT 'student'");
+        $driver = Schema::getConnection()->getDriverName();
+        if ($driver !== 'pgsql') {
+            DB::statement("ALTER TABLE users MODIFY role ENUM('student', 'cr') NOT NULL DEFAULT 'student'");
+        }
     }
 };

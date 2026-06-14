@@ -67,6 +67,7 @@ class DistrictAssociationResource extends Resource
                     ->id('logo_image_field')
                     ->image()
                     ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'community/district_associations/logos'])['secure_url'])
+                    ->pasteable(false)
                     ->label('Logo Image'),
                 Forms\Components\TextInput::make('link')
                     ->maxLength(255)
@@ -79,6 +80,7 @@ class DistrictAssociationResource extends Resource
                     ->id('hero_image_field')
                     ->image()
                     ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'community/district_associations/covers'])['secure_url'])
+                    ->pasteable(false)
                     ->label('Hero Image (Blue Portion)'),
             ]);
     }
