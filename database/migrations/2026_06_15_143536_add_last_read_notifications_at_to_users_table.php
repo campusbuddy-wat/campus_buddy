@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('last_read_notifications_at')->nullable()->after('remember_token');
-        });
+        if (!Schema::hasColumn('users', 'last_read_notifications_at')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->timestamp('last_read_notifications_at')->nullable()->after('remember_token');
+            });
+        }
     }
 
     /**

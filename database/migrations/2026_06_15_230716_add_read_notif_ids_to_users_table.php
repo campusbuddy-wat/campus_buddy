@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->json('read_notif_ids')->nullable()->after('last_read_notifications_at');
-        });
+        if (!Schema::hasColumn('users', 'read_notif_ids')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->json('read_notif_ids')->nullable()->after('last_read_notifications_at');
+            });
+        }
     }
 
     /**

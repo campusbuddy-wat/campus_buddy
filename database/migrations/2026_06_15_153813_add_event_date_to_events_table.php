@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->date('event_date')->nullable()->after('image_path');
-        });
+        if (!Schema::hasColumn('events', 'event_date')) {
+            Schema::table('events', function (Blueprint $table) {
+                $table->date('event_date')->nullable()->after('image_path');
+            });
+        }
     }
 
     /**
