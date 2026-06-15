@@ -76,7 +76,7 @@
                         elseif($notif->notif_type === 'material') $nUrl = route('notes').'#material-'.$notif->id;
                         elseif($notif->notif_type === 'alumni') $nUrl = route('alumni');
                     @endphp
-                    <a href="{{ $nUrl }}" class="notif-item unread">
+                    <a href="{{ $nUrl }}" class="notif-item {{ $notif->is_unread ? 'unread' : '' }}">
                         <div class="notif-info"><p class="notif-text">{{ $notif->notif_label }}: {{ $notif->title ?? 'New Update' }}</p><span class="notif-time">{{ $notif->created_at->diffForHumans() }}</span></div>
                     </a>
                 @empty
@@ -161,6 +161,33 @@
         if (userDropdown) userDropdown.classList.remove('show');
         if (notifDropdown) notifDropdown.classList.remove('show');
       });
+
+      // Mark All Read
+      const markAllBtn = document.getElementById('markAllRead');
+      if (markAllBtn) {
+          markAllBtn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              
+              // Make AJAX request
+              fetch('/api/notifications/mark-read', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                  }
+              })
+              .then(res => res.json())
+              .then(data => {
+                  if(data.success) {
+                      // Update UI
+                      document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
+                      const badge = document.getElementById('notifBadge');
+                      if(badge) badge.style.display = 'none';
+                  }
+              })
+              .catch(err => console.error(err));
+          });
+      }
     });
   </script>
 </header>

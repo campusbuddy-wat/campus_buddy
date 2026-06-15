@@ -32,6 +32,7 @@ class User extends Authenticatable implements FilamentUser
         'major',
         'profile_image',
         'password',
+        'last_read_notifications_at',
     ];
 
     /**
@@ -55,6 +56,7 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_approved' => 'boolean',
+            'last_read_notifications_at' => 'datetime',
         ];
     }
 
