@@ -185,12 +185,12 @@ Route::get('/fix-db-sequence', function () {
 
 // ==================== NOTIFICATIONS ====================
 Route::post('/api/notifications/mark-read', function () {
-    $user = Auth::user();
+    $user = \Illuminate\Support\Facades\Auth::user();
     $user->last_read_notifications_at = now();
     $user->save();
 
     // Clear the cache for the topbar notifications so the badge immediately resets on reload
-    Cache::forget("topbar_notifications_{$user->id}");
+    \Illuminate\Support\Facades\Cache::forget("topbar_notifications_{$user->id}");
 
     return response()->json(['success' => true]);
 })->middleware('auth')->name('api.notifications.mark-read');
