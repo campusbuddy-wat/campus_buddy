@@ -179,7 +179,8 @@
                   headers: {
                       'Content-Type': 'application/json',
                       'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                  }
+                  },
+                  credentials: 'same-origin'
               }).catch(err => console.error(err));
           });
       }

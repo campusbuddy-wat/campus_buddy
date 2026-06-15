@@ -22,9 +22,9 @@ class AnnouncementController extends Controller
             'user_id' => auth()->id(),
             'title' => $request->title,
             'content' => $request->input('content'),
-            'department' => auth()->user()->department,
-            'batch' => auth()->user()->batch,
-            'section' => auth()->user()->section,
+            'department' => auth()->user()->department ?? 'All',
+            'batch' => auth()->user()->batch ?? 'All',
+            'section' => auth()->user()->section ?? 'All',
             'major' => auth()->user()->major,
         ]);
 
