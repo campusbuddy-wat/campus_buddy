@@ -737,8 +737,17 @@ body .main {
 }
 
 .notif-item.unread {
-    background: rgba(0, 170, 255, 0.03);
-    border-left: 3px solid #00aaff;
+    background: #4a90e2;
+    border-left: 3px solid #2b6cb0;
+}
+.notif-item.unread .notif-text {
+    color: #ffffff;
+}
+.notif-item.unread .notif-text strong {
+    color: #ffffff;
+}
+.notif-item.unread .notif-time {
+    color: #e2e8f0;
 }
 
 .notif-icon {

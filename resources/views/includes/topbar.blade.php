@@ -168,6 +168,11 @@
           markAllBtn.addEventListener('click', function(e) {
               e.stopPropagation();
               
+              // Optimistically Update UI
+              document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
+              const badge = document.getElementById('notifBadge');
+              if(badge) badge.style.display = 'none';
+
               // Make AJAX request
               fetch('/api/notifications/mark-read', {
                   method: 'POST',
@@ -175,19 +180,16 @@
                       'Content-Type': 'application/json',
                       'X-CSRF-TOKEN': '{{ csrf_token() }}'
                   }
-              })
-              .then(res => res.json())
-              .then(data => {
-                  if(data.success) {
-                      // Update UI
-                      document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
-                      const badge = document.getElementById('notifBadge');
-                      if(badge) badge.style.display = 'none';
-                  }
-              })
-              .catch(err => console.error(err));
+              }).catch(err => console.error(err));
           });
       }
+
+      // Individual notification click
+      document.querySelectorAll('.notif-item').forEach(item => {
+          item.addEventListener('click', function() {
+              this.classList.remove('unread');
+          });
+      });
     });
   </script>
 </header>
