@@ -204,11 +204,24 @@ Route::get('/run-migrations', function () {
 Route::post('/api/notifications/mark-read', function () {
     $user = \Illuminate\Support\Facades\Auth::user();
     $user->last_read_notifications_at = \Carbon\Carbon::now();
+    $user->read_notif_ids = []; // Reset individual reads since all are now read
     $user->save();
-
-    // Clear the cache for the topbar notifications so the badge immediately resets on reload
-    \Illuminate\Support\Facades\Cache::forget("topbar_notifications_{$user->id}");
 
     return response()->json(['success' => true]);
 })->middleware('auth')->name('api.notifications.mark-read');
+
+Route::post('/api/notifications/mark-single-read', function (\Illuminate\Http\Request $request) {
+    $user = \Illuminate\Support\Facades\Auth::user();
+    $notifId = $request->input('notif_id'); // e.g. "announcement_5"
+    
+    if ($notifId) {
+        $readIds = $user->read_notif_ids ?? [];
+        if (!in_array($notifId, $readIds)) {
+            $readIds[] = $notifId;
+            $user->read_notif_ids = $readIds;
+            $user->save();
+        }
+    }
+    return response()->json(['success' => true]);
+})->middleware('auth')->name('api.notifications.mark-single-read');
 

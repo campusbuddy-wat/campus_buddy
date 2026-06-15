@@ -85,8 +85,19 @@ class TopbarComposer
                 ->values();
             // Apply read status dynamically
             $userLastRead = Auth::user()->last_read_notifications_at;
-            $notifications->transform(function ($notif) use ($userLastRead) {
-                $notif->is_unread = $userLastRead === null || $notif->created_at->gt($userLastRead);
+            $readNotifIds = Auth::user()->read_notif_ids ?? [];
+            
+            $notifications->transform(function ($notif) use ($userLastRead, $readNotifIds) {
+                $uniqueId = $notif->notif_type . '_' . $notif->id;
+                
+                // It is unread if: 
+                // 1. It is newer than last_read_notifications_at (or it's null)
+                // 2. AND it hasn't been individually clicked (not in readNotifIds)
+                $isNewer = $userLastRead === null || $notif->created_at->gt($userLastRead);
+                $isIndividuallyRead = in_array($uniqueId, $readNotifIds);
+                
+                $notif->is_unread = $isNewer && !$isIndividuallyRead;
+                $notif->unique_id = $uniqueId;
                 return $notif;
             });
 

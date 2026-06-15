@@ -76,7 +76,7 @@
                         elseif($notif->notif_type === 'material') $nUrl = route('notes').'#material-'.$notif->id;
                         elseif($notif->notif_type === 'alumni') $nUrl = route('alumni');
                     @endphp
-                    <a href="{{ $nUrl }}" class="notif-item {{ $notif->is_unread ? 'unread' : '' }}">
+                    <a href="{{ $nUrl }}" class="notif-item {{ $notif->is_unread ? 'unread' : '' }}" data-id="{{ $notif->unique_id }}">
                         <div class="notif-info"><p class="notif-text">{{ $notif->notif_label }}: {{ $notif->title ?? 'New Update' }}</p><span class="notif-time">{{ $notif->created_at->diffForHumans() }}</span></div>
                     </a>
                 @empty
@@ -187,8 +187,38 @@
 
       // Individual notification click
       document.querySelectorAll('.notif-item').forEach(item => {
-          item.addEventListener('click', function() {
-              this.classList.remove('unread');
+          item.addEventListener('click', function(e) {
+              if (this.classList.contains('unread')) {
+                  e.preventDefault(); // Stop immediate navigation to process the click
+                  const url = this.getAttribute('href');
+                  const notifId = this.getAttribute('data-id'); // e.g., "announcement_5"
+
+                  // Optimistic UI updates
+                  this.classList.remove('unread');
+                  const badge = document.getElementById('notifBadge');
+                  if (badge) {
+                      let currentCount = parseInt(badge.textContent);
+                      if (!isNaN(currentCount) && currentCount > 0) {
+                          currentCount--;
+                          badge.textContent = currentCount;
+                          if (currentCount === 0) badge.style.display = 'none';
+                      }
+                  }
+
+                  // Make AJAX request to mark single as read
+                  fetch('/api/notifications/mark-single-read', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                      },
+                      body: JSON.stringify({ notif_id: notifId }),
+                      credentials: 'same-origin'
+                  }).catch(err => console.error(err))
+                  .finally(() => {
+                      if (url) window.location.href = url;
+                  });
+              }
           });
       });
     });
