@@ -168,3 +168,18 @@ Route::post('/api/routine/auto-sync-web', [\App\Http\Controllers\RoutineImportCo
     ->middleware(['auth', 'throttle:10,1'])
     ->name('api.routine.auto-sync-web');
 
+// ==================== TEMPORARY FIX ROUTE ====================
+// Visit this route once in production to fix the PostgreSQL sequence issue
+Route::get('/fix-db-sequence', function () {
+    try {
+        \Illuminate\Support\Facades\DB::statement("SELECT setval(pg_get_serial_sequence('ai_chats', 'id'), (SELECT COALESCE(MAX(id), 1) FROM ai_chats));");
+        return 'Database sequence for ai_chats fixed successfully! You can now use the AI features.';
+    } catch (\Exception $e) {
+        // If they are on MySQL locally, this might throw an error, so we catch it
+        if (str_contains($e->getMessage(), 'pg_get_serial_sequence')) {
+            return 'This fix is only for PostgreSQL. Your local DB might be MySQL, which is fine.';
+        }
+        return 'Error: ' . $e->getMessage();
+    }
+});
+
