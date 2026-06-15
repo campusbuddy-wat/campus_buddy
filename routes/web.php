@@ -169,27 +169,34 @@ Route::post('/api/routine/auto-sync-web', [\App\Http\Controllers\RoutineImportCo
     ->name('api.routine.auto-sync-web');
 
 // ==================== TEMPORARY FIX ROUTE ====================
-// Visit this route once in production to fix the PostgreSQL sequence issue
 Route::get('/fix-db-sequence', function () {
-    try {
-        $tables = ['ai_chats', 'announcements', 'events', 'users', 'class_tasks', 'materials', 'community_posts'];
-        $results = [];
-        foreach ($tables as $table) {
+    $tables = ['ai_chats', 'announcements', 'events', 'users', 'class_tasks', 'materials', 'community_posts', 'posts'];
+    $results = [];
+    foreach ($tables as $table) {
+        try {
             \Illuminate\Support\Facades\DB::statement("SELECT setval(pg_get_serial_sequence('{$table}', 'id'), (SELECT COALESCE(MAX(id), 1) FROM {$table}));");
             $results[] = "Fixed {$table}";
+        } catch (\Exception $e) {
+            $results[] = "Skipped {$table} (Not found or no sequence)";
         }
-        return 'Sequences fixed for: ' . implode(', ', $results);
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
     }
+    return 'Sequences processed: <br>' . implode('<br>', $results);
 });
 
 Route::get('/run-migrations', function () {
     try {
+        // Manually add the last_read_notifications_at column bypassing artisan migrate if it's stuck
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'last_read_notifications_at')) {
+            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                $table->timestamp('last_read_notifications_at')->nullable();
+            });
+            return 'Successfully added missing last_read_notifications_at column manually!';
+        }
+        
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         return 'Migrations ran successfully! Output: <br>' . nl2br(\Illuminate\Support\Facades\Artisan::output());
     } catch (\Exception $e) {
-        return 'Error running migrations: ' . $e->getMessage();
+        return 'Error: ' . $e->getMessage();
     }
 });
 
