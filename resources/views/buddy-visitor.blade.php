@@ -11,8 +11,9 @@
         }
         
         body, html {
-            overflow: hidden;
+            overflow: hidden !important;
             background: #ffffff !important;
+            height: 100vh !important;
         }
 
         /* Hide unwanted topbar elements for visitors */
@@ -23,6 +24,11 @@
 
         .main {
             padding-bottom: 0 !important;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
         }
 
         /* Normal Mode Layout */
@@ -31,12 +37,13 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding-top: 100px !important;
+            padding-top: 70px !important;
             transition: padding-top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .buddy-chat-wrapper {
-            height: calc(100vh - 100px) !important;
+            flex: 1;
+            height: 100% !important;
             margin: 0;
             padding: 0;
             overflow: hidden;
