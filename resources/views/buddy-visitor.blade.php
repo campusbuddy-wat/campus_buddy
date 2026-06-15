@@ -14,6 +14,9 @@
             overflow: hidden !important;
             background: #ffffff !important;
             height: 100vh !important;
+            width: 100vw !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         /* Hide unwanted topbar elements for visitors */
@@ -22,34 +25,46 @@
             display: none !important;
         }
 
-        .main {
-            padding-bottom: 0 !important;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            overflow: hidden;
+        body .layout {
+            position: absolute !important;
+            top: 100px !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: auto !important;
+            min-height: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            background: #f8fafc !important;
         }
 
-        /* Normal Mode Layout */
-        .layout {
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            padding-top: 70px !important;
-            transition: padding-top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        @media (max-width: 1280px) { body .layout { top: 90px !important; } }
+        @media (max-width: 960px) { body .layout { top: 65px !important; } }
+        @media (max-width: 768px) { body .layout { top: 60px !important; } }
 
-        .buddy-chat-wrapper {
-            flex: 1;
+        body .main {
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
             height: 100% !important;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            display: flex;
-            transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #f8fafc;
+            width: 100% !important;
+            overflow: hidden !important;
+            padding-bottom: 0 !important;
+            margin: 0 !important;
+        }
+
+        body .buddy-chat-wrapper {
+            flex: 1 !important;
+            height: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            display: flex !important;
+            background: #f8fafc !important;
         }
 
         /* Sidebar toggle states */
