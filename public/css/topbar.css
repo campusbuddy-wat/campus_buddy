@@ -737,17 +737,17 @@ body .main {
 }
 
 .notif-item.unread {
-    background: #4a90e2;
-    border-left: 3px solid #2b6cb0;
+    background: #f0f7ff;
+    border-left: 3px solid #00aaff;
 }
 .notif-item.unread .notif-text {
-    color: #ffffff;
+    color: #4a5568;
 }
 .notif-item.unread .notif-text strong {
-    color: #ffffff;
+    color: #2d3748;
 }
 .notif-item.unread .notif-time {
-    color: #e2e8f0;
+    color: #718096;
 }
 
 .notif-icon {

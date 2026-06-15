@@ -191,7 +191,7 @@
                                         onclick="summarizeFromBtn(this)" title="AI Summary">
                                         ✨
                                     </button>
-                                    <a href="{{ Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path) }}" target="_blank"
+                                    <a href="https://docs.google.com/viewer?url={{ urlencode(Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path)) }}" target="_blank"
                                         class="mini-view-btn pdf">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
@@ -286,7 +286,7 @@
                                         onclick="summarizeFromBtn(this)" title="AI Summary">
                                         ✨
                                     </button>
-                                    <a href="{{ Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path) }}" target="_blank"
+                                    <a href="https://docs.google.com/viewer?url={{ urlencode(Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path)) }}" target="_blank"
                                         class="mini-view-btn note">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
