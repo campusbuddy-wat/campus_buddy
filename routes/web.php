@@ -172,14 +172,24 @@ Route::post('/api/routine/auto-sync-web', [\App\Http\Controllers\RoutineImportCo
 // Visit this route once in production to fix the PostgreSQL sequence issue
 Route::get('/fix-db-sequence', function () {
     try {
-        \Illuminate\Support\Facades\DB::statement("SELECT setval(pg_get_serial_sequence('ai_chats', 'id'), (SELECT COALESCE(MAX(id), 1) FROM ai_chats));");
-        return 'Database sequence for ai_chats fixed successfully! You can now use the AI features.';
-    } catch (\Exception $e) {
-        // If they are on MySQL locally, this might throw an error, so we catch it
-        if (str_contains($e->getMessage(), 'pg_get_serial_sequence')) {
-            return 'This fix is only for PostgreSQL. Your local DB might be MySQL, which is fine.';
+        $tables = ['ai_chats', 'announcements', 'events', 'users', 'class_tasks', 'materials', 'community_posts'];
+        $results = [];
+        foreach ($tables as $table) {
+            \Illuminate\Support\Facades\DB::statement("SELECT setval(pg_get_serial_sequence('{$table}', 'id'), (SELECT COALESCE(MAX(id), 1) FROM {$table}));");
+            $results[] = "Fixed {$table}";
         }
+        return 'Sequences fixed for: ' . implode(', ', $results);
+    } catch (\Exception $e) {
         return 'Error: ' . $e->getMessage();
+    }
+});
+
+Route::get('/run-migrations', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return 'Migrations ran successfully! Output: <br>' . nl2br(\Illuminate\Support\Facades\Artisan::output());
+    } catch (\Exception $e) {
+        return 'Error running migrations: ' . $e->getMessage();
     }
 });
 
