@@ -76,12 +76,27 @@ class BuddyAIController extends Controller
 
             if (!$chat) {
                 $title = substr($message, 0, 25) . (strlen($message) > 25 ? '...' : '');
-                $chat = \App\Models\AiChat::create([
-                    'user_id' => $user->id,
-                    'type' => 'buddy',
-                    'title' => $title,
-                    'history' => $history,
-                ]);
+                try {
+                    $chat = \App\Models\AiChat::create([
+                        'user_id' => $user->id,
+                        'type' => 'buddy',
+                        'title' => $title,
+                        'history' => $history,
+                    ]);
+                } catch (\Illuminate\Database\QueryException $e) {
+                    // 23505 is PostgreSQL unique violation. Auto-fix sequence and retry.
+                    if ($e->getCode() == '23505') {
+                        \Illuminate\Support\Facades\DB::statement("SELECT setval(pg_get_serial_sequence('ai_chats', 'id'), (SELECT COALESCE(MAX(id), 1) FROM ai_chats));");
+                        $chat = \App\Models\AiChat::create([
+                            'user_id' => $user->id,
+                            'type' => 'buddy',
+                            'title' => $title,
+                            'history' => $history,
+                        ]);
+                    } else {
+                        throw $e;
+                    }
+                }
             } else {
                 $chat->update(['history' => $history]);
             }
@@ -148,12 +163,27 @@ class BuddyAIController extends Controller
 
             if (!$chat) {
                 $title = substr($message, 0, 25) . (strlen($message) > 25 ? '...' : '');
-                $chat = \App\Models\AiChat::create([
-                    'session_id' => $sessionId,
-                    'type' => 'visitor',
-                    'title' => $title,
-                    'history' => $history,
-                ]);
+                try {
+                    $chat = \App\Models\AiChat::create([
+                        'session_id' => $sessionId,
+                        'type' => 'visitor',
+                        'title' => $title,
+                        'history' => $history,
+                    ]);
+                } catch (\Illuminate\Database\QueryException $e) {
+                    // 23505 is PostgreSQL unique violation. Auto-fix sequence and retry.
+                    if ($e->getCode() == '23505') {
+                        \Illuminate\Support\Facades\DB::statement("SELECT setval(pg_get_serial_sequence('ai_chats', 'id'), (SELECT COALESCE(MAX(id), 1) FROM ai_chats));");
+                        $chat = \App\Models\AiChat::create([
+                            'session_id' => $sessionId,
+                            'type' => 'visitor',
+                            'title' => $title,
+                            'history' => $history,
+                        ]);
+                    } else {
+                        throw $e;
+                    }
+                }
             } else {
                 $chat->update(['history' => $history]);
             }
