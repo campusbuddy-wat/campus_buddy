@@ -116,4 +116,8 @@ php artisan icons:cache 2>/dev/null || true
 echo "🌐 Starting Nginx & PHP-FPM..."
 echo "----------------------------------------------------"
 
+# Configure Nginx to listen on the port provided by Render
+sed -i "s/listen 80 default_server;/listen ${PORT:-80} default_server;/g" /etc/nginx/sites-available/default
+sed -i "s/listen \[::\]:80 default_server;/listen [::]:${PORT:-80} default_server;/g" /etc/nginx/sites-available/default
+
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
