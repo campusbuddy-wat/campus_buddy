@@ -84,6 +84,7 @@ class TopbarComposer
                     ->concat($alumniNotif)
                     ->sortByDesc('created_at')
                     ->values();
+            });
             // Apply read status dynamically
             $userLastRead = Auth::user()->last_read_notifications_at;
             $notifications->transform(function ($notif) use ($userLastRead) {
