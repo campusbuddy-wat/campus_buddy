@@ -18,6 +18,17 @@ class DashboardController extends Controller
         $uid = $user->id;
         $ttl = 60; // seconds
 
+        // Auto-cleanup (runs once per hour, ensures DB stays clean even without Cron setup)
+        Cache::remember('db_auto_cleanup', 3600, function () {
+            \Illuminate\Support\Facades\DB::table('class_tasks')
+                ->where('deadline', '<', \Carbon\Carbon::now()->subDays(15))
+                ->delete();
+            \Illuminate\Support\Facades\DB::table('announcements')
+                ->where('created_at', '<', \Carbon\Carbon::now()->subDays(7))
+                ->delete();
+            return true;
+        });
+
         // 1. Announcements — cached per user group
         $announcements = Cache::remember("dash_announcements_{$uid}", $ttl, function () use ($user) {
             return Announcement::where('department', $user->department)
