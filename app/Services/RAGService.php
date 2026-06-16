@@ -382,7 +382,7 @@ PROMPT;
             
         $eventsStr = $upcomingEvents->isEmpty()
             ? "No upcoming university events."
-            : $upcomingEvents->map(fn($e) => "- {$e->title} on " . Carbon\Carbon::parse($e->event_date)->format('M d, Y'))->implode("\n");
+            : $upcomingEvents->map(fn($e) => "- {$e->title} on " . Carbon::parse($e->event_date)->format('M d, Y'))->implode("\n");
 
         return <<<PROMPT
 You are a smart academic schedule advisor for {$user->name} at Daffodil International University.
