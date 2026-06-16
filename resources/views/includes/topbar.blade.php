@@ -187,7 +187,7 @@
 
       // Individual notification click
       document.querySelectorAll('.notif-item').forEach(item => {
-          item.addEventListener('click', function(e) {
+          item.addEventListener('click', async function(e) {
               if (this.classList.contains('unread')) {
                   e.preventDefault(); // Stop immediate navigation to process the click
                   const url = this.getAttribute('href');
@@ -206,18 +206,21 @@
                   }
 
                   // Make AJAX request to mark single as read
-                  fetch('/api/notifications/mark-single-read', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                      },
-                      body: JSON.stringify({ notif_id: notifId }),
-                      credentials: 'same-origin'
-                  }).catch(err => console.error(err))
-                  .finally(() => {
-                      if (url) window.location.href = url;
-                  });
+                  try {
+                      await fetch('/api/notifications/mark-single-read', {
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                          },
+                          body: JSON.stringify({ notif_id: notifId }),
+                          credentials: 'same-origin'
+                      });
+                  } catch (err) {
+                      console.error(err);
+                  }
+
+                  if (url) window.location.href = url;
               }
           });
       });

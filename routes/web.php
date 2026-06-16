@@ -190,7 +190,13 @@ Route::get('/run-migrations', function () {
             \Illuminate\Support\Facades\Schema::table('users', function ($table) {
                 $table->timestamp('last_read_notifications_at')->nullable();
             });
-            return 'Successfully added missing last_read_notifications_at column manually!';
+        }
+        
+        // Manually add the read_notif_ids column just to be absolutely safe
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'read_notif_ids')) {
+            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                $table->json('read_notif_ids')->nullable();
+            });
         }
         
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
