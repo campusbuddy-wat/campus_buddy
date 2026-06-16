@@ -194,7 +194,11 @@ Standardized structure matching all pages
             </div>
 
             {{-- 2. PRIORITY TASK CARD (Center) --}}
-            @php $urgentTask = $assignments->first(); @endphp
+            @php 
+                $urgentTask = $assignments->filter(function($task) {
+                    return \Carbon\Carbon::parse($task->deadline)->isFuture() && $task->progress_status !== 'Completed';
+                })->first(); 
+            @endphp
             <a href="{{ route('classtask') }}{{ $urgentTask ? '#task-'.$urgentTask->id : '' }}"
               class="stat-card active task-card animate-scale delay-3 {{ $urgentTask ? $urgentTask->type . '-card' : '' }}"
               style="padding: 0; align-items: stretch; text-align: left;">

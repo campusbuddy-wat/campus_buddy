@@ -41,6 +41,12 @@ class AdminPanelProvider extends PanelProvider
                      ->icon('heroicon-o-users')
                      ->collapsed(),
             ])
+            ->userMenuItems([
+                \Filament\Navigation\MenuItem::make()
+                    ->label('Return to Dashboard')
+                    ->url(fn (): string => route('dashboard'))
+                    ->icon('heroicon-o-arrow-left-on-rectangle'),
+            ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
