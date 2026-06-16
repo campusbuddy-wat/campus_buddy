@@ -94,7 +94,7 @@
                     <div class="section-badge">{{ $tasks->where('type', $type)->count() }} Items</div>
                 </div>
                 <div class="task-cards-grid">
-                    @foreach($tasks->where('type', $type) as $task)
+                    @foreach($tasks->where('type', $type)->values() as $index => $task)
                         @php
                             $deadline = \Carbon\Carbon::parse($task->deadline);
                             $isPast = $deadline->isPast();
@@ -104,7 +104,7 @@
                             if ($isCompleted) $statusClass = 'status-completed';
                             elseif ($isPast) $statusClass = 'status-overdue';
                         @endphp
-                        <div id="task-{{ $task->id }}" class="task-card {{ $statusClass }} active" data-type="{{ $type }}">
+                        <div id="task-{{ $task->id }}" class="task-card {{ $statusClass }} active {{ $index >= 3 ? 'hidden-task-'.$type : '' }}" data-type="{{ $type }}" style="{{ $index >= 3 ? 'display: none;' : '' }}">
                             <div class="card-status-bar {{ $type }}-bar"></div>
                             <div class="card-header">
                                 <h3 class="card-title">{{ $task->title }}</h3>
@@ -164,6 +164,13 @@
                         </div>
                     @endforeach
                 </div>
+                @if($tasks->where('type', $type)->count() > 3)
+                    <div class="view-more-container" style="text-align: center; margin-top: 30px;">
+                        <button class="view-more-btn" onclick="toggleViewMore('{{ $type }}', this)" style="background: rgba(100,116,139,0.1); color: #475569; border: 1px solid rgba(100,116,139,0.2); padding: 10px 24px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+                            View More <i class="fas fa-chevron-down" style="margin-left: 6px;"></i>
+                        </button>
+                    </div>
+                @endif
             </section>
             @endif
         @endforeach
@@ -223,6 +230,22 @@
                 });
             });
         });
+
+        // View More
+        function toggleViewMore(type, btn) {
+            const hiddenTasks = document.querySelectorAll('.hidden-task-' + type);
+            if (hiddenTasks.length === 0) return;
+            
+            const isHidden = hiddenTasks[0].style.display === 'none';
+            
+            hiddenTasks.forEach(task => {
+                task.style.display = isHidden ? 'flex' : 'none';
+            });
+            
+            btn.innerHTML = isHidden 
+                ? 'View Less <i class="fas fa-chevron-up" style="margin-left: 6px;"></i>' 
+                : 'View More <i class="fas fa-chevron-down" style="margin-left: 6px;"></i>';
+        }
 
         // ==================== AI TASK TIPS ====================
         async function generateAITips(btn, task) {
