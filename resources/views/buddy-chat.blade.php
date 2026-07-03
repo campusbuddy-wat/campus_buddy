@@ -461,7 +461,7 @@
                 currentChatId = data.chat_id;
             }
             const aiResponse = data.response || "I couldn't generate a response. Please try again.";
-            addMessage(aiResponse, 'bot');
+            addMessage(aiResponse, 'bot', data.sources || []);
             // Add to conversation history
             conversationHistory.push({ role: 'user', content: text });
             conversationHistory.push({ role: 'assistant', content: aiResponse });
@@ -554,10 +554,28 @@
 
       /**
        * Simple Markdown-to-HTML renderer for AI responses.
-       * Handles: bold, italic, bullet points, numbered lists, code blocks, line breaks.
+       * Handles: bold, italic, bullet points, numbered lists, code blocks, line breaks, bare URLs.
        */
       function renderMarkdown(text) {
-        let html = text;
+        if (!text) return "";
+
+        // Extract bare URLs first to linkify them with clean hostnames
+        const urlPlaceholders = [];
+        const urlRegex = /https?:\/\/[^\s<>"')]+/g;
+        const textWithPlaceholders = text.replace(urlRegex, (url) => {
+          try {
+            const hostname = new URL(url).hostname.replace(/^www\./, "");
+            const idx = urlPlaceholders.length;
+            urlPlaceholders.push(
+              `<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-link">${hostname}&nbsp;↗</a>`
+            );
+            return `\x00LINK${idx}\x00`;
+          } catch {
+            return url;
+          }
+        });
+
+        let html = textWithPlaceholders;
         // Code blocks (```...```)
         html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
         // Inline code (`...`)
@@ -575,15 +593,26 @@
         html = html.replace(/^[-*]\s+(.+)$/gm, '<div style="padding-left:16px;margin:2px 0;">• $1</div>');
         // Line breaks
         html = html.replace(/\n/g, '<br>');
+
+        // Restore links
+        html = html.replace(/\x00LINK(\d+)\x00/g, (_, idx) => urlPlaceholders[+idx]);
+
         return html;
       }
 
-      function addMessage(text, sender) {
+      function addMessage(text, sender, sources = []) {
         const row = document.createElement('div');
         row.className = `message-row ${sender}-row`;
 
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const renderedText = sender === 'bot' ? renderMarkdown(text) : text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        // Clean Verify line from bot message
+        let cleanText = text;
+        if (sender === 'bot') {
+            cleanText = text.replace(/\n*🔗\s*Verify at:\s*https?:\/\/\S+/gi, "").trim();
+        }
+
+        const renderedText = sender === 'bot' ? renderMarkdown(cleanText) : text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         row.innerHTML = `
                 <div class="msg-avatar ${sender}-avatar">${sender === 'bot' ? `<img src="{{ asset('assets/landing/character.png') }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : '👤'}</div>
@@ -593,6 +622,37 @@
                     <span class="msg-time">${time}</span>
                 </div>
             `;
+
+        // Append verify section inside bubble
+        if (sender === 'bot' && sources && sources.length > 0) {
+            const seen = new Set();
+            const uniqueSources = sources.filter(s => {
+                if (!s.url || seen.has(s.url)) return false;
+                seen.add(s.url);
+                return true;
+            });
+
+            if (uniqueSources.length > 0) {
+                const bubble = row.querySelector('.msg-bubble');
+                const srcDiv = document.createElement('div');
+                srcDiv.className = 'sources-section';
+                srcDiv.innerHTML = `
+                    <div class="sources-label">
+                        <span class="sources-icon">🔗</span>
+                        <span>Verify from official source${uniqueSources.length > 1 ? "s" : ""}</span>
+                    </div>
+                    <div class="sources-links">
+                        ${uniqueSources.map(s => `
+                            <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="verify-btn">
+                                <span class="verify-btn-icon">↗</span>
+                                <span>${s.title}</span>
+                            </a>
+                        `).join("")}
+                    </div>
+                `;
+                bubble.appendChild(srcDiv);
+            }
+        }
 
         chatMessages.appendChild(row);
         chatMessages.scrollTop = chatMessages.scrollHeight;

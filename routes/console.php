@@ -22,3 +22,6 @@ Schedule::call(function () {
         ->where('created_at', '<', Carbon::now()->subDays(7))
         ->delete();
 })->daily();
+
+// Pre-warm Visitor AI cache every 6 hours so real DIU web data is always ready
+Schedule::command('visitor-ai:warm-cache')->everySixHours();

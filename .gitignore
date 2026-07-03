@@ -22,3 +22,29 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Python Virtual Environments
+venv/
+ai_service/venv/
+ai_service/.env
+ai_service/logs/
+__pycache__/
+*.pyc
+
+# Data caches
+ai_service/data/processed/hash_cache.json
+
+# Scratch/Test Files
+test_*.php
+test_*.py
+*output.txt
+test_da.php
+test_eloquent.php
+test_mysql.php
+test_pooler.php
+test_prompt_size.php
+test_retriever.py
+test_sync.php
+test_tuition_fees.php
+test_tuition_fees_full.php
+test_visitor_ai.php

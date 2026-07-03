@@ -199,6 +199,313 @@
             body.show-left-sidebar .chat-sidebar { display: flex !important; }
             body.show-right-sidebar .options-sidebar { display: flex !important; }
         }
+
+        /* ── Calculator Modal & Overlay Styles ─────────────────── */
+        .calc-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 3000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .calc-overlay.open {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .calc-modal {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+            margin: auto;
+            animation: calcFadeIn 0.3s ease-out;
+        }
+
+        @keyframes calcFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .calc-header {
+            background: linear-gradient(135deg, #16a34a 0%, #0d7632 100%);
+            color: #ffffff;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .calc-header h2 { margin: 0; font-size: 1.15rem; font-weight: 700; color: #fff; }
+        .calc-header p  { margin: 4px 0 0; font-size: 0.78rem; opacity: 0.9; color: #f0fdf4; }
+        
+        .calc-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .calc-close:hover { background: rgba(255,255,255,0.35); }
+
+        .calc-body {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 0;
+        }
+        @media (max-width: 768px) {
+            .calc-body { grid-template-columns: 1fr; }
+            .calc-result-panel { border-left: none; border-top: 1px solid #e2e8f0; }
+        }
+
+        .calc-form-panel { padding: 24px; max-height: 80vh; overflow-y: auto; }
+        
+        .calc-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+        .calc-section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .calc-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+        .calc-field label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .calc-field label .req { color: #ef4444; }
+        
+        .calc-select, .calc-input {
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            color: #1e293b;
+            background: #ffffff;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .calc-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+        .calc-select:focus, .calc-input:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.15);
+        }
+
+        .waiver-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 480px) {
+            .waiver-grid { grid-template-columns: 1fr; }
+        }
+        
+        .waiver-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #ffffff;
+        }
+        .waiver-card:hover { border-color: #16a34a; background: #f0fdf4; }
+        .waiver-card.selected { border-color: #16a34a; background: #f0fdf4; }
+        
+        .waiver-card .wc-check {
+            width: 18px; height: 18px; min-width: 18px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            margin-top: 2px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .waiver-card.selected .wc-check {
+            background: #16a34a; border-color: #16a34a;
+        }
+        .waiver-card.selected .wc-check::after {
+            content: '✓'; color: #ffffff; font-size: 11px; font-weight: 700;
+        }
+        .waiver-card .wc-icon { font-size: 1.1rem; min-width: 22px; }
+        .waiver-card .wc-title { font-size: 0.8rem; font-weight: 700; color: #1a202c; line-height: 1.3; }
+        .waiver-card .wc-sub { font-size: 0.72rem; color: #718096; margin-top: 2px; }
+
+        .prog-pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+        .prog-pill {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .prog-pill .pv { font-size: 0.9rem; font-weight: 700; color: #1e293b; }
+        .prog-pill .pk { font-size: 0.7rem; color: #94a3b8; margin-top: 2px; }
+
+        .gpa-hint { font-size: 0.7rem; color: #d97706; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+
+        .calc-result-panel {
+            background: linear-gradient(160deg, #f8fafc 0%, #f1f5f9 100%);
+            border-left: 1px solid #e2e8f0;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .calc-result-panel > * {
+            flex-shrink: 0 !important;
+        }
+
+        .result-empty {
+            text-align: center;
+            padding: 60px 16px;
+            color: #94a3b8;
+        }
+        .result-empty .re-icon { font-size: 3rem; margin-bottom: 12px; }
+        .result-empty p { font-size: 0.85rem; line-height: 1.5; color: #718096; }
+
+        .result-congrats {
+            background: linear-gradient(135deg, #16a34a 0%, #0d7632 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: #ffffff;
+            text-align: center;
+        }
+        .result-congrats .rc-label { font-size: 0.8rem; opacity: 0.9; margin-bottom: 8px; font-weight: 600; }
+        .result-congrats .rc-percent { font-size: 3.2rem; font-weight: 800; line-height: 1; margin: 8px 0; }
+        .result-congrats .rc-name { font-size: 0.82rem; opacity: 0.9; }
+
+        .result-card {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .result-card-head {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 10px 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+        .result-card-body { padding: 14px; }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 0.83rem;
+            color: #475569;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .result-row:last-child { border-bottom: none; }
+        .result-row .rk { color: #64748b; }
+        .result-row .rv { font-weight: 600; color: #1e293b; }
+
+        .pay-box {
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        .pay-box.admission { background: #eff6ff; border: 1.5px solid #bfdbfe; }
+        .pay-box.final     { background: #f0fdf4; border: 1.5px solid #bbf7d0; }
+        .pay-box .pb-label { font-size: 0.72rem; color: #64748b; margin-bottom: 4px; }
+        .pay-box .pb-amount { font-size: 1.5rem; font-weight: 800; }
+        .pay-box.admission .pb-amount { color: #1a56db; }
+        .pay-box.final     .pb-amount { color: #16a34a; }
+        .pay-box .pb-sub   { font-size: 0.68rem; color: #94a3b8; }
+
+        .result-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            color: #dc2626;
+            font-size: 0.83rem;
+        }
+
+        .calc-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #16a34a 0%, #0d7632 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
+            margin-top: 10px;
+        }
+        .calc-btn:hover:not(:disabled) { opacity: 0.95; transform: translateY(-1px); }
+        .calc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            color: #475569;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .reset-btn:hover { background: #e2e8f0; }
+
+        .loading-spin {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 @endpush
 
@@ -220,6 +527,12 @@
         </div>
         
         <div class="sidebar-label">DIU Frequents Questions</div>
+
+        <!-- Waiver Calculator Card Link -->
+        <div class="faq-item" id="openWaiverCalcCard" style="border-color: #16a34a; background: #f0fdf4;">
+            <span>💰 DIU Fee & Waiver Calculator</span>
+            <p>Calculate your tuition fees & waiver eligibility instantly.</p>
+        </div>
         
         <div class="faq-item" onclick="askFAQ('What are the scholarship requirements at DIU?')">
             <span>💰 DIU Scholarship & Waivers</span>
@@ -384,10 +697,155 @@
         </div>
     </aside>
 </div>
+
+<!-- ════════════════════════════════════════════════
+     WAIVER CALCULATOR MODAL (Laravel Integrated)
+════════════════════════════════════════════════ -->
+<div class="calc-overlay" id="calcOverlay">
+    <div class="calc-modal">
+
+        <!-- Modal header -->
+        <div class="calc-header">
+            <div>
+                <h2>💰 Tuition Fee & Waiver Calculator</h2>
+                <p>Official DIU fee calculator — real-time data from daffodilvarsity.edu.bd</p>
+            </div>
+            <button class="calc-close" id="closeCalcBtn">✕</button>
+        </div>
+
+        <div class="calc-body">
+            <!-- LEFT: Form -->
+            <div class="calc-form-panel">
+                
+                <!-- Step 1: Basic Info -->
+                <div class="calc-section">
+                    <p class="calc-section-title">📋 Basic Information</p>
+                    <div class="calc-row">
+                        <div class="calc-field">
+                            <label>Tuition Category <span class="req">*</span></label>
+                            <select class="calc-select" id="caTuitionCategory">
+                                <option value="1">Local Tuition Fee (BDT)</option>
+                                <option value="2">International Tuition Fee (USD)</option>
+                            </select>
+                        </div>
+                        <div class="calc-field">
+                            <label>Program Type <span class="req">*</span></label>
+                            <select class="calc-select" id="caProgramType">
+                                <option value="1">Undergraduate</option>
+                                <option value="2">Postgraduate</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Waiver Category -->
+                <div class="calc-section">
+                    <p class="calc-section-title">🏷️ Select Waiver Category</p>
+                    <div class="waiver-grid" id="waiverGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Step 3: Program -->
+                <div class="calc-section">
+                    <p class="calc-section-title">🎓 Program & Details</p>
+                    <div class="calc-field">
+                        <label>Program <span class="req">*</span></label>
+                        <select class="calc-select" id="caProgram">
+                            <option value="">— Select a program —</option>
+                        </select>
+                    </div>
+                    <div class="prog-pills" id="progPills" style="display:none;">
+                        <div class="prog-pill">
+                            <div class="pv" id="pillDuration">—</div>
+                            <div class="pk">Duration</div>
+                        </div>
+                        <div class="prog-pill">
+                            <div class="pv" id="pillCredits">—</div>
+                            <div class="pk">Credits</div>
+                        </div>
+                        <div class="prog-pill">
+                            <div class="pv" id="pillFees">—</div>
+                            <div class="pk">Total Fees</div>
+                        </div>
+                    </div>
+
+                    <!-- Academic Results (only for result-based waiver) -->
+                    <div id="academicSection" style="margin-top:14px; display:none;">
+                        <p style="font-size:0.8rem;font-weight:700;color:#475569;margin:0 0 10px;">Academic Results</p>
+                        <div class="calc-row">
+                            <div class="calc-field">
+                                <label>SSC Result / Equivalent <span class="req">*</span></label>
+                                <input class="calc-input" id="caSSC" type="text" inputmode="decimal" placeholder="e.g. 4.94" autocomplete="off" />
+                                <div class="gpa-hint" id="sscHint" style="display:none; margin-top:5px;">
+                                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.75rem; color:#475569; user-select:none;">
+                                        <input type="checkbox" id="caSSCGolden" /> ⭐️ Golden GPA
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="calc-field">
+                                <label>HSC Result / Equivalent <span class="req">*</span></label>
+                                <input class="calc-input" id="caHSC" type="text" inputmode="decimal" placeholder="e.g. 5.00" autocomplete="off" />
+                                <div class="gpa-hint" id="hscHint" style="display:none; margin-top:5px;">
+                                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.75rem; color:#475569; user-select:none;">
+                                        <input type="checkbox" id="caHSCGolden" /> ⭐️ Golden GPA
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Info -->
+                    <div style="margin-top:14px;">
+                        <p style="font-size:0.8rem;font-weight:700;color:#475569;margin:0 0 10px;">Additional Information</p>
+                        <div class="calc-row">
+                            <div class="calc-field">
+                                <label>Education Board / University <span class="req">*</span></label>
+                                <select class="calc-select" id="caBoard">
+                                    <option value="1">General Education Board</option>
+                                    <option value="2">Madrasah Board</option>
+                                    <option value="3">Technical Education Board</option>
+                                    <option value="4">University (Diploma)</option>
+                                    <option value="5">Foreign Board / University</option>
+                                </select>
+                            </div>
+                            <div class="calc-field">
+                                <label>Gender <span class="req">*</span></label>
+                                <select class="calc-select" id="caGender">
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                    <option value="3">Others</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button class="calc-btn" id="calcSubmitBtn" disabled>
+                    Calculate My Fees →
+                </button>
+
+            </div>
+
+            <!-- RIGHT: Result -->
+            <div class="calc-result-panel" id="calcResultPanel">
+                <div class="result-empty" id="resultEmpty">
+                    <div class="re-icon">🧮</div>
+                    <p>Fill in the form and click <strong>Calculate My Fees</strong> to see your personalized fee breakdown and waiver eligibility.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
+    // ── Config url from Laravel services config ──────────────────────────────────
+    window.VISITOR_AI_URL = "{{ rtrim(config('services.visitor_ai.url'), '/') }}";
+
     document.addEventListener('DOMContentLoaded', function() {
         const chatInput = document.getElementById('chatInput');
         const sendBtn = document.getElementById('sendBtn');
@@ -458,7 +916,7 @@
                         currentChatId = data.chat_id;
                     }
                     const aiResponse = data.response || "I couldn't generate a response. Please try again.";
-                    addMessage(aiResponse, 'bot');
+                    addMessage(aiResponse, 'bot', data.sources || []);
                     conversationHistory.push({ role: 'user', content: rawText });
                     conversationHistory.push({ role: 'assistant', content: aiResponse });
                 }
@@ -548,8 +1006,29 @@
         /**
          * Simple Markdown-to-HTML renderer for AI responses.
          */
+        /**
+         * Simple Markdown-to-HTML renderer for AI responses.
+         */
         function renderMarkdown(text) {
-            let html = text;
+            if (!text) return "";
+
+            // Extract bare URLs first to linkify them with clean hostnames
+            const urlPlaceholders = [];
+            const urlRegex = /https?:\/\/[^\s<>"')]+/g;
+            const textWithPlaceholders = text.replace(urlRegex, (url) => {
+                try {
+                    const hostname = new URL(url).hostname.replace(/^www\./, "");
+                    const idx = urlPlaceholders.length;
+                    urlPlaceholders.push(
+                        `<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-link">${hostname}&nbsp;↗</a>`
+                    );
+                    return `\x00LINK${idx}\x00`;
+                } catch {
+                    return url;
+                }
+            });
+
+            let html = textWithPlaceholders;
             html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
             html = html.replace(/`([^`]+)`/g, '<code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.9em;">$1</code>');
             html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -559,14 +1038,25 @@
             html = html.replace(/^\d+\.\s+(.+)$/gm, '<div style="padding-left:16px;margin:2px 0;">• $1</div>');
             html = html.replace(/^[-*]\s+(.+)$/gm, '<div style="padding-left:16px;margin:2px 0;">• $1</div>');
             html = html.replace(/\n/g, '<br>');
+
+            // Restore links
+            html = html.replace(/\x00LINK(\d+)\x00/g, (_, idx) => urlPlaceholders[+idx]);
+
             return html;
         }
 
-        function addMessage(text, sender) {
+        function addMessage(text, sender, sources = []) {
             const row = document.createElement('div');
             row.className = `message-row ${sender}-row`;
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const renderedText = sender === 'bot' ? renderMarkdown(text) : text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Clean Verify line from bot message
+            let cleanText = text;
+            if (sender === 'bot') {
+                cleanText = text.replace(/\n*🔗\s*Verify at:\s*https?:\/\/\S+/gi, "").trim();
+            }
+            
+            const renderedText = sender === 'bot' ? renderMarkdown(cleanText) : text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
             
             row.innerHTML = `
                 <div class="msg-avatar ${sender}-avatar">${sender === 'bot' ? `<img src="{{ asset('assets/landing/character.png') }}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : '👤'}</div>
@@ -576,6 +1066,38 @@
                     <span class="msg-time">${time}</span>
                 </div>
             `;
+
+            // Append verify section inside bubble
+            if (sender === 'bot' && sources && sources.length > 0) {
+                const seen = new Set();
+                const uniqueSources = sources.filter(s => {
+                    if (!s.url || seen.has(s.url)) return false;
+                    seen.add(s.url);
+                    return true;
+                });
+
+                if (uniqueSources.length > 0) {
+                    const bubble = row.querySelector('.msg-bubble');
+                    const srcDiv = document.createElement('div');
+                    srcDiv.className = 'sources-section';
+                    srcDiv.innerHTML = `
+                        <div class="sources-label">
+                            <span class="sources-icon">🔗</span>
+                            <span>Verify from official source${uniqueSources.length > 1 ? "s" : ""}</span>
+                        </div>
+                        <div class="sources-links">
+                            ${uniqueSources.map(s => `
+                                <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="verify-btn">
+                                    <span class="verify-btn-icon">↗</span>
+                                    <span>${s.title}</span>
+                                </a>
+                            `).join("")}
+                        </div>
+                    `;
+                    bubble.appendChild(srcDiv);
+                }
+            }
+
             chatMessages.appendChild(row);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -613,6 +1135,338 @@
                 document.body.classList.toggle('right-sidebar-hidden');
             }
         });
+
+        // ════════════════════════════════════════════════
+        // WAIVER CALCULATOR JS INTEGRATION
+        // ════════════════════════════════════════════════
+        const WAIVER_CATEGORIES = [
+            { id: 1,  icon: '📊', title: 'Result Based Waiver (SSC & HSC)',     sub: 'Based on SSC & HSC GPA',           hasResult: true  },
+            { id: 2,  icon: '👥', title: 'Sibling / Spouse',                     sub: 'For siblings or spouse of student', hasResult: false },
+            { id: 7,  icon: '♿', title: 'Physically Challenged',                sub: 'For differently-abled students',   hasResult: false },
+            { id: 3,  icon: '👔', title: 'Employee',                             sub: 'For DIU employees & dependents',   hasResult: false },
+            { id: 10, icon: '🌿', title: 'Tribal / Ethnic Group',               sub: 'For tribal/ethnic students',       hasResult: false },
+            { id: 11, icon: '💍', title: 'Spouse / 1st Blood Relative of Alumni',sub: 'For relatives of DIU alumni',      hasResult: false },
+            { id: 6,  icon: '🎓', title: 'Diploma Holders',                     sub: 'For diploma certificate holders',  hasResult: false },
+            { id: 13, icon: '🏫', title: 'Daffodil Polytechnic / BSDI / DTI',   sub: 'Affiliated institution students',  hasResult: false },
+            { id: 14, icon: '🏢', title: 'Daffodil Int\'l / Eminence College',   sub: 'Affiliated college students',      hasResult: false },
+            { id: 15, icon: '📈', title: 'DIPTI Business Management College',    sub: 'BM College students',              hasResult: false },
+        ];
+
+        let selectedWaiverCat = null;
+        let selectedProgram   = null;
+        let programsCache     = {};
+        let isCalculating     = false;
+
+        const overlay      = document.getElementById('calcOverlay');
+        const openCardBtn  = document.getElementById('openWaiverCalcCard');
+        const closeBtn     = document.getElementById('closeCalcBtn');
+        const waiverGrid   = document.getElementById('waiverGrid');
+        const progSelect   = document.getElementById('caProgram');
+        const tuitionCat   = document.getElementById('caTuitionCategory');
+        const programType  = document.getElementById('caProgramType');
+        const submitBtn    = document.getElementById('calcSubmitBtn');
+        const resultPanel  = document.getElementById('calcResultPanel');
+
+        if (openCardBtn) {
+            openCardBtn.addEventListener('click', () => {
+                overlay.classList.add('open');
+                if (!waiverGrid.children.length) initCalc();
+            });
+        }
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => overlay.classList.remove('open'));
+        }
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) overlay.classList.remove('open');
+        });
+
+        function initCalc() {
+            renderWaiverCards();
+            loadPrograms();
+        }
+
+        function renderWaiverCards() {
+            waiverGrid.innerHTML = '';
+            WAIVER_CATEGORIES.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = 'waiver-card';
+                card.dataset.id = cat.id;
+                card.dataset.hasResult = cat.hasResult;
+                card.innerHTML = `
+                    <div class="wc-check"></div>
+                    <div class="wc-icon">${cat.icon}</div>
+                    <div class="wc-text">
+                        <div class="wc-title">${cat.title}</div>
+                        <div class="wc-sub">${cat.sub}</div>
+                    </div>`;
+                card.addEventListener('click', () => selectWaiverCat(cat, card));
+                waiverGrid.appendChild(card);
+            });
+        }
+
+        function selectWaiverCat(cat, card) {
+            document.querySelectorAll('.waiver-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedWaiverCat = cat;
+            
+            const acSec = document.getElementById('academicSection');
+            if (acSec) {
+                acSec.style.display = cat.hasResult ? 'block' : 'none';
+            }
+            validateForm();
+        }
+
+        async function loadPrograms() {
+            const tCat  = tuitionCat.value;
+            const pType = programType.value;
+            const key   = `${tCat}_${pType}`;
+            progSelect.disabled = true;
+            progSelect.innerHTML = '<option>Loading programs…</option>';
+
+            if (programsCache[key]) {
+                populateProgramDropdown(programsCache[key]);
+                return;
+            }
+            try {
+                const resp = await fetch(`${window.VISITOR_AI_URL}/api/calculator/programs?tuition_category_id=${tCat}&program_type_id=${pType}`);
+                const data = await resp.json();
+                programsCache[key] = data.programs || [];
+                populateProgramDropdown(programsCache[key]);
+            } catch(e) {
+                console.error("Programs load failed:", e);
+                progSelect.innerHTML = '<option>Error loading programs</option>';
+            }
+        }
+
+        function populateProgramDropdown(programs) {
+            progSelect.disabled = false;
+            progSelect.innerHTML = '<option value="">— Select a program —</option>';
+            programs.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.text  = p.name;
+                opt.dataset.duration = p.duration;
+                opt.dataset.credit   = p.credit;
+                opt.dataset.fees     = p.total_fees;
+                progSelect.appendChild(opt);
+            });
+            selectedProgram = null;
+            document.getElementById('progPills').style.display = 'none';
+            validateForm();
+        }
+
+        progSelect.addEventListener('change', () => {
+            const opt = progSelect.selectedOptions[0];
+            const pills = document.getElementById('progPills');
+            if (opt && opt.value) {
+                selectedProgram = {
+                    id: opt.value,
+                    name: opt.text,
+                    duration: opt.dataset.duration,
+                    credit: opt.dataset.credit,
+                    fees: opt.dataset.fees
+                };
+                document.getElementById('pillDuration').textContent = opt.dataset.duration || '—';
+                document.getElementById('pillCredits').textContent  = opt.dataset.credit   || '—';
+                document.getElementById('pillFees').textContent     = (parseInt(tuitionCat.value) === 2 ? '$ ' : '৳ ') + (opt.dataset.fees || '—');
+                pills.style.display = 'grid';
+            } else {
+                selectedProgram = null;
+                pills.style.display = 'none';
+            }
+            validateForm();
+        });
+
+        ['caSSC', 'caHSC'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', function() {
+                    // Allow only digits and a single decimal point
+                    this.value = this.value.replace(/[^0-9.]/g, '');
+                    const parts = this.value.split('.');
+                    if (parts.length > 2) {
+                        this.value = parts[0] + '.' + parts.slice(1).join('');
+                    }
+                    // Prevent entering a GPA value higher than 5.0
+                    const parsed = parseFloat(this.value);
+                    if (parsed > 5.0) {
+                        this.value = '5.00';
+                    }
+
+                    const isFive = parseFloat(this.value) === 5.0;
+                    const hint = document.getElementById(id === 'caSSC' ? 'sscHint' : 'hscHint');
+                    if (hint) {
+                        hint.style.display = isFive ? 'block' : 'none';
+                        if (!isFive) {
+                            const checkbox = document.getElementById(id === 'caSSC' ? 'caSSCGolden' : 'caHSCGolden');
+                            if (checkbox) checkbox.checked = false;
+                        }
+                    }
+                    validateForm();
+                });
+            }
+        });
+
+        tuitionCat.addEventListener('change', () => { selectedProgram = null; loadPrograms(); resetResult(); });
+        programType.addEventListener('change', () => { selectedProgram = null; loadPrograms(); resetResult(); });
+
+        function validateForm() {
+            const wOk   = !!selectedWaiverCat;
+            const pOk   = !!selectedProgram;
+            const sscVal = document.getElementById('caSSC').value;
+            const hscVal = document.getElementById('caHSC').value;
+            const resOk = !selectedWaiverCat?.hasResult || (sscVal && hscVal);
+            submitBtn.disabled = !(wOk && pOk && resOk);
+        }
+
+        submitBtn.addEventListener('click', async () => {
+            if (isCalculating) return;
+            isCalculating = true;
+            submitBtn.innerHTML = '<div class="loading-spin"></div> Calculating…';
+            submitBtn.disabled = true;
+
+            const ssc = document.getElementById('caSSC').value;
+            const hsc = document.getElementById('caHSC').value;
+
+            const payload = {
+                tuition_category_id: parseInt(tuitionCat.value),
+                program_type_id:     parseInt(programType.value),
+                waiver_category_id:  selectedWaiverCat.id,
+                tuition_id:          parseInt(selectedProgram.id),
+                board_id:            parseInt(document.getElementById('caBoard').value),
+                gender_id:           parseInt(document.getElementById('caGender').value),
+            };
+            if (selectedWaiverCat.hasResult) {
+                payload.ssc_result = ssc;
+                payload.hsc_result = hsc;
+                
+                const sscGolden = document.getElementById('caSSCGolden');
+                const hscGolden = document.getElementById('caHSCGolden');
+                if (sscGolden && sscGolden.checked) payload.ssc_golden = 1;
+                if (hscGolden && hscGolden.checked) payload.hsc_golden = 1;
+            }
+
+            try {
+                const resp = await fetch(`${window.VISITOR_AI_URL}/api/calculator/calculate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await resp.json();
+                renderResult(data);
+            } catch(e) {
+                renderError('Network error. Please try again.');
+            } finally {
+                isCalculating = false;
+                submitBtn.innerHTML = 'Calculate My Fees →';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function fmt(n) {
+            if (!n && n !== 0) return '—';
+            return '৳ ' + Number(n).toLocaleString('en-BD', { maximumFractionDigits: 2 });
+        }
+        function fmtUSD(n) {
+            if (!n && n !== 0) return '—';
+            return '$ ' + Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+        }
+
+        function renderResult(data) {
+            if (data.success && data.data) {
+                const d   = data.data;
+                const f   = d.fees;
+                const isInt = parseInt(tuitionCat.value) === 2;
+                const fmtFn = isInt ? fmtUSD : fmt;
+
+                resultPanel.innerHTML = `
+                    <div class="result-congrats">
+                        <div class="rc-label">🎉 Congratulations!</div>
+                        <div style="font-size:0.82rem;opacity:0.9;margin-bottom:8px;">
+                            You are eligible for <strong>${d.waiver_rate}%</strong> tuition fee waiver under<br>
+                            <em>${d.category_name}</em> quota.
+                        </div>
+                        <div class="rc-percent">${d.waiver_rate}%</div>
+                        <div class="rc-name">${d.category_name}</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-card-head">🎓 Program</div>
+                        <div class="result-card-body">
+                            <div class="result-row"><span class="rk">${d.program.name}</span></div>
+                            <div class="result-row">
+                                <span class="rk">Duration</span>
+                                <span class="rv">${d.program.duration}</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="rk">Total Credit Hour</span>
+                                <span class="rv">${d.program.credit_hours}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-card-head">💳 Fee Summary</div>
+                        <div class="result-card-body">
+                            <div class="result-row">
+                                <span class="rk">Total Cost</span>
+                                <span class="rv">${fmtFn(f.total_cost)}</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="rk">Tuition Fees</span>
+                                <span class="rv">${fmtFn(f.tuition_fees)}</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="rk">Other Fees</span>
+                                <span class="rv">${fmtFn(f.other_fees)}</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="rk">Waiver Amount (${d.waiver_rate}%)</span>
+                                <span class="rv" style="color:#16a34a;">- ${fmtFn(f.waiver_amount)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pay-box admission">
+                        <div class="pb-label">Payable During Admission</div>
+                        <div class="pb-amount">${fmtFn(f.admission_fees)}</div>
+                        <div class="pb-sub">(From First Semester Fee)</div>
+                    </div>
+
+                    <div class="pay-box final">
+                        <div class="pb-label">After Waiver — Total Cost Will Be</div>
+                        <div class="pb-amount">${fmtFn(f.final_cost_after_waiver)}</div>
+                    </div>
+
+                    ${d.additional_message ? `<div style="font-size:0.78rem;color:#64748b;text-align:center;padding:4px 8px;">${d.additional_message}</div>` : ''}
+
+                    <button class="reset-btn" id="resetCalcBtn">🔄 Reset</button>
+                `;
+                document.getElementById('resetCalcBtn').addEventListener('click', resetResult);
+            } else {
+                const msg = data.data?.message || data.message || 'No waiver available for these inputs.';
+                renderError(msg.replace(/<[^>]+>/g, ''));
+            }
+        }
+
+        function renderError(msg) {
+            resultPanel.innerHTML = `
+                <div class="result-error">
+                    <div style="font-size:2rem;margin-bottom:8px;">😕</div>
+                    <strong>No Result</strong><br>${msg}
+                </div>
+                <button class="reset-btn" id="resetCalcBtn" style="margin-top:8px;">🔄 Try Again</button>
+            `;
+            document.getElementById('resetCalcBtn').addEventListener('click', resetResult);
+        }
+
+        function resetResult() {
+            resultPanel.innerHTML = `
+                <div class="result-empty" id="resultEmpty">
+                    <div class="re-icon">🧮</div>
+                    <p>Fill in the form and click <strong>Calculate My Fees</strong> to see your personalized fee breakdown and waiver eligibility.</p>
+                </div>`;
+        }
     });
 </script>
 @endpush

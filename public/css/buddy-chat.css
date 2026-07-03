@@ -1435,3 +1435,64 @@ body.focus-mode .restore-btn {
     color: #fff;
     transform: scale(1.1);
 }
+
+/* ── Sources / Verify section ────────────────────────────────────────── */
+.sources-section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(26, 35, 126, 0.1);
+}
+.sources-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.sources-icon { font-size: 13px; }
+.sources-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.verify-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-dark);
+  background: var(--accent-glow);
+  border: 1px solid rgba(0, 170, 255, 0.25);
+  border-radius: 20px;
+  padding: 5px 12px;
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.verify-btn:hover {
+  background: rgba(0, 170, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 170, 255, 0.15);
+}
+.verify-btn-icon {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ── Inline URL links inside answer text ─────────────────────────────── */
+.inline-link {
+  color: var(--accent-dark);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color .2s, opacity .2s;
+}
+.inline-link:hover {
+  opacity: 0.8;
+  text-decoration-style: solid;
+}

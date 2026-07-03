@@ -53,4 +53,18 @@ return [
         'temperature' => (float) env('GROQ_TEMPERATURE', 0.7),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Visitor AI — Python RAG Microservice
+    |--------------------------------------------------------------------------
+    |
+    | URL of the FastAPI Python service that handles vector search (Qdrant)
+    | + LLM generation (Groq) for the public Visitor AI chatbot.
+    | Locally this runs on port 9000. On Render it uses its own service URL.
+    |
+    */
+    'visitor_ai' => [
+        'url' => env('VISITOR_AI_URL', 'http://127.0.0.1:9000'),
+    ],
+
 ];

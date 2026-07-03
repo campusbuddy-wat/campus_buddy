@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)http://127.0.0.1:8000/admin/district-associations/4/edit -->
+<html lang="en" dir="ltr" class="fi min-h-screen"><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/content/location/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+
+        
+        <meta name="csrf-token" content="UdjL7h3cbU6laEWJg4YvQPGcIJADqZTP2n47i6ZW">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        
+        <title>
+            Edit District Association -  Laravel
+        </title>
+
+        
+
+        <style>
+            [x-cloak=''],
+            [x-cloak='x-cloak'],
+            [x-cloak='1'] {
+                display: none !important;
+            }
+
+            @media (max-width: 1023px) {
+                [x-cloak='-lg'] {
+                    display: none !important;
+                }
+            }
+
+            @media (min-width: 1024px) {
+                [x-cloak='lg'] {
+                    display: none !important;
+                }
+            }
+        </style>
+
+        <link href="./Netrokona(hero)District Association - Laravel_files/forms.css" rel="stylesheet" data-navigate-track="">
+                <link href="./Netrokona(hero)District Association - Laravel_files/support.css" rel="stylesheet" data-navigate-track="">
+    
+<style>
+    :root {
+         --danger-50:254, 242, 242;  --danger-100:254, 226, 226;  --danger-200:254, 202, 202;  --danger-300:252, 165, 165;  --danger-400:248, 113, 113;  --danger-500:239, 68, 68;  --danger-600:220, 38, 38;  --danger-700:185, 28, 28;  --danger-800:153, 27, 27;  --danger-900:127, 29, 29;  --danger-950:69, 10, 10;  --gray-50:250, 250, 250;  --gray-100:244, 244, 245;  --gray-200:228, 228, 231;  --gray-300:212, 212, 216;  --gray-400:161, 161, 170;  --gray-500:113, 113, 122;  --gray-600:82, 82, 91;  --gray-700:63, 63, 70;  --gray-800:39, 39, 42;  --gray-900:24, 24, 27;  --gray-950:9, 9, 11;  --info-50:239, 246, 255;  --info-100:219, 234, 254;  --info-200:191, 219, 254;  --info-300:147, 197, 253;  --info-400:96, 165, 250;  --info-500:59, 130, 246;  --info-600:37, 99, 235;  --info-700:29, 78, 216;  --info-800:30, 64, 175;  --info-900:30, 58, 138;  --info-950:23, 37, 84;  --primary-50:255, 251, 235;  --primary-100:254, 243, 199;  --primary-200:253, 230, 138;  --primary-300:252, 211, 77;  --primary-400:251, 191, 36;  --primary-500:245, 158, 11;  --primary-600:217, 119, 6;  --primary-700:180, 83, 9;  --primary-800:146, 64, 14;  --primary-900:120, 53, 15;  --primary-950:69, 26, 3;  --success-50:240, 253, 244;  --success-100:220, 252, 231;  --success-200:187, 247, 208;  --success-300:134, 239, 172;  --success-400:74, 222, 128;  --success-500:34, 197, 94;  --success-600:22, 163, 74;  --success-700:21, 128, 61;  --success-800:22, 101, 52;  --success-900:20, 83, 45;  --success-950:5, 46, 22;  --warning-50:255, 251, 235;  --warning-100:254, 243, 199;  --warning-200:253, 230, 138;  --warning-300:252, 211, 77;  --warning-400:251, 191, 36;  --warning-500:245, 158, 11;  --warning-600:217, 119, 6;  --warning-700:180, 83, 9;  --warning-800:146, 64, 14;  --warning-900:120, 53, 15;  --warning-950:69, 26, 3;     }
+</style>
+
+        <link href="./Netrokona(hero)District Association - Laravel_files/app.css" rel="stylesheet" data-navigate-track="">
+        
+            <link rel="preconnect" href="https://fonts.bunny.net/">
+            <link href="./Netrokona(hero)District Association - Laravel_files/css" rel="stylesheet">
+        
+
+        <style>
+            :root {
+                --font-family: 'Inter';
+                --sidebar-width: 20rem;
+                --collapsed-sidebar-width: 4.5rem;
+                --default-theme-mode: system;
+            }
+        </style>
+
+        
+        
+
+                    <script>
+                const loadDarkMode = () => {
+                    window.theme = localStorage.getItem('theme') ?? 'system'
+                    if (
+                        window.theme === 'dark' ||
+                        (window.theme === 'system' &&
+                            window.matchMedia('(prefers-color-scheme: dark)')
+                                .matches)
+                    ) {
+                        document.documentElement.classList.add('dark')
+                    }
+                }
+
+                loadDarkMode()
+
+                document.addEventListener('livewire:navigated', loadDarkMode)
+            </script>
+        
+        
+    <!-- Livewire Styles --><style>[wire\:loading][wire\:loading], [wire\:loading\.delay][wire\:loading\.delay], [wire\:loading\.inline-block][wire\:loading\.inline-block], [wire\:loading\.inline][wire\:loading\.inline], [wire\:loading\.block][wire\:loading\.block], [wire\:loading\.flex][wire\:loading\.flex], [wire\:loading\.table][wire\:loading\.table], [wire\:loading\.grid][wire\:loading\.grid], [wire\:loading\.inline-flex][wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.none][wire\:loading\.delay\.none], [wire\:loading\.delay\.shortest][wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter][wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short][wire\:loading\.delay\.short], [wire\:loading\.delay\.default][wire\:loading\.delay\.default], [wire\:loading\.delay\.long][wire\:loading\.delay\.long], [wire\:loading\.delay\.longer][wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest][wire\:loading\.delay\.longest] {display: none;}[wire\:offline][wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}:root {--livewire-progress-bar-color: #2299dd;}[x-cloak] {display: none !important;}[wire\:cloak] {display: none !important;}dialog#livewire-error::backdrop {background-color: rgba(0, 0, 0, .6);}</style>
+<style>/* Make clicks pass-through */
+
+    #nprogress {
+      pointer-events: none;
+    }
+
+    #nprogress .bar {
+      background: var(--livewire-progress-bar-color, #29d);
+
+      position: fixed;
+      z-index: 1031;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 2px;
+    }
+
+    /* Fancy blur effect */
+    #nprogress .peg {
+      display: block;
+      position: absolute;
+      right: 0px;
+      width: 100px;
+      height: 100%;
+      box-shadow: 0 0 10px var(--livewire-progress-bar-color, #29d), 0 0 5px var(--livewire-progress-bar-color, #29d);
+      opacity: 1.0;
+
+      -webkit-transform: rotate(3deg) translate(0px, -4px);
+          -ms-transform: rotate(3deg) translate(0px, -4px);
+              transform: rotate(3deg) translate(0px, -4px);
+    }
+
+    /* Remove these to get rid of the spinner */
+    #nprogress .spinner {
+      display: block;
+      position: fixed;
+      z-index: 1031;
+      top: 15px;
+      right: 15px;
+    }
+
+    #nprogress .spinner-icon {
+      width: 18px;
+      height: 18px;
+      box-sizing: border-box;
+
+      border: solid 2px transparent;
+      border-top-color: var(--livewire-progress-bar-color, #29d);
+      border-left-color: var(--livewire-progress-bar-color, #29d);
+      border-radius: 50%;
+
+      -webkit-animation: nprogress-spinner 400ms linear infinite;
+              animation: nprogress-spinner 400ms linear infinite;
+    }
+
+    .nprogress-custom-parent {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .nprogress-custom-parent #nprogress .spinner,
+    .nprogress-custom-parent #nprogress .bar {
+      position: absolute;
+    }
+
+    @-webkit-keyframes nprogress-spinner {
+      0%   { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+    @keyframes nprogress-spinner {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    </style></head>
+
+    <body class="fi-body fi-panel-admin min-h-screen bg-gray-50 font-normal text-gray-950 antialiased dark:bg-gray-950 dark:text-white" __processed_3b9463a8-1e80-4c7d-b296-bfcfe004ea74__="true">
+        
+
+        <div class="fi-layout flex min-h-screen w-full flex-row-reverse overflow-x-clip">
+        <div x-data="{}" x-bind:style="&#39;display: flex; opacity:1;&#39;" class="fi-main-ctn w-screen flex-1 flex-col opacity-0" style="display: flex; opacity:1;">
+                            
+
+                <div class="fi-topbar sticky top-0 z-20 overflow-x-clip">
+    <nav class="flex h-16 items-center gap-x-4 bg-white px-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 md:px-6 lg:px-8">
+        
+
+                    <button style="--c-300: var(--gray-300); --c-400: var(--gray-400); --c-500: var(--gray-500); --c-600: var(--gray-600); display: none;" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-1.5 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-topbar-open-sidebar-btn lg:hidden" title="Expand sidebar" type="button" wire:loading.attr="disabled" x-data="{}" x-on:click="$store.sidebar.open()" x-show="! $store.sidebar.isOpen">
+                    <span class="sr-only">
+                Expand sidebar
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+</svg>
+        
+            </button>
+
+            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-1.5 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-topbar-close-sidebar-btn lg:hidden" title="Collapse sidebar" type="button" wire:loading.attr="disabled" x-data="{}" x-on:click="$store.sidebar.close()" x-show="$store.sidebar.isOpen">
+                    <span class="sr-only">
+                Collapse sidebar
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+</svg>
+        
+            </button>
+        
+        
+        <div x-persist="topbar.end.panel-admin" class="ms-auto flex items-center gap-x-4">
+            
+
+            
+            
+
+                            
+                <div x-data="{
+        toggle: function (event) {
+            $refs.panel?.toggle(event)
+        },
+
+        open: function (event) {
+            $refs.panel?.open(event)
+        },
+
+        close: function (event) {
+            $refs.panel?.close(event)
+        },
+    }" class="fi-dropdown fi-user-menu">
+    <div x-on:click="toggle" class="fi-dropdown-trigger flex cursor-pointer">
+        <button aria-label="User menu" type="button" class="shrink-0">
+            <img class="fi-avatar object-cover object-center fi-circular rounded-full h-8 w-8 fi-user-avatar" src="./Netrokona(hero)District Association - Laravel_files/saved_resource" alt="Avatar of Md.Washim Akram">
+        </button>
+    </div>
+
+            <div x-float.placement.bottom-end.flip.teleport.offset="{ offset: 8,  }" x-ref="panel" x-transition:enter-start="opacity-0" x-transition:leave-end="opacity-0" class="fi-dropdown-panel absolute z-10 w-screen divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-gray-950/5 transition dark:divide-white/5 dark:bg-gray-900 dark:ring-white/10 !max-w-[14rem]" style="position: fixed; display: none;">
+            <div class="fi-dropdown-header flex w-full gap-2 p-3 text-sm  fi-dropdown-header-color-gray fi-color-gray">
+            <svg class="fi-dropdown-header-icon h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-5.5-2.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10 12a5.99 5.99 0 0 0-4.793 2.39A6.483 6.483 0 0 0 10 16.5a6.483 6.483 0 0 0 4.793-2.11A5.99 5.99 0 0 0 10 12Z" clip-rule="evenodd"></path>
+</svg>    
+    <span class="fi-dropdown-header-label flex-1 truncate text-start text-gray-700 dark:text-gray-200" style="">
+        Md.Washim Akram
+    </span>
+</div>
+        
+        
+    
+            <div class="fi-dropdown-list p-1">
+    <div x-data="{ theme: null }" x-init="
+        $watch(&#39;theme&#39;, () =&gt; {
+            $dispatch(&#39;theme-changed&#39;, theme)
+        })
+
+        theme = localStorage.getItem(&#39;theme&#39;) || &#39;system&#39;    " class="fi-theme-switcher grid grid-flow-col gap-x-1">
+    <button aria-label="Enable light theme" type="button" x-on:click="(theme = &#39;light&#39;) &amp;&amp; close()" x-tooltip="{
+        content: &#39;Enable light theme&#39;,
+        theme: $store.theme,
+    }" class="fi-theme-switcher-btn flex justify-center rounded-md p-2 outline-none transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400" x-bind:class="
+        theme === &#39;light&#39;            ? &#39;fi-active bg-gray-50 text-primary-500 dark:bg-white/5 dark:text-primary-400&#39;
+            : &#39;text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400&#39;
+    ">
+    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path d="M10 2a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 2ZM10 15a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 15ZM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM15.657 5.404a.75.75 0 1 0-1.06-1.06l-1.061 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06ZM6.464 14.596a.75.75 0 1 0-1.06-1.06l-1.06 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06ZM18 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 18 10ZM5 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 5 10ZM14.596 15.657a.75.75 0 0 0 1.06-1.06l-1.06-1.061a.75.75 0 1 0-1.06 1.06l1.06 1.06ZM5.404 6.464a.75.75 0 0 0 1.06-1.06l-1.06-1.06a.75.75 0 1 0-1.061 1.06l1.06 1.06Z"></path>
+</svg></button>
+
+    <button aria-label="Enable dark theme" type="button" x-on:click="(theme = &#39;dark&#39;) &amp;&amp; close()" x-tooltip="{
+        content: &#39;Enable dark theme&#39;,
+        theme: $store.theme,
+    }" class="fi-theme-switcher-btn flex justify-center rounded-md p-2 outline-none transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400" x-bind:class="
+        theme === &#39;dark&#39;            ? &#39;fi-active bg-gray-50 text-primary-500 dark:bg-white/5 dark:text-primary-400&#39;
+            : &#39;text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400&#39;
+    ">
+    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M7.455 2.004a.75.75 0 0 1 .26.77 7 7 0 0 0 9.958 7.967.75.75 0 0 1 1.067.853A8.5 8.5 0 1 1 6.647 1.921a.75.75 0 0 1 .808.083Z" clip-rule="evenodd"></path>
+</svg></button>
+
+    <button aria-label="Enable system theme" type="button" x-on:click="(theme = &#39;system&#39;) &amp;&amp; close()" x-tooltip="{
+        content: &#39;Enable system theme&#39;,
+        theme: $store.theme,
+    }" class="fi-theme-switcher-btn flex justify-center rounded-md p-2 outline-none transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 fi-active bg-gray-50 text-primary-500 dark:bg-white/5 dark:text-primary-400" x-bind:class="
+        theme === &#39;system&#39;            ? &#39;fi-active bg-gray-50 text-primary-500 dark:bg-white/5 dark:text-primary-400&#39;
+            : &#39;text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400&#39;
+    ">
+    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M2 4.25A2.25 2.25 0 0 1 4.25 2h11.5A2.25 2.25 0 0 1 18 4.25v8.5A2.25 2.25 0 0 1 15.75 15h-3.105a3.501 3.501 0 0 0 1.1 1.677A.75.75 0 0 1 13.26 18H6.74a.75.75 0 0 1-.484-1.323A3.501 3.501 0 0 0 7.355 15H4.25A2.25 2.25 0 0 1 2 12.75v-8.5Zm1.5 0a.75.75 0 0 1 .75-.75h11.5a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-.75.75H4.25a.75.75 0 0 1-.75-.75v-7.5Z" clip-rule="evenodd"></path>
+</svg></button>
+</div>
+</div>
+    
+    <div class="fi-dropdown-list p-1">
+    <form action="http://127.0.0.1:8000/admin/logout" method="post">
+        <input type="hidden" name="_token" value="UdjL7h3cbU6laEWJg4YvQPGcIJADqZTP2n47i6ZW" autocomplete="off">
+        <button type="submit" style=";" class="fi-dropdown-list-item flex w-full items-center gap-2 whitespace-nowrap rounded-md p-2 text-sm transition-colors duration-75 outline-none disabled:pointer-events-none disabled:opacity-70 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 fi-dropdown-list-item-color-gray fi-color-gray">
+                            <svg class="fi-dropdown-list-item-icon h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z" clip-rule="evenodd"></path>
+  <path fill-rule="evenodd" d="M19 10a.75.75 0 0 0-.75-.75H8.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 19 10Z" clip-rule="evenodd"></path>
+</svg>            
+            <span class="fi-dropdown-list-item-label flex-1 truncate text-start text-gray-700 dark:text-gray-200" style="">
+                Sign out
+            </span>
+
+                    </button>
+    </form>
+</div>
+        </div>
+    </div>
+
+
+                    </div>
+
+        
+    </nav>
+</div>
+
+                
+            
+            
+
+            <main class="fi-main mx-auto h-full w-full px-4 md:px-6 lg:px-8 max-w-7xl">
+                
+
+                <div wire:snapshot="{&quot;data&quot;:{&quot;data&quot;:[{&quot;id&quot;:4,&quot;name&quot;:&quot;Netrakona Student Association Of DIU&quot;,&quot;division&quot;:&quot;Mymensingh&quot;,&quot;district&quot;:&quot;Netrokona&quot;,&quot;image&quot;:[{&quot;80d41f25-9014-425c-af38-af6f55c59a59&quot;:&quot;community\/district_associations\/logos\/01KMJT62B61GW0AP8Y8F8ANC8F.png&quot;},{&quot;s&quot;:&quot;arr&quot;}],&quot;link&quot;:&quot;https:\/\/web.facebook.com\/people\/Netrakona-Student-Association-Of-DIU\/61557633962516\/?_rdc=1&amp;_rdr#&quot;,&quot;members_count&quot;:50,&quot;created_at&quot;:&quot;2026-03-25T15:35:35.000000Z&quot;,&quot;updated_at&quot;:&quot;2026-04-08T10:29:45.000000Z&quot;,&quot;cover_image&quot;:[{&quot;4e78f1dc-43c1-48d2-a92d-5f215491109a&quot;:&quot;community\/district_associations\/covers\/01KMJT62B8JYM0KF8MEVWC8VA9.jpeg&quot;},{&quot;s&quot;:&quot;arr&quot;}]},{&quot;s&quot;:&quot;arr&quot;}],&quot;previousUrl&quot;:&quot;http:\/\/127.0.0.1:8000\/admin\/district-associations&quot;,&quot;activeRelationManager&quot;:null,&quot;record&quot;:[null,{&quot;class&quot;:&quot;App\\Models\\DistrictAssociation&quot;,&quot;key&quot;:4,&quot;s&quot;:&quot;mdl&quot;}],&quot;savedDataHash&quot;:null,&quot;mountedActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;defaultAction&quot;:null,&quot;defaultActionArguments&quot;:null,&quot;componentFileAttachments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;areFormStateUpdateHooksDisabledForTesting&quot;:false,&quot;mountedFormComponentActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsComponents&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsComponent&quot;:null,&quot;mountedInfolistActionsInfolist&quot;:null},&quot;memo&quot;:{&quot;id&quot;:&quot;g5JW8xwhMGmF3bNVFErF&quot;,&quot;name&quot;:&quot;app.filament.resources.district-association-resource.pages.edit-district-association&quot;,&quot;path&quot;:&quot;admin\/district-associations\/4\/edit&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;f594e4558102b5dee04a0228a94d67f3aae59b228e3f9e4ff7834f878ae42082&quot;}" wire:effects="{&quot;url&quot;:{&quot;activeRelationManager&quot;:{&quot;as&quot;:null,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultAction&quot;:{&quot;as&quot;:&quot;action&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultActionArguments&quot;:{&quot;as&quot;:&quot;actionArguments&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null}}}" wire:id="g5JW8xwhMGmF3bNVFErF" class="fi-page fi-resource-edit-record-page fi-resource-district-associations fi-resource-record-4">
+    
+
+    <section class="flex flex-col gap-y-8 py-8">
+        <!--[if BLOCK]><![endif]-->            
+            <header class="fi-header flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+        <!--[if BLOCK]><![endif]-->            <nav class="fi-breadcrumbs mb-2 hidden sm:block">
+    <ol class="fi-breadcrumbs-list flex flex-wrap items-center gap-x-2">
+        <!--[if BLOCK]><![endif]-->            <li class="fi-breadcrumbs-item flex items-center gap-x-2">
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]-->                    <a href="http://127.0.0.1:8000/admin/district-associations" class="fi-breadcrumbs-item-label text-sm font-medium text-gray-500 dark:text-gray-400 transition duration-75 hover:text-gray-700 dark:hover:text-gray-200">
+                        District Associations
+                    </a>
+                <!--[if ENDBLOCK]><![endif]-->            </li>
+                    <li class="fi-breadcrumbs-item flex items-center gap-x-2">
+                <!--[if BLOCK]><![endif]-->                    <!--[if BLOCK]><![endif]-->    <svg class="fi-breadcrumbs-item-separator flex h-5 w-5 text-gray-400 dark:text-gray-500 rtl:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]-->    <svg class="fi-breadcrumbs-item-separator flex h-5 w-5 text-gray-400 dark:text-gray-500 ltr:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->                <!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]-->                    <span class="fi-breadcrumbs-item-label text-sm font-medium text-gray-500 dark:text-gray-400">
+                        Edit
+                    </span>
+                <!--[if ENDBLOCK]><![endif]-->            </li>
+        <!--[if ENDBLOCK]><![endif]-->    </ol>
+</nav>
+        <!--[if ENDBLOCK]><![endif]-->
+        <h1 class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">
+            Edit District Association
+        </h1>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+
+    <div class="flex shrink-0 items-center gap-3 sm:mt-7">
+        
+
+        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <div class="fi-ac gap-3 flex flex-wrap items-center justify-start">
+        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<button x-data="{}" x-bind:id="$id(&#39;key-bindings&#39;)" x-mousetrap.global.mod-d="document.getElementById($el.id).click()" style="--c-400:var(--danger-400);--c-500:var(--danger-500);--c-600:var(--danger-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-danger fi-color-danger fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action" type="button" wire:loading.attr="disabled" wire:click="mountAction(&#39;delete&#39;)" id="key-bindings-1">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="animate-spin fi-btn-icon transition duration-75 h-5 w-5 text-white" wire:loading.delay.default="" wire:target="mountAction(&#39;delete&#39;)">
+    <path clip-rule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill-rule="evenodd" fill="currentColor" opacity="0.2"></path>
+    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" fill="currentColor"></path>
+</svg>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        Delete
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></button>
+
+            <!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->    </div>
+<!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        
+    </div>
+</header>
+        <!--[if ENDBLOCK]><![endif]-->
+        <div class="">
+            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+            <div class="grid flex-1 auto-cols-fr gap-y-8">
+                
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                
+
+                <!--[if BLOCK]><![endif]-->                
+        <form method="post" x-data="{ isProcessing: false }" x-on:submit="if (isProcessing) $event.preventDefault()" x-on:form-processing-started="isProcessing = true" x-on:form-processing-finished="isProcessing = false" class="fi-form grid gap-y-6" id="form" wire:key="g5JW8xwhMGmF3bNVFErF.forms.data" wire:submit="save">
+    <div style="--cols-default: repeat(1, minmax(0, 1fr)); --cols-lg: repeat(2, minmax(0, 1fr));" class="grid grid-cols-[--cols-default] lg:grid-cols-[--cols-lg] fi-fo-component-ctn gap-6" x-data="{}" x-on:form-validation-error.window="if ($event.detail.livewireId !== &#39;g5JW8xwhMGmF3bNVFErF&#39;) {
+                return
+            }
+
+            $nextTick(() =&gt; {
+                let error = $el.querySelector(&#39;[data-validation-error]&#39;)
+
+                if (! error) {
+                    return
+                }
+
+                let elementToExpand = error
+
+                while (elementToExpand) {
+                    elementToExpand.dispatchEvent(new CustomEvent(&#39;expand&#39;))
+
+                    elementToExpand = elementToExpand.parentNode
+                }
+
+                setTimeout(
+                    () =&gt;
+                        error.closest(&#39;[data-field-wrapper]&#39;).scrollIntoView({
+                            behavior: &#39;smooth&#39;,
+                            block: &#39;start&#39;,
+                            inline: &#39;start&#39;,
+                        }),
+                    200,
+                )
+        })">
+    <!--[if BLOCK]><![endif]-->        
+        <div style="--col-span-default: span 1 / span 1;" class="col-[--col-span-default]" wire:key="g5JW8xwhMGmF3bNVFErF.data.name.Filament\Forms\Components\TextInput">
+    <!--[if BLOCK]><![endif]-->                <div data-field-wrapper="" class="fi-fo-field-wrp">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="grid gap-y-2">
+        <!--[if BLOCK]><![endif]-->            <div class="flex items-center gap-x-3 justify-between ">
+                <!--[if BLOCK]><![endif]-->                    <label class="fi-fo-field-wrp-label inline-flex items-center gap-x-3" for="data.name">
+    
+
+    <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
+        
+        Name<!--[if BLOCK]><![endif]--><sup class="text-danger-600 dark:text-danger-400 font-medium">*</sup>
+        <!--[if ENDBLOCK]><![endif]-->    </span>
+
+    
+</label>
+                <!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <div class="grid auto-cols-fr gap-y-2">
+                <div class="fi-input-wrp flex rounded-lg shadow-sm ring-1 transition duration-75 bg-white dark:bg-white/5 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-2 ring-gray-950/10 dark:ring-white/20 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-600 dark:[&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-500 fi-fo-text-input overflow-hidden">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-input-wrp-input min-w-0 flex-1">
+        <input class="fi-input block w-full border-none py-1.5 text-base text-gray-950 transition duration-75 placeholder:text-gray-400 focus:ring-0 disabled:text-gray-500 disabled:[-webkit-text-fill-color:theme(colors.gray.500)] disabled:placeholder:[-webkit-text-fill-color:theme(colors.gray.400)] dark:text-white dark:placeholder:text-gray-500 dark:disabled:text-gray-400 dark:disabled:[-webkit-text-fill-color:theme(colors.gray.400)] dark:disabled:placeholder:[-webkit-text-fill-color:theme(colors.gray.500)] sm:text-sm sm:leading-6 bg-white/0 ps-3 pe-3" id="data.name" maxlength="255" required="required" type="text" wire:model="data.name">
+    </div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->    </div>
+</div>
+
+            <!--[if ENDBLOCK]><![endif]-->
+</div>
+            
+        <div style="--col-span-default: span 1 / span 1;" class="col-[--col-span-default]" wire:key="g5JW8xwhMGmF3bNVFErF.data.division.Filament\Forms\Components\Select">
+    <!--[if BLOCK]><![endif]-->                <div data-field-wrapper="" class="fi-fo-field-wrp">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="grid gap-y-2">
+        <!--[if BLOCK]><![endif]-->            <div class="flex items-center gap-x-3 justify-between ">
+                <!--[if BLOCK]><![endif]-->                    <label class="fi-fo-field-wrp-label inline-flex items-center gap-x-3" for="data.division">
+    
+
+    <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
+        
+        Division<!--[if BLOCK]><![endif]--><sup class="text-danger-600 dark:text-danger-400 font-medium">*</sup>
+        <!--[if ENDBLOCK]><![endif]-->    </span>
+
+    
+</label>
+                <!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <div class="grid auto-cols-fr gap-y-2">
+                <div class="fi-input-wrp flex rounded-lg shadow-sm ring-1 transition duration-75 bg-white dark:bg-white/5 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-2 ring-gray-950/10 dark:ring-white/20 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-600 dark:[&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-500 fi-fo-select">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-input-wrp-input min-w-0 flex-1">
+        <!--[if BLOCK]><![endif]-->            <div class="hidden" x-data="{
+                    isDisabled: false,
+                    init: function () {
+                        const container = $el.nextElementSibling
+                        container.dispatchEvent(
+                            new CustomEvent(&#39;set-select-property&#39;, {
+                                detail: { isDisabled: this.isDisabled },
+                            }),
+                        )
+                    },
+                }"></div>
+            <div x-load="" x-load-src="http://127.0.0.1:8000/js/filament/forms/components/select.js?v=3.3.49.0" x-data="selectFormComponent({
+                            canSelectPlaceholder: true,
+                            isHtmlAllowed: false,
+                            getOptionLabelUsing: async () =&gt; {
+                                return await $wire.getFormSelectOptionLabel(&#39;data.division&#39;)
+                            },
+                            getOptionLabelsUsing: async () =&gt; {
+                                return await $wire.getFormSelectOptionLabels(&#39;data.division&#39;)
+                            },
+                            getOptionsUsing: async () =&gt; {
+                                return await $wire.getFormSelectOptions(&#39;data.division&#39;)
+                            },
+                            getSearchResultsUsing: async (search) =&gt; {
+                                return await $wire.getFormSelectSearchResults(&#39;data.division&#39;, search)
+                            },
+                            isAutofocused: false,
+                            isMultiple: false,
+                            isSearchable: true,
+                            livewireId: &#39;g5JW8xwhMGmF3bNVFErF&#39;,
+                            hasDynamicOptions: false,
+                            hasDynamicSearchResults: false,
+                            loadingMessage: &#39;Loading...&#39;,
+                            maxItems: null,
+                            maxItemsMessage: &#39;Only  can be selected.&#39;,
+                            noSearchResultsMessage: &#39;No options match your search.&#39;,
+                            options: JSON.parse(&#39;[{\u0022label\u0022:\u0022Dhaka\u0022,\u0022value\u0022:\u0022Dhaka\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Chattogram\u0022,\u0022value\u0022:\u0022Chattogram\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Rajshahi\u0022,\u0022value\u0022:\u0022Rajshahi\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Khulna\u0022,\u0022value\u0022:\u0022Khulna\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Barishal\u0022,\u0022value\u0022:\u0022Barishal\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Sylhet\u0022,\u0022value\u0022:\u0022Sylhet\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Rangpur\u0022,\u0022value\u0022:\u0022Rangpur\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Mymensingh\u0022,\u0022value\u0022:\u0022Mymensingh\u0022,\u0022disabled\u0022:false}]&#39;),
+                            optionsLimit: 50,
+                            placeholder: &#39;Select an option&#39;,
+                            position: null,
+                            searchDebounce: 1000,
+                            searchingMessage: &#39;Searching...&#39;,
+                            searchPrompt: &#39;Start typing to search...&#39;,
+                            searchableOptionFields: JSON.parse(&#39;[\u0022label\u0022]&#39;),
+                            state: $wire.$entangle(&#39;data.division&#39;, true),
+                            statePath: &#39;data.division&#39;,
+                        })" wire:ignore="" wire:key="g5JW8xwhMGmF3bNVFErF.data.division.Filament\Forms\Components\Select.a8cf63fecab3eb3edf6760bc02f258a6" x-on:keydown.esc="select.dropdown.isActive &amp;&amp; $event.stopPropagation()" x-on:set-select-property="$event.detail.isDisabled ? select.disable() : select.enable()" class="">
+                <div class="choices" data-type="select-one" tabindex="0" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false"><div class="choices__inner"><select x-ref="input" class="h-9 w-full rounded-lg border-none bg-transparent !bg-none choices__input" id="data.division" hidden="" tabindex="-1" data-choice="active"><option value="Mymensingh" data-custom-properties="[object Object]">Mymensingh</option></select><div class="choices__list choices__list--single"><div class="choices__item choices__item--selectable" data-item="" data-id="1" data-value="Mymensingh" data-custom-properties="[object Object]" aria-selected="true" data-deletable="">Mymensingh<button type="button" class="choices__button" aria-label="Remove item: &#39;Mymensingh&#39;" data-button="">Remove item</button></div></div></div><div class="choices__list choices__list--dropdown" aria-expanded="false"><input type="search" name="search_terms" class="choices__input choices__input--cloned" autocomplete="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" aria-label="Select an option" placeholder="Start typing to search..."><div class="choices__list" role="listbox"><div id="choices--datadivision-item-choice-1" class="choices__item choices__item--choice choices__item--selectable is-highlighted" role="option" data-choice="" data-id="1" data-value="Dhaka" data-select-text="" data-choice-selectable="" aria-selected="true">Dhaka</div><div id="choices--datadivision-item-choice-2" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="2" data-value="Chattogram" data-select-text="" data-choice-selectable="">Chattogram</div><div id="choices--datadivision-item-choice-3" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="3" data-value="Rajshahi" data-select-text="" data-choice-selectable="">Rajshahi</div><div id="choices--datadivision-item-choice-4" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="4" data-value="Khulna" data-select-text="" data-choice-selectable="">Khulna</div><div id="choices--datadivision-item-choice-5" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="5" data-value="Barishal" data-select-text="" data-choice-selectable="">Barishal</div><div id="choices--datadivision-item-choice-6" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="6" data-value="Sylhet" data-select-text="" data-choice-selectable="">Sylhet</div><div id="choices--datadivision-item-choice-7" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="7" data-value="Rangpur" data-select-text="" data-choice-selectable="">Rangpur</div><div id="choices--datadivision-item-choice-8" class="choices__item choices__item--choice is-selected choices__item--selectable" role="option" data-choice="" data-id="8" data-value="Mymensingh" data-select-text="" data-choice-selectable="">Mymensingh</div></div></div></div>
+            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+    </div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></div>
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->    </div>
+</div>
+
+            <!--[if ENDBLOCK]><![endif]-->
+</div>
+            
+        <div style="--col-span-default: span 1 / span 1;" class="col-[--col-span-default]" wire:key="g5JW8xwhMGmF3bNVFErF.data.district.Filament\Forms\Components\Select">
+    <!--[if BLOCK]><![endif]-->                <div data-field-wrapper="" class="fi-fo-field-wrp">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="grid gap-y-2">
+        <!--[if BLOCK]><![endif]-->            <div class="flex items-center gap-x-3 justify-between ">
+                <!--[if BLOCK]><![endif]-->                    <label class="fi-fo-field-wrp-label inline-flex items-center gap-x-3" for="data.district">
+    
+
+    <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
+        
+        District<!--[if BLOCK]><![endif]--><sup class="text-danger-600 dark:text-danger-400 font-medium">*</sup>
+        <!--[if ENDBLOCK]><![endif]-->    </span>
+
+    
+</label>
+                <!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <div class="grid auto-cols-fr gap-y-2">
+                <div class="fi-input-wrp flex rounded-lg shadow-sm ring-1 transition duration-75 bg-white dark:bg-white/5 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-2 ring-gray-950/10 dark:ring-white/20 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-600 dark:[&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-500 fi-fo-select">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-input-wrp-input min-w-0 flex-1">
+        <!--[if BLOCK]><![endif]-->            <div class="hidden" x-data="{
+                    isDisabled: false,
+                    init: function () {
+                        const container = $el.nextElementSibling
+                        container.dispatchEvent(
+                            new CustomEvent(&#39;set-select-property&#39;, {
+                                detail: { isDisabled: this.isDisabled },
+                            }),
+                        )
+                    },
+                }"></div>
+            <div x-load="" x-load-src="http://127.0.0.1:8000/js/filament/forms/components/select.js?v=3.3.49.0" x-data="selectFormComponent({
+                            canSelectPlaceholder: true,
+                            isHtmlAllowed: false,
+                            getOptionLabelUsing: async () =&gt; {
+                                return await $wire.getFormSelectOptionLabel(&#39;data.district&#39;)
+                            },
+                            getOptionLabelsUsing: async () =&gt; {
+                                return await $wire.getFormSelectOptionLabels(&#39;data.district&#39;)
+                            },
+                            getOptionsUsing: async () =&gt; {
+                                return await $wire.getFormSelectOptions(&#39;data.district&#39;)
+                            },
+                            getSearchResultsUsing: async (search) =&gt; {
+                                return await $wire.getFormSelectSearchResults(&#39;data.district&#39;, search)
+                            },
+                            isAutofocused: false,
+                            isMultiple: false,
+                            isSearchable: true,
+                            livewireId: &#39;g5JW8xwhMGmF3bNVFErF&#39;,
+                            hasDynamicOptions: true,
+                            hasDynamicSearchResults: false,
+                            loadingMessage: &#39;Loading...&#39;,
+                            maxItems: null,
+                            maxItemsMessage: &#39;Only  can be selected.&#39;,
+                            noSearchResultsMessage: &#39;No options match your search.&#39;,
+                            options: JSON.parse(&#39;[{\u0022label\u0022:\u0022Mymensingh\u0022,\u0022value\u0022:\u0022Mymensingh\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Jamalpur\u0022,\u0022value\u0022:\u0022Jamalpur\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Netrokona\u0022,\u0022value\u0022:\u0022Netrokona\u0022,\u0022disabled\u0022:false},{\u0022label\u0022:\u0022Sherpur\u0022,\u0022value\u0022:\u0022Sherpur\u0022,\u0022disabled\u0022:false}]&#39;),
+                            optionsLimit: 50,
+                            placeholder: &#39;Select an option&#39;,
+                            position: null,
+                            searchDebounce: 1000,
+                            searchingMessage: &#39;Searching...&#39;,
+                            searchPrompt: &#39;Start typing to search...&#39;,
+                            searchableOptionFields: JSON.parse(&#39;[\u0022label\u0022]&#39;),
+                            state: $wire.$entangle(&#39;data.district&#39;, false),
+                            statePath: &#39;data.district&#39;,
+                        })" wire:ignore="" wire:key="g5JW8xwhMGmF3bNVFErF.data.district.Filament\Forms\Components\Select.a8cf63fecab3eb3edf6760bc02f258a6" x-on:keydown.esc="select.dropdown.isActive &amp;&amp; $event.stopPropagation()" x-on:set-select-property="$event.detail.isDisabled ? select.disable() : select.enable()" class="">
+                <div class="choices" data-type="select-one" tabindex="0" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false"><div class="choices__inner"><select x-ref="input" class="h-9 w-full rounded-lg border-none bg-transparent !bg-none choices__input" id="data.district" hidden="" tabindex="-1" data-choice="active"><option value="Netrokona" data-custom-properties="[object Object]">Netrokona</option></select><div class="choices__list choices__list--single"><div class="choices__item choices__item--selectable" data-item="" data-id="1" data-value="Netrokona" data-custom-properties="[object Object]" aria-selected="true" data-deletable="">Netrokona<button type="button" class="choices__button" aria-label="Remove item: &#39;Netrokona&#39;" data-button="">Remove item</button></div></div></div><div class="choices__list choices__list--dropdown" aria-expanded="false"><input type="search" name="search_terms" class="choices__input choices__input--cloned" autocomplete="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" aria-label="Select an option" placeholder="Start typing to search..."><div class="choices__list" role="listbox"><div id="choices--datadistrict-item-choice-1" class="choices__item choices__item--choice choices__item--selectable is-highlighted" role="option" data-choice="" data-id="1" data-value="Mymensingh" data-select-text="" data-choice-selectable="" aria-selected="true">Mymensingh</div><div id="choices--datadistrict-item-choice-2" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="2" data-value="Jamalpur" data-select-text="" data-choice-selectable="">Jamalpur</div><div id="choices--datadistrict-item-choice-3" class="choices__item choices__item--choice is-selected choices__item--selectable" role="option" data-choice="" data-id="3" data-value="Netrokona" data-select-text="" data-choice-selectable="">Netrokona</div><div id="choices--datadistrict-item-choice-4" class="choices__item choices__item--choice choices__item--selectable" role="option" data-choice="" data-id="4" data-value="Sherpur" data-select-text="" data-choice-selectable="">Sherpur</div></div></div></div>
+            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+    </div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></div>
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->    </div>
+</div>
+
+            <!--[if ENDBLOCK]><![endif]-->
+</div>
+            
+        <div style="--col-span-default: span 1 / span 1;" class="col-[--col-span-default]" wire:key="g5JW8xwhMGmF3bNVFErF.data.image.Filament\Forms\Components\FileUpload">
+    <!--[if BLOCK]><![endif]-->                <div data-field-wrapper="" class="fi-fo-field-wrp">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="grid gap-y-2">
+        <!--[if BLOCK]><![endif]-->            <div class="flex items-center gap-x-3 justify-between ">
+                <!--[if BLOCK]><![endif]-->                    <div class="fi-fo-field-wrp-label inline-flex items-center gap-x-3" id="logo_image_field-label">
+    
+
+    <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
+        
+        Logo Image<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </span>
+
+    
+</div>
+                <!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <div class="grid auto-cols-fr gap-y-2">
+                <div x-load="" x-load-src="http://127.0.0.1:8000/js/filament/forms/components/file-upload.js?v=3.3.49.0" x-data="fileUploadFormComponent({
+                    acceptedFileTypes: JSON.parse(&#39;[\u0022image\\\/*\u0022]&#39;),
+                    imageEditorEmptyFillColor: null,
+                    imageEditorMode: 1,
+                    imageEditorViewportHeight: null,
+                    imageEditorViewportWidth: null,
+                    deleteUploadedFileUsing: async (fileKey) =&gt; {
+                        return await $wire.deleteUploadedFile(&#39;data.image&#39;, fileKey)
+                    },
+                    getUploadedFilesUsing: async () =&gt; {
+                        return await $wire.getFormUploadedFiles(&#39;data.image&#39;)
+                    },
+                    hasImageEditor: false,
+                    hasCircleCropper: false,
+                    canEditSvgs: true,
+                    isSvgEditingConfirmed: false,
+                    confirmSvgEditingMessage: &#39;Editing SVG files is not recommended as it can result in quality loss when scaling.\\n Are you sure you want to continue?&#39;,
+                    disabledSvgEditingMessage: &#39;Editing SVG files is disabled as it can result in quality loss when scaling.&#39;,
+                    imageCropAspectRatio: null,
+                    imagePreviewHeight: null,
+                    imageResizeMode: null,
+                    imageResizeTargetHeight: null,
+                    imageResizeTargetWidth: null,
+                    imageResizeUpscale: true,
+                    isAvatar: false,
+                    isDeletable: true,
+                    isDisabled: false,
+                    isDownloadable: false,
+                    isMultiple: false,
+                    isOpenable: false,
+                    isPasteable: false,
+                    isPreviewable: true,
+                    isReorderable: false,
+                    itemPanelAspectRatio: null,
+                    loadingIndicatorPosition: &#39;right&#39;,
+                    locale: &#39;en&#39;,
+                    panelAspectRatio: null,
+                    panelLayout: &#39;compact&#39;,
+                    placeholder: null,
+                    maxFiles: null,
+                    maxSize: null,
+                    minSize: null,
+                    mimeTypeMap: [],
+                    maxParallelUploads: null,
+                    removeUploadedFileUsing: async (fileKey) =&gt; {
+                        return await $wire.removeFormUploadedFile(&#39;data.image&#39;, fileKey)
+                    },
+                    removeUploadedFileButtonPosition: &#39;left&#39;,
+                    reorderUploadedFilesUsing: async (files) =&gt; {
+                        return await $wire.reorderFormUploadedFiles(&#39;data.image&#39;, files)
+                    },
+                    shouldAppendFiles: false,
+                    shouldOrientImageFromExif: true,
+                    shouldTransformImage: false,
+                    state: $wire.$entangle(&#39;data.image&#39;, false),
+                    uploadButtonPosition: &#39;right&#39;,
+                    uploadingMessage: &#39;Uploading file...&#39;,
+                    uploadProgressIndicatorPosition: &#39;right&#39;,
+                    uploadUsing: (fileKey, file, success, error, progress) =&gt; {
+                        $wire.upload(
+                            `data.image.${fileKey}`,
+                            file,
+                            () =&gt; {
+                                success(fileKey)
+                            },
+                            error,
+                            (progressEvent) =&gt; {
+                                progress(true, progressEvent.detail.progress, 100)
+                            },
+                        )
+                    },
+                })" wire:ignore="" wire:key="g5JW8xwhMGmF3bNVFErF.data.image.Filament\Forms\Components\FileUpload.a8cf63fecab3eb3edf6760bc02f258a6" class="fi-fo-file-upload flex flex-col gap-y-2 [&amp;_.filepond--root]:font-sans items-start" aria-labelledby="logo_image_field-label" id="logo_image_field" role="group">
+        <div class="h-full w-full">
+            <div class="filepond--root filepond--hopper" data-style-panel-layout="compact" data-style-button-remove-item-position="left" data-style-button-process-item-position="right" data-style-load-indicator-position="right" data-style-progress-indicator-position="right" data-style-button-remove-item-align="false" data-style-image-edit-button-edit-item-position="bottom center" style="height: 256px;"><input class="filepond--browser" type="file" id="filepond--browser-uu3j2g19c" aria-controls="filepond--assistant-uu3j2g19c" aria-labelledby="filepond--drop-label-uu3j2g19c" accept="image/*"><div class="filepond--drop-label" style="transform: translate3d(0px, 30px, 0px); opacity: 0; visibility: hidden; pointer-events: none;"><label for="filepond--browser-uu3j2g19c" id="filepond--drop-label-uu3j2g19c">Drag &amp; Drop your files or <span class="filepond--label-action" tabindex="0"> Browse </span></label></div><div class="filepond--list-scroller" style="transform: translate3d(0px, 0px, 0px);"><ul class="filepond--list" role="list"><li class="filepond--item" id="filepond--item-wnucvkxut" data-filepond-item-state="idle" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 1; height: 256px;"><fieldset class="filepond--file-wrapper"><legend>01KMJT62B61GW0AP8Y8F8ANC8F.png</legend><div class="filepond--file"><button class="filepond--file-action-button filepond--action-abort-item-load" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><span>Abort</span></button><button class="filepond--file-action-button filepond--action-retry-item-load" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M10.81 9.185l-.038.02A4.997 4.997 0 0 0 8 13.683a5 5 0 0 0 5 5 5 5 0 0 0 5-5 1 1 0 0 1 2 0A7 7 0 1 1 9.722 7.496l-.842-.21a.999.999 0 1 1 .484-1.94l3.23.806c.535.133.86.675.73 1.21l-.804 3.233a.997.997 0 0 1-1.21.73.997.997 0 0 1-.73-1.21l.23-.928v-.002z" fill="currentColor" fill-rule="nonzero"></path></svg><span>Retry</span></button><button class="filepond--file-action-button filepond--action-remove-item" type="button" data-align="left" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 1;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M11.586 13l-2.293 2.293a1 1 0 0 0 1.414 1.414L13 14.414l2.293 2.293a1 1 0 0 0 1.414-1.414L14.414 13l2.293-2.293a1 1 0 0 0-1.414-1.414L13 11.586l-2.293-2.293a1 1 0 0 0-1.414 1.414L11.586 13z" fill="currentColor" fill-rule="nonzero"></path></svg><span>Remove</span></button><button class="filepond--file-action-button filepond--action-process-item" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M14 10.414v3.585a1 1 0 0 1-2 0v-3.585l-1.293 1.293a1 1 0 0 1-1.414-1.415l3-3a1 1 0 0 1 1.414 0l3 3a1 1 0 0 1-1.414 1.415L14 10.414zM9 18a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2H9z" fill="currentColor" fill-rule="evenodd"></path></svg><span>Upload</span></button><button class="filepond--file-action-button filepond--action-abort-item-processing" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><span>Cancel</span></button><button class="filepond--file-action-button filepond--action-retry-item-processing" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M10.81 9.185l-.038.02A4.997 4.997 0 0 0 8 13.683a5 5 0 0 0 5 5 5 5 0 0 0 5-5 1 1 0 0 1 2 0A7 7 0 1 1 9.722 7.496l-.842-.21a.999.999 0 1 1 .484-1.94l3.23.806c.535.133.86.675.73 1.21l-.804 3.233a.997.997 0 0 1-1.21.73.997.997 0 0 1-.73-1.21l.23-.928v-.002z" fill="currentColor" fill-rule="nonzero"></path></svg><span>Retry</span></button><button class="filepond--file-action-button filepond--action-revert-item-processing" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M11.586 13l-2.293 2.293a1 1 0 0 0 1.414 1.414L13 14.414l2.293 2.293a1 1 0 0 0 1.414-1.414L14.414 13l2.293-2.293a1 1 0 0 0-1.414-1.414L13 11.586l-2.293-2.293a1 1 0 0 0-1.414 1.414L11.586 13z" fill="currentColor" fill-rule="nonzero"></path></svg><span>Remove</span></button><div class="filepond--processing-complete-indicator" data-align="right" style="transform: scale3d(0.75, 0.75, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M18.293 9.293a1 1 0 0 1 1.414 1.414l-7.002 7a1 1 0 0 1-1.414 0l-3.998-4a1 1 0 1 1 1.414-1.414L12 15.586l6.294-6.293z" fill="currentColor" fill-rule="nonzero"></path></svg></div><div class="filepond--file-info" style="transform: translate3d(35px, 0px, 0px);"><span class="filepond--file-info-main" aria-hidden="true">01KMJT62B61GW0AP8Y8F8ANC8F.png</span><span class="filepond--file-info-sub">4.8 MB</span></div><div class="filepond--file-status" style="transform: translate3d(35px, 0px, 0px); opacity: 0; visibility: hidden; pointer-events: none;"><span class="filepond--file-status-main"></span><span class="filepond--file-status-sub"></span></div><div class="filepond--progress-indicator filepond--load-indicator" style="opacity: 0; visibility: hidden; pointer-events: none;"><svg><path stroke-width="2" stroke-linecap="round"></path></svg></div><div class="filepond--progress-indicator filepond--process-indicator" style="opacity: 0; visibility: hidden; pointer-events: none;"><svg><path stroke-width="2" stroke-linecap="round"></path></svg></div><div class="filepond--image-preview-wrapper"><div class="filepond--image-preview-overlay filepond--image-preview-overlay-idle" style="opacity: 1;"><svg width="500" height="200" viewBox="0 0 500 200" preserveAspectRatio="none">
+    <defs>
+        <radialgradient id="gradient-1" cx=".5" cy="1.25" r="1.15">
+            <stop offset="50%" stop-color="#000000"></stop>
+            <stop offset="56%" stop-color="#0a0a0a"></stop>
+            <stop offset="63%" stop-color="#262626"></stop>
+            <stop offset="69%" stop-color="#4f4f4f"></stop>
+            <stop offset="75%" stop-color="#808080"></stop>
+            <stop offset="81%" stop-color="#b1b1b1"></stop>
+            <stop offset="88%" stop-color="#dadada"></stop>
+            <stop offset="94%" stop-color="#f6f6f6"></stop>
+            <stop offset="100%" stop-color="#ffffff"></stop>
+        </radialgradient>
+        <mask id="mask-1">
+            <rect x="0" y="0" width="500" height="200" fill="url(#gradient-1)"></rect>
+        </mask>
+    </defs>
+    <rect x="0" width="500" height="200" fill="currentColor" mask="url(#mask-1)"></rect>
+</svg></div><div class="filepond--image-preview-overlay filepond--image-preview-overlay-success" style="opacity: 0; visibility: hidden; pointer-events: none;"><svg width="500" height="200" viewBox="0 0 500 200" preserveAspectRatio="none">
+    <defs>
+        <radialgradient id="gradient-2" cx=".5" cy="1.25" r="1.15">
+            <stop offset="50%" stop-color="#000000"></stop>
+            <stop offset="56%" stop-color="#0a0a0a"></stop>
+            <stop offset="63%" stop-color="#262626"></stop>
+            <stop offset="69%" stop-color="#4f4f4f"></stop>
+            <stop offset="75%" stop-color="#808080"></stop>
+            <stop offset="81%" stop-color="#b1b1b1"></stop>
+            <stop offset="88%" stop-color="#dadada"></stop>
+            <stop offset="94%" stop-color="#f6f6f6"></stop>
+            <stop offset="100%" stop-color="#ffffff"></stop>
+        </radialgradient>
+        <mask id="mask-2">
+            <rect x="0" y="0" width="500" height="200" fill="url(#gradient-2)"></rect>
+        </mask>
+    </defs>
+    <rect x="0" width="500" height="200" fill="currentColor" mask="url(#mask-2)"></rect>
+</svg></div><div class="filepond--image-preview-overlay filepond--image-preview-overlay-failure" style="opacity: 0; visibility: hidden; pointer-events: none;"><svg width="500" height="200" viewBox="0 0 500 200" preserveAspectRatio="none">
+    <defs>
+        <radialgradient id="gradient-3" cx=".5" cy="1.25" r="1.15">
+            <stop offset="50%" stop-color="#000000"></stop>
+            <stop offset="56%" stop-color="#0a0a0a"></stop>
+            <stop offset="63%" stop-color="#262626"></stop>
+            <stop offset="69%" stop-color="#4f4f4f"></stop>
+            <stop offset="75%" stop-color="#808080"></stop>
+            <stop offset="81%" stop-color="#b1b1b1"></stop>
+            <stop offset="88%" stop-color="#dadada"></stop>
+            <stop offset="94%" stop-color="#f6f6f6"></stop>
+            <stop offset="100%" stop-color="#ffffff"></stop>
+        </radialgradient>
+        <mask id="mask-3">
+            <rect x="0" y="0" width="500" height="200" fill="url(#gradient-3)"></rect>
+        </mask>
+    </defs>
+    <rect x="0" width="500" height="200" fill="currentColor" mask="url(#mask-3)"></rect>
+</svg></div><div class="filepond--image-preview" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 1;"><div class="filepond--image-clip" style="opacity: 1; height: 256px; width: 341.58px;"><div class="filepond--image-canvas-wrapper" style="transform-origin: 461px 345.5px; transform: translate3d(-290.21px, -217.5px, 0px) scale3d(0.370478, 0.370478, 1) rotateZ(6.28319rad); opacity: 1; height: 691px; width: 922px;"><div class="filepond--image-bitmap" style="transform: scale3d(1, 1, 1);"><canvas width="922" height="691"></canvas></div></div></div></div></div></div></fieldset><div class="filepond--panel filepond--item-panel" data-scalable="true"><div class="filepond--panel-top filepond--item-panel"></div><div class="filepond--panel-center filepond--item-panel" style="transform: translate3d(0px, 8px, 0px) scale3d(1, 2.4, 1);"></div><div class="filepond--panel-bottom filepond--item-panel" style="transform: translate3d(0px, 248px, 0px);"></div></div></li></ul></div><div class="filepond--panel filepond--panel-root" data-scalable="true"><div class="filepond--panel-top filepond--panel-root"></div><div class="filepond--panel-center filepond--panel-root" style="transform: translate3d(0px, 8px, 0px) scale3d(1, 2.4, 1);"></div><div class="filepond--panel-bottom filepond--panel-root" style="transform: translate3d(0px, 248px, 0px);"></div></div><span class="filepond--assistant" id="filepond--assistant-uu3j2g19c" role="alert" aria-live="polite" aria-relevant="additions"></span><fieldset class="filepond--data"><legend>Files</legend><input type="hidden" name="filepond" value="http://127.0.0.1:8000/storage/community/district_associations/logos/01KMJT62B61GW0AP8Y8F8ANC8F.png"></fieldset><div class="filepond--drip"></div></div>
+        </div>
+
+        <div x-show="error" x-text="error" class="text-sm text-danger-600 dark:text-danger-400" style="display: none;"></div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->    </div>
+</div>
+
+            <!--[if ENDBLOCK]><![endif]-->
+</div>
+            
+        <div style="--col-span-default: span 1 / span 1;" class="col-[--col-span-default]" wire:key="g5JW8xwhMGmF3bNVFErF.data.link.Filament\Forms\Components\TextInput">
+    <!--[if BLOCK]><![endif]-->                <div data-field-wrapper="" class="fi-fo-field-wrp">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="grid gap-y-2">
+        <!--[if BLOCK]><![endif]-->            <div class="flex items-center gap-x-3 justify-between ">
+                <!--[if BLOCK]><![endif]-->                    <label class="fi-fo-field-wrp-label inline-flex items-center gap-x-3" for="data.link">
+    
+
+    <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
+        
+        Link<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </span>
+
+    
+</label>
+                <!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <div class="grid auto-cols-fr gap-y-2">
+                <div class="fi-input-wrp flex rounded-lg shadow-sm ring-1 transition duration-75 bg-white dark:bg-white/5 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-2 ring-gray-950/10 dark:ring-white/20 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-600 dark:[&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-500 fi-fo-text-input overflow-hidden">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-input-wrp-input min-w-0 flex-1">
+        <input class="fi-input block w-full border-none py-1.5 text-base text-gray-950 transition duration-75 placeholder:text-gray-400 focus:ring-0 disabled:text-gray-500 disabled:[-webkit-text-fill-color:theme(colors.gray.500)] disabled:placeholder:[-webkit-text-fill-color:theme(colors.gray.400)] dark:text-white dark:placeholder:text-gray-500 dark:disabled:text-gray-400 dark:disabled:[-webkit-text-fill-color:theme(colors.gray.400)] dark:disabled:placeholder:[-webkit-text-fill-color:theme(colors.gray.500)] sm:text-sm sm:leading-6 bg-white/0 ps-3 pe-3" id="data.link" maxlength="255" type="text" wire:model="data.link">
+    </div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->    </div>
+</div>
+
+            <!--[if ENDBLOCK]><![endif]-->
+</div>
+            
+        <div style="--col-span-default: span 1 / span 1;" class="col-[--col-span-default]" wire:key="g5JW8xwhMGmF3bNVFErF.data.members_count.Filament\Forms\Components\TextInput">
+    <!--[if BLOCK]><![endif]-->                <div data-field-wrapper="" class="fi-fo-field-wrp">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="grid gap-y-2">
+        <!--[if BLOCK]><![endif]-->            <div class="flex items-center gap-x-3 justify-between ">
+                <!--[if BLOCK]><![endif]-->                    <label class="fi-fo-field-wrp-label inline-flex items-center gap-x-3" for="data.members_count">
+    
+
+    <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
+        
+        Members count<!--[if BLOCK]><![endif]--><sup class="text-danger-600 dark:text-danger-400 font-medium">*</sup>
+        <!--[if ENDBLOCK]><![endif]-->    </span>
+
+    
+</label>
+                <!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <div class="grid auto-cols-fr gap-y-2">
+                <div class="fi-input-wrp flex rounded-lg shadow-sm ring-1 transition duration-75 bg-white dark:bg-white/5 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-2 ring-gray-950/10 dark:ring-white/20 [&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-600 dark:[&amp;:not(:has(.fi-ac-action:focus))]:focus-within:ring-primary-500 fi-fo-text-input overflow-hidden">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-input-wrp-input min-w-0 flex-1">
+        <input class="fi-input block w-full border-none py-1.5 text-base text-gray-950 transition duration-75 placeholder:text-gray-400 focus:ring-0 disabled:text-gray-500 disabled:[-webkit-text-fill-color:theme(colors.gray.500)] disabled:placeholder:[-webkit-text-fill-color:theme(colors.gray.400)] dark:text-white dark:placeholder:text-gray-500 dark:disabled:text-gray-400 dark:disabled:[-webkit-text-fill-color:theme(colors.gray.400)] dark:disabled:placeholder:[-webkit-text-fill-color:theme(colors.gray.500)] sm:text-sm sm:leading-6 bg-white/0 ps-3 pe-3" id="data.members_count" inputmode="decimal" required="required" step="any" type="number" wire:model="data.members_count">
+    </div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->    </div>
+</div>
+
+            <!--[if ENDBLOCK]><![endif]-->
+</div>
+            
+        <div style="--col-span-default: span 1 / span 1;" class="col-[--col-span-default]" wire:key="g5JW8xwhMGmF3bNVFErF.data.cover_image.Filament\Forms\Components\FileUpload">
+    <!--[if BLOCK]><![endif]-->                <div data-field-wrapper="" class="fi-fo-field-wrp">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="grid gap-y-2">
+        <!--[if BLOCK]><![endif]-->            <div class="flex items-center gap-x-3 justify-between ">
+                <!--[if BLOCK]><![endif]-->                    <div class="fi-fo-field-wrp-label inline-flex items-center gap-x-3" id="hero_image_field-label">
+    
+
+    <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
+        
+        Hero Image (Blue Portion)<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </span>
+
+    
+</div>
+                <!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <div class="grid auto-cols-fr gap-y-2">
+                <div x-load="" x-load-src="http://127.0.0.1:8000/js/filament/forms/components/file-upload.js?v=3.3.49.0" x-data="fileUploadFormComponent({
+                    acceptedFileTypes: JSON.parse(&#39;[\u0022image\\\/*\u0022]&#39;),
+                    imageEditorEmptyFillColor: null,
+                    imageEditorMode: 1,
+                    imageEditorViewportHeight: null,
+                    imageEditorViewportWidth: null,
+                    deleteUploadedFileUsing: async (fileKey) =&gt; {
+                        return await $wire.deleteUploadedFile(&#39;data.cover_image&#39;, fileKey)
+                    },
+                    getUploadedFilesUsing: async () =&gt; {
+                        return await $wire.getFormUploadedFiles(&#39;data.cover_image&#39;)
+                    },
+                    hasImageEditor: false,
+                    hasCircleCropper: false,
+                    canEditSvgs: true,
+                    isSvgEditingConfirmed: false,
+                    confirmSvgEditingMessage: &#39;Editing SVG files is not recommended as it can result in quality loss when scaling.\\n Are you sure you want to continue?&#39;,
+                    disabledSvgEditingMessage: &#39;Editing SVG files is disabled as it can result in quality loss when scaling.&#39;,
+                    imageCropAspectRatio: null,
+                    imagePreviewHeight: null,
+                    imageResizeMode: null,
+                    imageResizeTargetHeight: null,
+                    imageResizeTargetWidth: null,
+                    imageResizeUpscale: true,
+                    isAvatar: false,
+                    isDeletable: true,
+                    isDisabled: false,
+                    isDownloadable: false,
+                    isMultiple: false,
+                    isOpenable: false,
+                    isPasteable: false,
+                    isPreviewable: true,
+                    isReorderable: false,
+                    itemPanelAspectRatio: null,
+                    loadingIndicatorPosition: &#39;right&#39;,
+                    locale: &#39;en&#39;,
+                    panelAspectRatio: null,
+                    panelLayout: &#39;compact&#39;,
+                    placeholder: null,
+                    maxFiles: null,
+                    maxSize: null,
+                    minSize: null,
+                    mimeTypeMap: [],
+                    maxParallelUploads: null,
+                    removeUploadedFileUsing: async (fileKey) =&gt; {
+                        return await $wire.removeFormUploadedFile(&#39;data.cover_image&#39;, fileKey)
+                    },
+                    removeUploadedFileButtonPosition: &#39;left&#39;,
+                    reorderUploadedFilesUsing: async (files) =&gt; {
+                        return await $wire.reorderFormUploadedFiles(&#39;data.cover_image&#39;, files)
+                    },
+                    shouldAppendFiles: false,
+                    shouldOrientImageFromExif: true,
+                    shouldTransformImage: false,
+                    state: $wire.$entangle(&#39;data.cover_image&#39;, false),
+                    uploadButtonPosition: &#39;right&#39;,
+                    uploadingMessage: &#39;Uploading file...&#39;,
+                    uploadProgressIndicatorPosition: &#39;right&#39;,
+                    uploadUsing: (fileKey, file, success, error, progress) =&gt; {
+                        $wire.upload(
+                            `data.cover_image.${fileKey}`,
+                            file,
+                            () =&gt; {
+                                success(fileKey)
+                            },
+                            error,
+                            (progressEvent) =&gt; {
+                                progress(true, progressEvent.detail.progress, 100)
+                            },
+                        )
+                    },
+                })" wire:ignore="" wire:key="g5JW8xwhMGmF3bNVFErF.data.cover_image.Filament\Forms\Components\FileUpload.a8cf63fecab3eb3edf6760bc02f258a6" class="fi-fo-file-upload flex flex-col gap-y-2 [&amp;_.filepond--root]:font-sans items-start" aria-labelledby="hero_image_field-label" id="hero_image_field" role="group">
+        <div class="h-full w-full">
+            <div class="filepond--root filepond--hopper" data-style-panel-layout="compact" data-style-button-remove-item-position="left" data-style-button-process-item-position="right" data-style-load-indicator-position="right" data-style-progress-indicator-position="right" data-style-button-remove-item-align="false" data-style-image-edit-button-edit-item-position="bottom center" style="height: 194px;"><input class="filepond--browser" type="file" id="filepond--browser-f3bf54t9j" aria-controls="filepond--assistant-f3bf54t9j" aria-labelledby="filepond--drop-label-f3bf54t9j" accept="image/*"><div class="filepond--drop-label" style="transform: translate3d(0px, 30px, 0px); opacity: 0; visibility: hidden; pointer-events: none;"><label for="filepond--browser-f3bf54t9j" id="filepond--drop-label-f3bf54t9j">Drag &amp; Drop your files or <span class="filepond--label-action" tabindex="0"> Browse </span></label></div><div class="filepond--list-scroller" style="transform: translate3d(0px, 0px, 0px);"><ul class="filepond--list" role="list"><li class="filepond--item" id="filepond--item-bspmgxn4r" data-filepond-item-state="idle" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 1; height: 194px;"><fieldset class="filepond--file-wrapper"><legend>01KMJT62B8JYM0KF8MEVWC8VA9.jpeg</legend><div class="filepond--file"><button class="filepond--file-action-button filepond--action-abort-item-load" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><span>Abort</span></button><button class="filepond--file-action-button filepond--action-retry-item-load" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M10.81 9.185l-.038.02A4.997 4.997 0 0 0 8 13.683a5 5 0 0 0 5 5 5 5 0 0 0 5-5 1 1 0 0 1 2 0A7 7 0 1 1 9.722 7.496l-.842-.21a.999.999 0 1 1 .484-1.94l3.23.806c.535.133.86.675.73 1.21l-.804 3.233a.997.997 0 0 1-1.21.73.997.997 0 0 1-.73-1.21l.23-.928v-.002z" fill="currentColor" fill-rule="nonzero"></path></svg><span>Retry</span></button><button class="filepond--file-action-button filepond--action-remove-item" type="button" data-align="left" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 1;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M11.586 13l-2.293 2.293a1 1 0 0 0 1.414 1.414L13 14.414l2.293 2.293a1 1 0 0 0 1.414-1.414L14.414 13l2.293-2.293a1 1 0 0 0-1.414-1.414L13 11.586l-2.293-2.293a1 1 0 0 0-1.414 1.414L11.586 13z" fill="currentColor" fill-rule="nonzero"></path></svg><span>Remove</span></button><button class="filepond--file-action-button filepond--action-process-item" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M14 10.414v3.585a1 1 0 0 1-2 0v-3.585l-1.293 1.293a1 1 0 0 1-1.414-1.415l3-3a1 1 0 0 1 1.414 0l3 3a1 1 0 0 1-1.414 1.415L14 10.414zM9 18a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2H9z" fill="currentColor" fill-rule="evenodd"></path></svg><span>Upload</span></button><button class="filepond--file-action-button filepond--action-abort-item-processing" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><span>Cancel</span></button><button class="filepond--file-action-button filepond--action-retry-item-processing" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M10.81 9.185l-.038.02A4.997 4.997 0 0 0 8 13.683a5 5 0 0 0 5 5 5 5 0 0 0 5-5 1 1 0 0 1 2 0A7 7 0 1 1 9.722 7.496l-.842-.21a.999.999 0 1 1 .484-1.94l3.23.806c.535.133.86.675.73 1.21l-.804 3.233a.997.997 0 0 1-1.21.73.997.997 0 0 1-.73-1.21l.23-.928v-.002z" fill="currentColor" fill-rule="nonzero"></path></svg><span>Retry</span></button><button class="filepond--file-action-button filepond--action-revert-item-processing" type="button" data-align="right" disabled="disabled" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M11.586 13l-2.293 2.293a1 1 0 0 0 1.414 1.414L13 14.414l2.293 2.293a1 1 0 0 0 1.414-1.414L14.414 13l2.293-2.293a1 1 0 0 0-1.414-1.414L13 11.586l-2.293-2.293a1 1 0 0 0-1.414 1.414L11.586 13z" fill="currentColor" fill-rule="nonzero"></path></svg><span>Remove</span></button><div class="filepond--processing-complete-indicator" data-align="right" style="transform: scale3d(0.75, 0.75, 1); opacity: 0; visibility: hidden; pointer-events: none;"><svg width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M18.293 9.293a1 1 0 0 1 1.414 1.414l-7.002 7a1 1 0 0 1-1.414 0l-3.998-4a1 1 0 1 1 1.414-1.414L12 15.586l6.294-6.293z" fill="currentColor" fill-rule="nonzero"></path></svg></div><div class="filepond--file-info" style="transform: translate3d(35px, 0px, 0px);"><span class="filepond--file-info-main" aria-hidden="true">01KMJT62B8JYM0KF8MEVWC8VA9.jpeg</span><span class="filepond--file-info-sub">15 KB</span></div><div class="filepond--file-status" style="transform: translate3d(35px, 0px, 0px); opacity: 0; visibility: hidden; pointer-events: none;"><span class="filepond--file-status-main"></span><span class="filepond--file-status-sub"></span></div><div class="filepond--progress-indicator filepond--load-indicator" style="opacity: 0; visibility: hidden; pointer-events: none;"><svg><path stroke-width="2" stroke-linecap="round"></path></svg></div><div class="filepond--progress-indicator filepond--process-indicator" style="opacity: 0; visibility: hidden; pointer-events: none;"><svg><path stroke-width="2" stroke-linecap="round"></path></svg></div><div class="filepond--image-preview-wrapper"><div class="filepond--image-preview-overlay filepond--image-preview-overlay-idle" style="opacity: 1;"><svg width="500" height="200" viewBox="0 0 500 200" preserveAspectRatio="none">
+    <defs>
+        <radialgradient id="gradient-4" cx=".5" cy="1.25" r="1.15">
+            <stop offset="50%" stop-color="#000000"></stop>
+            <stop offset="56%" stop-color="#0a0a0a"></stop>
+            <stop offset="63%" stop-color="#262626"></stop>
+            <stop offset="69%" stop-color="#4f4f4f"></stop>
+            <stop offset="75%" stop-color="#808080"></stop>
+            <stop offset="81%" stop-color="#b1b1b1"></stop>
+            <stop offset="88%" stop-color="#dadada"></stop>
+            <stop offset="94%" stop-color="#f6f6f6"></stop>
+            <stop offset="100%" stop-color="#ffffff"></stop>
+        </radialgradient>
+        <mask id="mask-4">
+            <rect x="0" y="0" width="500" height="200" fill="url(#gradient-4)"></rect>
+        </mask>
+    </defs>
+    <rect x="0" width="500" height="200" fill="currentColor" mask="url(#mask-4)"></rect>
+</svg></div><div class="filepond--image-preview-overlay filepond--image-preview-overlay-success" style="opacity: 0; visibility: hidden; pointer-events: none;"><svg width="500" height="200" viewBox="0 0 500 200" preserveAspectRatio="none">
+    <defs>
+        <radialgradient id="gradient-5" cx=".5" cy="1.25" r="1.15">
+            <stop offset="50%" stop-color="#000000"></stop>
+            <stop offset="56%" stop-color="#0a0a0a"></stop>
+            <stop offset="63%" stop-color="#262626"></stop>
+            <stop offset="69%" stop-color="#4f4f4f"></stop>
+            <stop offset="75%" stop-color="#808080"></stop>
+            <stop offset="81%" stop-color="#b1b1b1"></stop>
+            <stop offset="88%" stop-color="#dadada"></stop>
+            <stop offset="94%" stop-color="#f6f6f6"></stop>
+            <stop offset="100%" stop-color="#ffffff"></stop>
+        </radialgradient>
+        <mask id="mask-5">
+            <rect x="0" y="0" width="500" height="200" fill="url(#gradient-5)"></rect>
+        </mask>
+    </defs>
+    <rect x="0" width="500" height="200" fill="currentColor" mask="url(#mask-5)"></rect>
+</svg></div><div class="filepond--image-preview-overlay filepond--image-preview-overlay-failure" style="opacity: 0; visibility: hidden; pointer-events: none;"><svg width="500" height="200" viewBox="0 0 500 200" preserveAspectRatio="none">
+    <defs>
+        <radialgradient id="gradient-6" cx=".5" cy="1.25" r="1.15">
+            <stop offset="50%" stop-color="#000000"></stop>
+            <stop offset="56%" stop-color="#0a0a0a"></stop>
+            <stop offset="63%" stop-color="#262626"></stop>
+            <stop offset="69%" stop-color="#4f4f4f"></stop>
+            <stop offset="75%" stop-color="#808080"></stop>
+            <stop offset="81%" stop-color="#b1b1b1"></stop>
+            <stop offset="88%" stop-color="#dadada"></stop>
+            <stop offset="94%" stop-color="#f6f6f6"></stop>
+            <stop offset="100%" stop-color="#ffffff"></stop>
+        </radialgradient>
+        <mask id="mask-6">
+            <rect x="0" y="0" width="500" height="200" fill="url(#gradient-6)"></rect>
+        </mask>
+    </defs>
+    <rect x="0" width="500" height="200" fill="currentColor" mask="url(#mask-6)"></rect>
+</svg></div><div class="filepond--image-preview" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1); opacity: 1;"><div class="filepond--image-clip" style="opacity: 1; height: 194px; width: 259px;"><div class="filepond--image-canvas-wrapper" style="transform-origin: 129.5px 97px; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateZ(6.28319rad); opacity: 1; height: 194px; width: 259px;"><div class="filepond--image-bitmap" style="transform: scale3d(1, 1, 1);"><canvas width="259" height="194"></canvas></div></div></div></div></div></div></fieldset><div class="filepond--panel filepond--item-panel" data-scalable="true"><div class="filepond--panel-top filepond--item-panel"></div><div class="filepond--panel-center filepond--item-panel" style="transform: translate3d(0px, 8px, 0px) scale3d(1, 1.78, 1);"></div><div class="filepond--panel-bottom filepond--item-panel" style="transform: translate3d(0px, 186px, 0px);"></div></div></li></ul></div><div class="filepond--panel filepond--panel-root" data-scalable="true"><div class="filepond--panel-top filepond--panel-root"></div><div class="filepond--panel-center filepond--panel-root" style="transform: translate3d(0px, 8px, 0px) scale3d(1, 1.78, 1);"></div><div class="filepond--panel-bottom filepond--panel-root" style="transform: translate3d(0px, 186px, 0px);"></div></div><span class="filepond--assistant" id="filepond--assistant-f3bf54t9j" role="alert" aria-live="polite" aria-relevant="additions"></span><fieldset class="filepond--data"><legend>Files</legend><input type="hidden" name="filepond" value="http://127.0.0.1:8000/storage/community/district_associations/covers/01KMJT62B8JYM0KF8MEVWC8VA9.jpeg"></fieldset><div class="filepond--drip"></div></div>
+        </div>
+
+        <div x-show="error" x-text="error" class="text-sm text-danger-600 dark:text-danger-400" style="display: none;"></div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->            </div>
+        <!--[if ENDBLOCK]><![endif]-->    </div>
+</div>
+
+            <!--[if ENDBLOCK]><![endif]-->
+</div>
+    <!--[if ENDBLOCK]><![endif]-->
+</div>
+
+
+            <!--[if BLOCK]><![endif]-->    <div class="fi-form-actions">
+        <!--[if BLOCK]><![endif]-->    <div class="fi-ac gap-3 flex flex-wrap items-center justify-start">
+        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<button x-bind:id="$id(&#39;key-bindings&#39;)" x-mousetrap.global.mod-s="document.getElementById($el.id).click()" x-data="{
+            form: null,
+            isProcessing: false,
+            processingMessage: null,
+        }" x-init="
+            form = $el.closest(&#39;form&#39;)
+
+            form?.addEventListener(&#39;form-processing-started&#39;, (event) =&gt; {
+                isProcessing = true
+                processingMessage = event.detail.message
+            })
+
+            form?.addEventListener(&#39;form-processing-finished&#39;, () =&gt; {
+                isProcessing = false
+            })
+        " x-bind:class="{ &#39;enabled:opacity-70 enabled:cursor-wait&#39;: isProcessing }" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action" type="submit" wire:loading.attr="disabled" x-bind:disabled="isProcessing" id="key-bindings-2">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="animate-spin fi-btn-icon transition duration-75 h-5 w-5 text-white" wire:loading.delay.default="" wire:target="save">
+    <path clip-rule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill-rule="evenodd" fill="currentColor" opacity="0.2"></path>
+    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" fill="currentColor"></path>
+</svg>
+        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]-->            <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="animate-spin fi-btn-icon transition duration-75 h-5 w-5 text-white" x-show="isProcessing" style="display: none;">
+    <path clip-rule="evenodd" d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill-rule="evenodd" fill="currentColor" opacity="0.2"></path>
+    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" fill="currentColor"></path>
+</svg>
+        <!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span x-show="! isProcessing" class="fi-btn-label">
+        Save changes
+    </span>
+
+    <!--[if BLOCK]><![endif]-->        <span x-show="isProcessing" x-text="processingMessage" class="fi-btn-label" style="display: none;"></span>
+    <!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></button>
+
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<button style=";" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg  fi-btn-color-gray fi-color-gray fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-white text-gray-950 hover:bg-gray-50 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 ring-1 ring-gray-950/10 dark:ring-white/20 [input:checked+&amp;]:bg-gray-400 [input:checked+&amp;]:text-white [input:checked+&amp;]:ring-0 [input:checked+&amp;]:hover:bg-gray-300 dark:[input:checked+&amp;]:bg-gray-600 dark:[input:checked+&amp;]:hover:bg-gray-500 fi-ac-action fi-ac-btn-action" type="button" wire:loading.attr="disabled" x-on:click="document.referrer ? window.history.back() : (window.location.href = &#39;http:\/\/127.0.0.1:8000\/admin\/district-associations&#39;)">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        Cancel
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></button>
+
+            <!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->    </div>
+<!--[if ENDBLOCK]><![endif]-->    </div>
+<!--[if ENDBLOCK]><![endif]-->
+</form>
+    
+            
+    <!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+
+                
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                
+            </div>
+
+            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </section>
+
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->    <form wire:submit.prevent="callMountedAction">
+        
+        <div aria-modal="true" role="dialog" x-data="{
+        isOpen: false,
+
+        livewire: null,
+
+        close: function () {
+            this.isOpen = false
+
+            if (! this.$refs.modalContainer.isConnected) {
+                return
+            }
+
+            this.$refs.modalContainer.dispatchEvent(
+                new CustomEvent(&#39;modal-closed&#39;, { detail: { id: &#39;g5JW8xwhMGmF3bNVFErF-action&#39; } }),
+            )
+        },
+
+        open: function () {
+            this.$nextTick(() =&gt; {
+                this.isOpen = true
+
+                
+                this.$refs.modalContainer.dispatchEvent(
+                    new CustomEvent(&#39;modal-opened&#39;, { detail: { id: &#39;g5JW8xwhMGmF3bNVFErF-action&#39; } }),
+                )
+            })
+        },
+    }" x-on:close-modal.window="if ($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF-action&#39;) close()" x-on:open-modal.window="if ($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF-action&#39;) open()" data-fi-modal-id="g5JW8xwhMGmF3bNVFErF-action" x-trap.noscroll="isOpen" x-bind:class="{
+        &#39;fi-modal-open&#39;: isOpen,
+    }" class="fi-modal block">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div x-show="isOpen" style="display: none;">
+        <div aria-hidden="true" x-show="isOpen" x-transition.duration.300ms.opacity="" class="fi-modal-close-overlay fixed inset-0 z-40 bg-gray-950/50 dark:bg-gray-950/75" style="display: none;"></div>
+
+        <div class="fixed inset-0 z-40 overflow-y-auto cursor-pointer">
+            <div x-ref="modalContainer" x-on:click.self="
+                        document.activeElement.selectionStart === undefined &amp;&amp;
+                            document.activeElement.selectionEnd === undefined &amp;&amp;
+                            $dispatch(&#39;close-modal&#39;, { id: &#39;g5JW8xwhMGmF3bNVFErF-action&#39; })
+                    " class="relative grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center sm:grid-rows-[1fr_auto_3fr] p-4" x-on:closed-form-component-action-modal.window="if (($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF&#39;) &amp;&amp; $wire.mountedActions.length) open()" x-on:modal-closed.stop="if (!$event.detail?.id?.startsWith(&#39;g5JW8xwhMGmF3bNVFErF-&#39;)) {
+                    return
+                }
+
+                const mountedActionShouldOpenModal = false
+
+
+                if (! mountedActionShouldOpenModal) {
+                    return
+                }
+
+                if ($wire.mountedFormComponentActions.length) {
+                    return
+                }
+
+                $wire.unmountAction(false, false)" x-on:opened-form-component-action-modal.window="if ($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF&#39;) close()">
+                <div x-data="{ isShown: false }" x-init="
+                        $nextTick(() =&gt; {
+                            isShown = isOpen
+                            $watch(&#39;isOpen&#39;, () =&gt; (isShown = isOpen))
+                        })
+                    " x-on:keydown.window.escape="$dispatch(&#39;close-modal&#39;, { id: &#39;g5JW8xwhMGmF3bNVFErF-action&#39; })" x-show="isShown" x-transition:enter="duration-300" x-transition:leave="duration-300" x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100" x-transition:leave-start="scale-100 opacity-100" x-transition:leave-end="scale-95 opacity-0" wire:key="g5JW8xwhMGmF3bNVFErF.modal.g5JW8xwhMGmF3bNVFErF-action.window" class="fi-modal-window pointer-events-auto relative row-start-2 flex w-full cursor-default flex-col bg-white shadow-xl ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 mx-auto rounded-xl hidden max-w-sm" style="display: none;">
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </form>
+
+    <!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]-->    <form wire:submit.prevent="callMountedInfolistAction">
+        
+        <div aria-modal="true" role="dialog" x-data="{
+        isOpen: false,
+
+        livewire: null,
+
+        close: function () {
+            this.isOpen = false
+
+            if (! this.$refs.modalContainer.isConnected) {
+                return
+            }
+
+            this.$refs.modalContainer.dispatchEvent(
+                new CustomEvent(&#39;modal-closed&#39;, { detail: { id: &#39;g5JW8xwhMGmF3bNVFErF-infolist-action&#39; } }),
+            )
+        },
+
+        open: function () {
+            this.$nextTick(() =&gt; {
+                this.isOpen = true
+
+                
+                this.$refs.modalContainer.dispatchEvent(
+                    new CustomEvent(&#39;modal-opened&#39;, { detail: { id: &#39;g5JW8xwhMGmF3bNVFErF-infolist-action&#39; } }),
+                )
+            })
+        },
+    }" x-on:close-modal.window="if ($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF-infolist-action&#39;) close()" x-on:open-modal.window="if ($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF-infolist-action&#39;) open()" data-fi-modal-id="g5JW8xwhMGmF3bNVFErF-infolist-action" x-trap.noscroll="isOpen" x-bind:class="{
+        &#39;fi-modal-open&#39;: isOpen,
+    }" class="fi-modal block">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div x-show="isOpen" style="display: none;">
+        <div aria-hidden="true" x-show="isOpen" x-transition.duration.300ms.opacity="" class="fi-modal-close-overlay fixed inset-0 z-40 bg-gray-950/50 dark:bg-gray-950/75" style="display: none;"></div>
+
+        <div class="fixed inset-0 z-40 overflow-y-auto cursor-pointer">
+            <div x-ref="modalContainer" x-on:click.self="
+                        document.activeElement.selectionStart === undefined &amp;&amp;
+                            document.activeElement.selectionEnd === undefined &amp;&amp;
+                            $dispatch(&#39;close-modal&#39;, { id: &#39;g5JW8xwhMGmF3bNVFErF-infolist-action&#39; })
+                    " class="relative grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center sm:grid-rows-[1fr_auto_3fr] p-4" x-on:closed-form-component-action-modal.window="if (($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF&#39;) &amp;&amp; $wire.mountedInfolistActions.length) open()" x-on:modal-closed.stop="if (!$event.detail?.id?.startsWith(&#39;g5JW8xwhMGmF3bNVFErF-&#39;)) {
+                    return
+                }
+
+                const mountedInfolistActionShouldOpenModal = false
+
+
+                if (! mountedInfolistActionShouldOpenModal) {
+                    return
+                }
+
+                if ($wire.mountedFormComponentActions.length) {
+                    return
+                }
+
+                $wire.unmountInfolistAction(false, false)" x-on:opened-form-component-action-modal.window="if ($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF&#39;) close()">
+                <div x-data="{ isShown: false }" x-init="
+                        $nextTick(() =&gt; {
+                            isShown = isOpen
+                            $watch(&#39;isOpen&#39;, () =&gt; (isShown = isOpen))
+                        })
+                    " x-on:keydown.window.escape="$dispatch(&#39;close-modal&#39;, { id: &#39;g5JW8xwhMGmF3bNVFErF-infolist-action&#39; })" x-show="isShown" x-transition:enter="duration-300" x-transition:leave="duration-300" x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100" x-transition:leave-start="scale-100 opacity-100" x-transition:leave-end="scale-95 opacity-0" wire:key="g5JW8xwhMGmF3bNVFErF.modal.g5JW8xwhMGmF3bNVFErF-infolist-action.window" class="fi-modal-window pointer-events-auto relative row-start-2 flex w-full cursor-default flex-col bg-white shadow-xl ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 mx-auto rounded-xl hidden max-w-sm" style="display: none;">
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </form>
+
+    <!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]-->    
+    <form wire:submit.prevent="callMountedFormComponentAction">
+        <div aria-modal="true" role="dialog" x-data="{
+        isOpen: false,
+
+        livewire: null,
+
+        close: function () {
+            this.isOpen = false
+
+            if (! this.$refs.modalContainer.isConnected) {
+                return
+            }
+
+            this.$refs.modalContainer.dispatchEvent(
+                new CustomEvent(&#39;modal-closed&#39;, { detail: { id: &#39;g5JW8xwhMGmF3bNVFErF-form-component-action&#39; } }),
+            )
+        },
+
+        open: function () {
+            this.$nextTick(() =&gt; {
+                this.isOpen = true
+
+                
+                this.$refs.modalContainer.dispatchEvent(
+                    new CustomEvent(&#39;modal-opened&#39;, { detail: { id: &#39;g5JW8xwhMGmF3bNVFErF-form-component-action&#39; } }),
+                )
+            })
+        },
+    }" x-on:close-modal.window="if ($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF-form-component-action&#39;) close()" x-on:open-modal.window="if ($event.detail.id === &#39;g5JW8xwhMGmF3bNVFErF-form-component-action&#39;) open()" data-fi-modal-id="g5JW8xwhMGmF3bNVFErF-form-component-action" x-trap.noscroll="isOpen" x-bind:class="{
+        &#39;fi-modal-open&#39;: isOpen,
+    }" class="fi-modal block">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div x-show="isOpen" style="display: none;">
+        <div aria-hidden="true" x-show="isOpen" x-transition.duration.300ms.opacity="" class="fi-modal-close-overlay fixed inset-0 z-40 bg-gray-950/50 dark:bg-gray-950/75" style="display: none;"></div>
+
+        <div class="fixed inset-0 z-40 overflow-y-auto cursor-pointer">
+            <div x-ref="modalContainer" x-on:click.self="
+                        document.activeElement.selectionStart === undefined &amp;&amp;
+                            document.activeElement.selectionEnd === undefined &amp;&amp;
+                            $dispatch(&#39;close-modal&#39;, { id: &#39;g5JW8xwhMGmF3bNVFErF-form-component-action&#39; })
+                    " class="relative grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center sm:grid-rows-[1fr_auto_3fr] p-4" x-on:modal-closed.stop="if (!$event.detail?.id?.startsWith(&#39;g5JW8xwhMGmF3bNVFErF-&#39;)) {
+                    return
+                }
+
+                const mountedFormComponentActionShouldOpenModal = false
+
+
+                if (mountedFormComponentActionShouldOpenModal) {
+                    $wire.unmountFormComponentAction(false, false)
+                }">
+                <div x-data="{ isShown: false }" x-init="
+                        $nextTick(() =&gt; {
+                            isShown = isOpen
+                            $watch(&#39;isOpen&#39;, () =&gt; (isShown = isOpen))
+                        })
+                    " x-on:keydown.window.escape="$dispatch(&#39;close-modal&#39;, { id: &#39;g5JW8xwhMGmF3bNVFErF-form-component-action&#39; })" x-show="isShown" x-transition:enter="duration-300" x-transition:leave="duration-300" x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100" x-transition:leave-start="scale-100 opacity-100" x-transition:leave-end="scale-95 opacity-0" wire:key="g5JW8xwhMGmF3bNVFErF.modal.g5JW8xwhMGmF3bNVFErF-form-component-action.window" class="fi-modal-window pointer-events-auto relative row-start-2 flex w-full cursor-default flex-col bg-white shadow-xl ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 mx-auto rounded-xl hidden max-w-sm" style="display: none;">
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </form>
+
+    <!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></div>
+
+                
+            </main>
+
+            
+
+            
+        </div>
+
+                    <div x-data="{}" x-on:click="$store.sidebar.close()" x-show="$store.sidebar.isOpen" x-transition.opacity.300ms="" class="fi-sidebar-close-overlay fixed inset-0 z-30 bg-gray-950/50 transition duration-500 dark:bg-gray-950/75 lg:hidden"></div>
+
+            <aside x-data="{}" x-bind:class="
+                $store.sidebar.isOpen
+                    ? &#39;fi-sidebar-open w-[--sidebar-width] translate-x-0 shadow-xl ring-1 ring-gray-950\/5 dark:ring-white\/10 rtl:-translate-x-0 lg:sticky&#39;                    : &#39;w-[--sidebar-width] -translate-x-full rtl:translate-x-full lg:sticky&#39;
+            " class="fi-sidebar fixed inset-y-0 start-0 z-30 flex flex-col h-screen content-start bg-white transition-all dark:bg-gray-900 lg:z-0 lg:bg-transparent lg:shadow-none lg:ring-0 lg:transition-none dark:lg:bg-transparent lg:translate-x-0 rtl:lg:-translate-x-0 fi-main-sidebar fi-sidebar-open w-[--sidebar-width] translate-x-0 shadow-xl ring-1 ring-gray-950/5 dark:ring-white/10 rtl:-translate-x-0 lg:sticky">
+    <div class="overflow-x-clip">
+        <header class="fi-sidebar-header flex h-16 items-center bg-white px-6 ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 lg:shadow-sm">
+            <div>
+                                    <a href="http://127.0.0.1:8000/admin">
+                        <div class="fi-logo flex text-xl font-bold leading-5 tracking-tight text-gray-950 dark:text-white">
+            Laravel
+        </div>
+    
+            
+
+                    </a>
+                            </div>
+
+            
+                    </header>
+    </div>
+
+    <nav class="fi-sidebar-nav flex-grow flex flex-col gap-y-7 overflow-y-auto overflow-x-hidden px-6 py-8" style="scrollbar-gutter: stable">
+        
+
+        
+        <ul class="fi-sidebar-nav-groups -mx-2 flex flex-col gap-y-7">
+                            <li x-data="{ label: null }" data-group-label="" class="fi-sidebar-group flex flex-col gap-y-1">
+    
+    
+    <ul class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Dashboard
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/alumni-registrations" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Alumni Approval
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/class-tasks" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            ClassTask Setting
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/clubs" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Clubs Setting
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/users" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Users
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/events" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Home Setting
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/schedules" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Routine Setting
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/question-banks" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            QuestionBank Setting
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/materials" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Pdf &amp; Note Setting
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: &#39;Community Setting&#39; }" data-group-label="Community Setting" class="fi-sidebar-group flex flex-col gap-y-1 fi-active">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+                            <svg class="fi-sidebar-group-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"></path>
+</svg>            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Community Setting
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Community Setting" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ &#39;-rotate-180&#39;: $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Community Setting
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item fi-active fi-sidebar-item-active flex flex-col gap-y-1">
+    <a href="http://127.0.0.1:8000/admin/district-associations" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 bg-gray-100 dark:bg-white/5">
+        
+                    <div class="fi-sidebar-item-grouped-border relative flex h-6 w-6 items-center justify-center">
+                
+                                    <div class="absolute -bottom-1/2 top-1/2 w-px bg-gray-300 dark:bg-gray-600"></div>
+                
+                <div class="relative h-1.5 w-1.5 rounded-full bg-primary-600 dark:bg-primary-400"></div>
+            </div>
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-primary-600 dark:text-primary-400">
+            District Associations
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/posts" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+        
+                    <div class="fi-sidebar-item-grouped-border relative flex h-6 w-6 items-center justify-center">
+                                    <div class="absolute -top-1/2 bottom-1/2 w-px bg-gray-300 dark:bg-gray-600"></div>
+                
+                                    <div class="absolute -bottom-1/2 top-1/2 w-px bg-gray-300 dark:bg-gray-600"></div>
+                
+                <div class="relative h-1.5 w-1.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+            </div>
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Posts
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/talent" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+        
+                    <div class="fi-sidebar-item-grouped-border relative flex h-6 w-6 items-center justify-center">
+                                    <div class="absolute -top-1/2 bottom-1/2 w-px bg-gray-300 dark:bg-gray-600"></div>
+                
+                
+                <div class="relative h-1.5 w-1.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+            </div>
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Talent
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: &#39;Documentation&#39; }" data-group-label="Documentation" class="fi-sidebar-group flex flex-col gap-y-1">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Documentation
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Documentation" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ &#39;-rotate-180&#39;: $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Documentation
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/docs-settings" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Docs Settings
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/docs-sections" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Docs Sections
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8000/admin/docs-team-members" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Docs Team
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                    </ul>
+
+        <script>
+            var collapsedGroups = JSON.parse(
+                localStorage.getItem('collapsedGroups'),
+            )
+
+            if (collapsedGroups === null || collapsedGroups === 'null') {
+                localStorage.setItem(
+                    'collapsedGroups',
+                    JSON.stringify(JSON.parse('[\u0022Community Setting\u0022]')),
+                )
+            }
+
+            collapsedGroups = JSON.parse(
+                localStorage.getItem('collapsedGroups'),
+            )
+
+            document
+                .querySelectorAll('.fi-sidebar-group')
+                .forEach((group) => {
+                    if (
+                        !collapsedGroups.includes(group.dataset.groupLabel)
+                    ) {
+                        return
+                    }
+
+                    // Alpine.js loads too slow, so attempt to hide a
+                    // collapsed sidebar group earlier.
+                    group.querySelector(
+                        '.fi-sidebar-group-items',
+                    ).style.display = 'none'
+                    group
+                        .querySelector('.fi-sidebar-group-collapse-button')
+                        .classList.add('-rotate-180')
+                })
+        </script>
+
+        
+    </nav>
+
+    
+</aside>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(() => {
+                        let activeSidebarItem = document.querySelector(
+                            '.fi-main-sidebar .fi-sidebar-item.fi-active',
+                        )
+
+                        if (
+                            !activeSidebarItem ||
+                            activeSidebarItem.offsetParent === null
+                        ) {
+                            activeSidebarItem = document.querySelector(
+                                '.fi-main-sidebar .fi-sidebar-group.fi-active',
+                            )
+                        }
+
+                        if (
+                            !activeSidebarItem ||
+                            activeSidebarItem.offsetParent === null
+                        ) {
+                            return
+                        }
+
+                        const sidebarWrapper = document.querySelector(
+                            '.fi-main-sidebar .fi-sidebar-nav',
+                        )
+
+                        if (!sidebarWrapper) {
+                            return
+                        }
+
+                        sidebarWrapper.scrollTo(
+                            0,
+                            activeSidebarItem.offsetTop -
+                                window.innerHeight / 2,
+                        )
+                    }, 10)
+                })
+            </script>
+            </div>
+
+        <div wire:snapshot="{&quot;data&quot;:{&quot;isFilamentNotificationsComponent&quot;:true,&quot;notifications&quot;:[[],{&quot;class&quot;:&quot;Filament\\Notifications\\Collection&quot;,&quot;s&quot;:&quot;wrbl&quot;}]},&quot;memo&quot;:{&quot;id&quot;:&quot;rhJFnddvod9H4oWFAJCa&quot;,&quot;name&quot;:&quot;filament.livewire.notifications&quot;,&quot;path&quot;:&quot;admin\/district-associations\/4\/edit&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;94ead2108202f7e60ee389ff526ad869256a9ba606ecfb087f59926ce1f74518&quot;}" wire:effects="{&quot;listeners&quot;:[&quot;notificationsSent&quot;,&quot;notificationSent&quot;,&quot;notificationClosed&quot;]}" wire:id="rhJFnddvod9H4oWFAJCa">
+    <div class="fi-no pointer-events-none fixed inset-4 z-50 mx-auto flex gap-3 items-end flex-col-reverse justify-end" role="status">
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+
+    <!--[if BLOCK]><![endif]-->        <div x-data="{}" x-init="
+        window.addEventListener(&#39;EchoLoaded&#39;, () =&gt; {
+            window.Echo.private(&#39;App.Models.User.1&#39;).notification((notification) =&gt; {
+                setTimeout(() =&gt; $wire.handleBroadcastNotification(notification), 500)
+            })
+        })
+
+        if (window.Echo) {
+            window.dispatchEvent(new CustomEvent(&#39;EchoLoaded&#39;))
+        }
+    "></div>
+    <!--[if ENDBLOCK]><![endif]--></div>
+
+        
+
+        <script>
+        window.filamentData = []    </script>
+
+            
+            <script src="./Netrokona(hero)District Association - Laravel_files/notifications.js"></script>
+        
+                
+            <script src="./Netrokona(hero)District Association - Laravel_files/support.js"></script>
+        
+                
+            <script src="./Netrokona(hero)District Association - Laravel_files/echo.js"></script>
+        
+                
+            <script src="./Netrokona(hero)District Association - Laravel_files/app.js"></script>
+        
+    
+<style>
+    :root {
+            }
+</style>
+
+        
+                    <script>
+                loadDarkMode()
+            </script>
+        
+        
+        
+
+        
+    <script src="./Netrokona(hero)District Association - Laravel_files/livewire.min.js" data-csrf="UdjL7h3cbU6laEWJg4YvQPGcIJADqZTP2n47i6ZW" data-update-uri="/livewire/update" data-navigate-once="true"></script>
+
+
+</body></html>

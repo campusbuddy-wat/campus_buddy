@@ -1,0 +1,30 @@
+# ── Web Framework ─────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-multipart==0.0.9
+jinja2==3.1.4
+
+# ── Environment ───────────────────────────────────────────
+python-dotenv==1.0.1
+
+# ── Web Scraping ──────────────────────────────────────────
+beautifulsoup4==4.12.3
+requests==2.32.3
+lxml==5.2.2
+
+# ── Embeddings (runs locally, no API cost) ────────────────
+sentence-transformers==3.0.1
+
+# ── Vector Database (Qdrant Cloud) ────────────────────────
+qdrant-client==1.9.1
+
+# ── LLM (Groq) ────────────────────────────────────────────
+groq==1.0.0
+
+# ── Scheduler (auto-refresh every 24h) ────────────────────
+apscheduler==3.10.4
+
+# ── Text Processing ───────────────────────────────────────
+tiktoken==0.7.0
+slowapi==0.1.10
+tenacity==9.1.2

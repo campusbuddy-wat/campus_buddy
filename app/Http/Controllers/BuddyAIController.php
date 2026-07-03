@@ -7,6 +7,7 @@ use App\Services\RAGService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -121,6 +122,10 @@ class BuddyAIController extends Controller
      * Handle public visitor chat messages (no auth required).
      * Route: POST /api/buddy-visitor
      *
+     * Proxies the request to the Python RAG microservice (ai_service/).
+     * The Python service handles retrieval from Qdrant + Groq generation.
+     * If the Python service is unreachable, falls back to a helpful message.
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -132,9 +137,9 @@ class BuddyAIController extends Controller
             'history' => 'nullable|array|max:20',
         ]);
 
-        $message = strip_tags($request->input('message'));
-        $history = $request->input('history', []);
-        $chatId  = $request->input('chat_id');
+        $message   = strip_tags($request->input('message'));
+        $history   = $request->input('history', []);
+        $chatId    = $request->input('chat_id');
         $sessionId = session()->getId();
 
         $chat = null;
@@ -145,63 +150,73 @@ class BuddyAIController extends Controller
             }
         }
 
+        // ── Call the Python RAG microservice ──────────────────────────────────
+        $aiServiceUrl = rtrim(config('services.visitor_ai.url'), '/');
+
         try {
-            if (!$this->groq->isConfigured()) {
-                return response()->json([
-                    'response' => "I'm currently being set up. Please visit daffodilvarsity.edu.bd for information or try again later.",
-                    'error'    => true,
-                ], 503);
+            $aiResponse = Http::timeout(30)
+                ->post("{$aiServiceUrl}/api/chat", [
+                    'message' => $message,
+                    'history' => array_slice($history, -8),   // last 4 turns
+                ]);
+
+            if ($aiResponse->failed()) {
+                throw new \RuntimeException(
+                    'Python AI service returned status ' . $aiResponse->status()
+                );
             }
 
-            $systemPrompt = $this->rag->buildVisitorSystemPrompt();
-            $messages = $this->buildMessageArray($history, $message);
-            $response = $this->groq->chat($systemPrompt, $messages);
+            $data        = $aiResponse->json();
+            $rawAnswer   = $data['answer']   ?? 'Sorry, I could not generate a response.';
+            $sources     = $data['sources']  ?? [];
+            $found       = $data['found']    ?? false;
+            $finalResponse = $rawAnswer;
 
-            // Save history
-            $history[] = ['role' => 'user', 'content' => $message];
-            $history[] = ['role' => 'assistant', 'content' => $response];
+        } catch (\Exception $e) {
+            Log::error('[VisitorAI] Python service error: ' . $e->getMessage());
+            return response()->json([
+                'response' => "I'm having trouble connecting to the AI service right now. For immediate help, please visit daffodilvarsity.edu.bd or call the admission helpline. 📞",
+                'error'    => true,
+            ], 503);
+        }
 
-            if (!$chat) {
-                $title = substr($message, 0, 25) . (strlen($message) > 25 ? '...' : '');
-                try {
+        // ── Persist RAW chat history to the database ─────────────────────────
+        $history[] = ['role' => 'user',      'content' => $message];
+        $history[] = ['role' => 'assistant', 'content' => $rawAnswer];
+
+        if (!$chat) {
+            $title = substr($message, 0, 25) . (strlen($message) > 25 ? '...' : '');
+            try {
+                $chat = \App\Models\AiChat::create([
+                    'session_id' => $sessionId,
+                    'type'       => 'visitor',
+                    'title'      => $title,
+                    'history'    => $history,
+                ]);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() == '23505') {
+                    \Illuminate\Support\Facades\DB::statement("SELECT setval(pg_get_serial_sequence('ai_chats', 'id'), (SELECT COALESCE(MAX(id), 1) FROM ai_chats));");
                     $chat = \App\Models\AiChat::create([
                         'session_id' => $sessionId,
-                        'type' => 'visitor',
-                        'title' => $title,
-                        'history' => $history,
+                        'type'       => 'visitor',
+                        'title'      => $title,
+                        'history'    => $history,
                     ]);
-                } catch (\Illuminate\Database\QueryException $e) {
-                    // 23505 is PostgreSQL unique violation. Auto-fix sequence and retry.
-                    if ($e->getCode() == '23505') {
-                        \Illuminate\Support\Facades\DB::statement("SELECT setval(pg_get_serial_sequence('ai_chats', 'id'), (SELECT COALESCE(MAX(id), 1) FROM ai_chats));");
-                        $chat = \App\Models\AiChat::create([
-                            'session_id' => $sessionId,
-                            'type' => 'visitor',
-                            'title' => $title,
-                            'history' => $history,
-                        ]);
-                    } else {
-                        throw $e;
-                    }
+                } else {
+                    throw $e;
                 }
-            } else {
-                $chat->update(['history' => $history]);
             }
-
-            return response()->json([
-                'response' => $response,
-                'chat_id'  => $chat->id,
-                'error'    => false,
-            ]);
-
-        } catch (\RuntimeException $e) {
-            Log::error('[VisitorAI] Chat error: ' . $e->getMessage());
-
-            return response()->json([
-                'response' => "I'm having trouble connecting right now. For immediate help, please visit daffodilvarsity.edu.bd or call the admission helpline. 📞",
-                'error'    => true,
-            ], 500);
+        } else {
+            $chat->update(['history' => $history]);
         }
+
+        return response()->json([
+            'response' => $finalResponse,
+            'sources'  => $sources ?? [],
+            'found'    => $found   ?? false,
+            'chat_id'  => $chat->id,
+            'error'    => false,
+        ]);
     }
 
     /**
