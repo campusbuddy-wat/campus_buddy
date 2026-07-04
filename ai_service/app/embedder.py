@@ -43,8 +43,13 @@ def get_model():
     if _model is None:
         try:
             from fastembed import TextEmbedding
-            logger.info(f"[Embedder] Loading fastembed model: {config.EMBEDDING_MODEL}")
-            _model = TextEmbedding(model_name=config.EMBEDDING_MODEL)
+            # fastembed requires the namespace prefix for sentence-transformers models
+            model_name = config.EMBEDDING_MODEL
+            if model_name == "all-MiniLM-L6-v2":
+                model_name = "sentence-transformers/all-MiniLM-L6-v2"
+                
+            logger.info(f"[Embedder] Loading fastembed model: {model_name}")
+            _model = TextEmbedding(model_name=model_name)
             logger.info("[Embedder] fastembed model loaded successfully.")
         except Exception as e:
             logger.error(f"[Embedder] Failed to load fastembed model: {e}")
