@@ -12,11 +12,11 @@ beautifulsoup4==4.12.3
 requests==2.32.3
 lxml==5.2.2
 
-# ── Embeddings (CPU-only via local sentence-transformers) ──
-# torch CPU-only is pre-installed by the render.yaml buildCommand
-# before this requirements.txt is processed, so torch will not
-# be re-downloaded here.
-sentence-transformers==3.0.1
+# ── Embeddings ────────────────────────────────────────────
+# fastembed uses ONNX Runtime instead of PyTorch.
+# Total RAM usage ~100MB vs 1.5GB for torch — fits Render free tier (512MB).
+# Uses same all-MiniLM-L6-v2 model, runs 100% locally, zero network calls.
+fastembed==0.3.6
 
 # ── Vector Database (Qdrant Cloud) ────────────────────────
 qdrant-client==1.9.1

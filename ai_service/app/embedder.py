@@ -5,15 +5,16 @@ WHY:    Converts human-readable text into numbers (vectors) so that
         mathematical similarity search is possible. Without embeddings,
         we cannot search the vector database.
 
-WHAT:   - Loads the sentence-transformers model once at startup (cached).
+WHAT:   - Loads the fastembed ONNX model once at startup (cached).
         - Splits long text into manageable chunks (≤ 400 tokens each).
         - Converts each chunk into a 384-dimensional vector.
 
-HOW:    Uses the 'all-MiniLM-L6-v2' model, which is:
-        - Small (~90MB download, runs on CPU)
-        - Fast (embeds hundreds of sentences per second)
-        - High quality (top-performing small model on benchmarks)
-        - 100% free — runs entirely locally, no API calls.
+HOW:    Uses fastembed with 'all-MiniLM-L6-v2' model, which is:
+        - Very small ONNX runtime (~100MB total, NO PyTorch needed)
+        - Fast (embeds hundreds of sentences per second on CPU)
+        - High quality (same model used by sentence-transformers)
+        - 100% free — runs entirely locally, zero network calls at runtime.
+        - Fits comfortably within Render's 512MB free-tier RAM limit.
 
         Text is split on sentence boundaries to preserve meaning.
         Overlapping tokens (50 tokens) between chunks ensure that a
@@ -24,111 +25,48 @@ import logging
 import re
 from typing import List
 
-import os
-import requests
-import time
-
 from app import config
 
 logger = logging.getLogger(__name__)
 
-try:
-    from sentence_transformers import SentenceTransformer
-    HAS_SENTENCE_TRANSFORMERS = True
-except ImportError:
-    HAS_SENTENCE_TRANSFORMERS = False
-
-logger.info(f"[Embedder] Local SentenceTransformer available: {HAS_SENTENCE_TRANSFORMERS}")
+# ── Model Loading (lazy singleton) ───────────────────────────────────────────
 
 _model = None
 
 
-def get_local_model():
-    """Load the local SentenceTransformer model lazily to save startup memory."""
+def get_model():
+    """
+    Lazily load the fastembed TextEmbedding model on first use.
+    fastembed uses ONNX Runtime — no PyTorch, ~100MB RAM total.
+    """
     global _model
-    if _model is None and HAS_SENTENCE_TRANSFORMERS:
-        logger.info(f"[Embedder] Loading local model: {config.EMBEDDING_MODEL}")
-        _model = SentenceTransformer(config.EMBEDDING_MODEL)
-        logger.info("[Embedder] Local model loaded successfully.")
+    if _model is None:
+        try:
+            from fastembed import TextEmbedding
+            logger.info(f"[Embedder] Loading fastembed model: {config.EMBEDDING_MODEL}")
+            _model = TextEmbedding(model_name=config.EMBEDDING_MODEL)
+            logger.info("[Embedder] fastembed model loaded successfully.")
+        except Exception as e:
+            logger.error(f"[Embedder] Failed to load fastembed model: {e}")
+            raise
     return _model
 
 
-def embed_texts_via_api(texts: List[str]) -> List[List[float]]:
-    """
-    Query Hugging Face's serverless Inference API for all-MiniLM-L6-v2 embeddings.
-    This runs entirely on HF cloud, requiring 0MB of local server memory.
-    """
-    hf_token = os.getenv("HF_TOKEN", "")
-    api_url = f"https://api-inference.huggingface.co/models/sentence-transformers/{config.EMBEDDING_MODEL}"
-    
-    headers = {}
-    if hf_token:
-        headers["Authorization"] = f"Bearer {hf_token}"
-        
-    logger.info(f"[Embedder] Querying Hugging Face API for {len(texts)} embeddings...")
-    
-    # Hugging Face serverless API might need a retry if the model is loading
-    for attempt in range(5):
-        try:
-            response = requests.post(
-                api_url,
-                headers=headers,
-                json={"inputs": texts, "options": {"wait_for_model": True}},
-                timeout=30
-            )
-            
-            if response.status_code == 200:
-                result = response.json()
-                if isinstance(result, list):
-                    # For some inputs, HF returns a nested list structure depending on the pipeline
-                    # We want to make sure it's a 2D list of floats [num_texts, 384]
-                    # If it's a single list of floats, wrap it
-                    if len(texts) == 1 and isinstance(result[0], float):
-                        return [result]
-                    # If it returns a 3D list (due to token embeddings), pool it by taking the mean or first element
-                    # But the default sentence-transformers model endpoint returns a 2D list of shape [num_texts, 384] directly.
-                    return result
-                raise ValueError(f"Unexpected response format from Hugging Face: {type(result)}")
-                
-            elif response.status_code == 503:
-                # Model is loading
-                data = response.json()
-                wait_time = data.get("estimated_time", 5)
-                logger.warning(f"[Embedder] HF model is loading, waiting {wait_time}s... (attempt {attempt+1}/5)")
-                time.sleep(wait_time)
-                continue
-            else:
-                raise ValueError(f"Hugging Face API returned status {response.status_code}: {response.text}")
-                
-        except Exception as e:
-            if attempt == 4:
-                raise e
-            logger.warning(f"[Embedder] HF embedding attempt {attempt+1} failed: {e}. Retrying in 2s...")
-            time.sleep(2)
-            
-    raise RuntimeError("Failed to get embeddings from Hugging Face API after 5 attempts.")
-
+# ── Public Embedding API ─────────────────────────────────────────────────────
 
 def embed_texts(texts: List[str]) -> List[List[float]]:
     """
     Convert a list of text strings into a list of embedding vectors.
     Each vector is a list of 384 floats.
+    Uses fastembed (ONNX) — runs locally with ~100MB RAM, no network calls.
     """
     if not texts:
         return []
 
-    # 1. Use local SentenceTransformer if package is installed
-    if HAS_SENTENCE_TRANSFORMERS:
-        try:
-            model = get_local_model()
-            if model is not None:
-                vectors = model.encode(texts, convert_to_numpy=True, show_progress_bar=False)
-                return vectors.tolist()
-        except Exception as e:
-            logger.warning(f"[Embedder] Local model encoding failed, falling back to Hugging Face API: {e}")
-
-    # 2. Otherwise query Hugging Face Serverless Inference API
-    return embed_texts_via_api(texts)
+    model = get_model()
+    # fastembed returns a generator of numpy arrays
+    vectors = list(model.embed(texts))
+    return [v.tolist() for v in vectors]
 
 
 def embed_query(query: str) -> List[float]:
