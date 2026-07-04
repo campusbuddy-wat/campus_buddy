@@ -161,8 +161,9 @@ class BuddyAIController extends Controller
                 ]);
 
             if ($aiResponse->failed()) {
+                $errorDetail = $aiResponse->json('detail') ?? $aiResponse->body();
                 throw new \RuntimeException(
-                    'Python AI service returned status ' . $aiResponse->status()
+                    'Python AI service returned status ' . $aiResponse->status() . ' - ' . $errorDetail
                 );
             }
 

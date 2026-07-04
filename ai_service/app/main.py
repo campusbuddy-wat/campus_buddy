@@ -97,7 +97,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
@@ -219,8 +219,8 @@ async def api_chat(request: Request, body: ChatRequest):
             question=body.message, response_time_ms=elapsed_ms,
             chunks_retrieved=0, top_score=None, found=False, error=error_msg,
         )
-        logger.error(f"[API /chat] Error: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.exception(f"[API /chat] Error processing request: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {error_msg}")
 
 
 @app.post("/api/refresh")
