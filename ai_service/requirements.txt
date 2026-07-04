@@ -12,8 +12,9 @@ beautifulsoup4==4.12.3
 requests==2.32.3
 lxml==5.2.2
 
-# ── Embeddings (runs locally, no API cost) ────────────────
-sentence-transformers==3.0.1
+# Embeddings (Query Hugging Face serverless API on Render to stay within 512MB RAM limit)
+# Run `pip install sentence-transformers` locally if you want offline CPU embeddings
+# sentence-transformers==3.0.1
 
 # ── Vector Database (Qdrant Cloud) ────────────────────────
 qdrant-client==1.9.1

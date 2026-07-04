@@ -24,48 +24,121 @@ import logging
 import re
 from typing import List
 
-from sentence_transformers import SentenceTransformer
+import os
+import requests
+import time
 
 from app import config
 
 logger = logging.getLogger(__name__)
 
-# ── Load the model once when this module is first imported ────────────────────
-# This takes ~2-3 seconds on first cold start but is then cached in memory.
-logger.info(f"[Embedder] Loading model: {config.EMBEDDING_MODEL}")
-_model = SentenceTransformer(config.EMBEDDING_MODEL)
-logger.info("[Embedder] Model loaded successfully.")
+try:
+    from sentence_transformers import SentenceTransformer
+    HAS_SENTENCE_TRANSFORMERS = True
+except ImportError:
+    HAS_SENTENCE_TRANSFORMERS = False
+
+logger.info(f"[Embedder] Local SentenceTransformer available: {HAS_SENTENCE_TRANSFORMERS}")
+
+_model = None
+
+
+def get_local_model():
+    """Load the local SentenceTransformer model lazily to save startup memory."""
+    global _model
+    if _model is None and HAS_SENTENCE_TRANSFORMERS:
+        logger.info(f"[Embedder] Loading local model: {config.EMBEDDING_MODEL}")
+        _model = SentenceTransformer(config.EMBEDDING_MODEL)
+        logger.info("[Embedder] Local model loaded successfully.")
+    return _model
+
+
+def embed_texts_via_api(texts: List[str]) -> List[List[float]]:
+    """
+    Query Hugging Face's serverless Inference API for all-MiniLM-L6-v2 embeddings.
+    This runs entirely on HF cloud, requiring 0MB of local server memory.
+    """
+    hf_token = os.getenv("HF_TOKEN", "")
+    api_url = f"https://api-inference.huggingface.co/models/sentence-transformers/{config.EMBEDDING_MODEL}"
+    
+    headers = {}
+    if hf_token:
+        headers["Authorization"] = f"Bearer {hf_token}"
+        
+    logger.info(f"[Embedder] Querying Hugging Face API for {len(texts)} embeddings...")
+    
+    # Hugging Face serverless API might need a retry if the model is loading
+    for attempt in range(5):
+        try:
+            response = requests.post(
+                api_url,
+                headers=headers,
+                json={"inputs": texts, "options": {"wait_for_model": True}},
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                if isinstance(result, list):
+                    # For some inputs, HF returns a nested list structure depending on the pipeline
+                    # We want to make sure it's a 2D list of floats [num_texts, 384]
+                    # If it's a single list of floats, wrap it
+                    if len(texts) == 1 and isinstance(result[0], float):
+                        return [result]
+                    # If it returns a 3D list (due to token embeddings), pool it by taking the mean or first element
+                    # But the default sentence-transformers model endpoint returns a 2D list of shape [num_texts, 384] directly.
+                    return result
+                raise ValueError(f"Unexpected response format from Hugging Face: {type(result)}")
+                
+            elif response.status_code == 503:
+                # Model is loading
+                data = response.json()
+                wait_time = data.get("estimated_time", 5)
+                logger.warning(f"[Embedder] HF model is loading, waiting {wait_time}s... (attempt {attempt+1}/5)")
+                time.sleep(wait_time)
+                continue
+            else:
+                raise ValueError(f"Hugging Face API returned status {response.status_code}: {response.text}")
+                
+        except Exception as e:
+            if attempt == 4:
+                raise e
+            logger.warning(f"[Embedder] HF embedding attempt {attempt+1} failed: {e}. Retrying in 2s...")
+            time.sleep(2)
+            
+    raise RuntimeError("Failed to get embeddings from Hugging Face API after 5 attempts.")
 
 
 def embed_texts(texts: List[str]) -> List[List[float]]:
     """
     Convert a list of text strings into a list of embedding vectors.
     Each vector is a list of 384 floats.
-
-    Args:
-        texts: List of text strings to embed.
-
-    Returns:
-        List of 384-dimensional float vectors (one per input text).
     """
     if not texts:
         return []
-    # convert_to_numpy=False returns Python lists (needed for Qdrant)
-    vectors = _model.encode(texts, convert_to_numpy=True, show_progress_bar=False)
-    return vectors.tolist()
+
+    # 1. Use local SentenceTransformer if package is installed
+    if HAS_SENTENCE_TRANSFORMERS:
+        try:
+            model = get_local_model()
+            if model is not None:
+                vectors = model.encode(texts, convert_to_numpy=True, show_progress_bar=False)
+                return vectors.tolist()
+        except Exception as e:
+            logger.warning(f"[Embedder] Local model encoding failed, falling back to Hugging Face API: {e}")
+
+    # 2. Otherwise query Hugging Face Serverless Inference API
+    return embed_texts_via_api(texts)
 
 
 def embed_query(query: str) -> List[float]:
     """
     Embed a single user query into a vector for similarity search.
-
-    Args:
-        query: The user's question string.
-
-    Returns:
-        A single 384-dimensional float vector.
     """
-    return _model.encode(query, convert_to_numpy=True).tolist()
+    vectors = embed_texts([query])
+    if not vectors:
+        raise ValueError("Failed to compute embedding for query")
+    return vectors[0]
 
 
 # ── Text Chunking ─────────────────────────────────────────────────────────────
