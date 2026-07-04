@@ -192,9 +192,11 @@ def start_scheduler() -> None:
         pass
 
     if total_vectors == 0:
-        # First run — no data in Qdrant yet. Trigger an immediate scrape.
-        logger.info("[Scheduler] Qdrant collection is empty. Running initial scrape...")
-        refresh_knowledge_base(force=True)
+        # First run — no data in Qdrant yet. Trigger an immediate scrape in a background thread
+        # to avoid blocking FastAPI's startup / lifespan context (which causes 502 Bad Gateway timeouts on Render).
+        import threading
+        logger.info("[Scheduler] Qdrant collection is empty. Triggering initial scrape in background thread...")
+        threading.Thread(target=refresh_knowledge_base, kwargs={"force": True}, daemon=True).start()
     else:
         logger.info(
             f"[Scheduler] Qdrant has {total_vectors} vectors. "
