@@ -64,6 +64,9 @@ GROQ_MODEL="${GROQ_MODEL:-llama-3.3-70b-versatile}"
 GROQ_MAX_TOKENS="${GROQ_MAX_TOKENS:-1536}"
 GROQ_TEMPERATURE="${GROQ_TEMPERATURE:-0.7}"
 
+# ==================== VISITOR AI ====================
+VISITOR_AI_URL="${VISITOR_AI_URL}"
+
 # ==================== CLOUDINARY ====================
 CLOUDINARY_URL="${CLOUDINARY_URL}"
 ENVEOF
