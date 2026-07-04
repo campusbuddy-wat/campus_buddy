@@ -25,7 +25,5 @@ groq==1.0.0
 # ── Scheduler (auto-refresh every 24h) ────────────────────
 apscheduler==3.10.4
 
-# ── Text Processing ───────────────────────────────────────
-tiktoken==0.7.0
 slowapi==0.1.10
 tenacity==9.1.2
