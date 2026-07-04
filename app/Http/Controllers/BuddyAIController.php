@@ -151,7 +151,26 @@ class BuddyAIController extends Controller
         }
 
         // ── Call the Python RAG microservice ──────────────────────────────────
-        $aiServiceUrl = rtrim(config('services.visitor_ai.url'), '/');
+        $aiServiceUrl = config('services.visitor_ai.url');
+        
+        if (empty($aiServiceUrl)) {
+            Log::error('[VisitorAI] Python service URL is empty. Please set VISITOR_AI_URL in your Render dashboard environment variables.');
+            return response()->json([
+                'response' => "I'm having trouble connecting to the AI service right now. For immediate help, please visit daffodilvarsity.edu.bd or call the admission helpline. 📞",
+                'error'    => true,
+            ], 503);
+        }
+
+        if (!str_starts_with($aiServiceUrl, 'http://') && !str_starts_with($aiServiceUrl, 'https://')) {
+            Log::error('[VisitorAI] Python service URL is invalid (missing http:// or https://): ' . $aiServiceUrl);
+            return response()->json([
+                'response' => "I'm having trouble connecting to the AI service right now. For immediate help, please visit daffodilvarsity.edu.bd or call the admission helpline. 📞",
+                'error'    => true,
+            ], 503);
+        }
+
+        $aiServiceUrl = rtrim($aiServiceUrl, '/');
+        Log::info('[VisitorAI] Sending chat request to: ' . "{$aiServiceUrl}/api/chat");
 
         try {
             $aiResponse = Http::timeout(30)
