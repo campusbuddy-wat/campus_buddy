@@ -117,7 +117,17 @@ class QuestionBankResource extends Resource
                             ->reorderable()
                             ->appendFiles()
                             ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'])
-                            ->maxSize(15360),
+                            ->maxSize(15360)
+                            ->dehydrateStateUsing(function ($state, $record) {
+                                if (empty($state)) {
+                                    return $record?->file_path ?? [];
+                                }
+                                $existing = $record?->file_path ?? [];
+                                if (is_string($existing)) {
+                                    $existing = json_decode($existing, true) ?? [];
+                                }
+                                return array_merge((array) $existing, (array) $state);
+                            }),
                         Forms\Components\Select::make('status')
                             ->options([
                                 'pending' => 'Pending',

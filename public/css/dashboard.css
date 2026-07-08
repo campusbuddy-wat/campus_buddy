@@ -209,6 +209,7 @@
     max-height: 140px;
     overflow-y: auto;
     padding-right: 8px;
+    padding-bottom: 28px; /* Safe space for the absolute button at the bottom */
 }
 
 /* Custom premium scrollbar for #aiBriefingContent */
