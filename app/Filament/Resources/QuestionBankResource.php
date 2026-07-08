@@ -80,8 +80,24 @@ class QuestionBankResource extends Resource
                             ->required()
                             ->searchable()
                             ->label('Uploaded By'),
+                        Forms\Components\Placeholder::make('view_files')
+                            ->label('Uploaded Files')
+                            ->content(function ($record) {
+                                if (!$record || !$record->file_path) {
+                                    return 'No files uploaded.';
+                                }
+                                $files = is_array($record->file_path) ? $record->file_path : [$record->file_path];
+                                $html = '<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">';
+                                foreach ($files as $index => $url) {
+                                    $num = $index + 1;
+                                    $html .= "<a href='{$url}' target='_blank' style='color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; width: fit-content; text-decoration: none;'>📄 Open File {$num} (Cloudinary)</a>";
+                                }
+                                $html .= '</div>';
+                                return new \Illuminate\Support\HtmlString($html);
+                            })
+                            ->columnSpanFull(),
                         Forms\Components\FileUpload::make('file_path')
-                            ->label('Question Files (PDF/Images)')
+                            ->label('Upload New Files')
                             ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'question_banks'])['secure_url'])
                             ->multiple()
                             ->reorderable()
@@ -117,6 +133,21 @@ class QuestionBankResource extends Resource
                     ->label('Year/Sem')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('file_path')
+                    ->label('Files')
+                    ->formatStateUsing(function ($state, $record) {
+                        if (!$record || !$record->file_path) {
+                            return 'No files';
+                        }
+                        $files = is_array($record->file_path) ? $record->file_path : [$record->file_path];
+                        $links = [];
+                        foreach ($files as $index => $url) {
+                            $num = $index + 1;
+                            $links[] = "<a href='{$url}' target='_blank' style='color: #0ea5e9; text-decoration: underline; font-weight: 600; font-size: 13px;'>File {$num}</a>";
+                        }
+                        return new \Illuminate\Support\HtmlString(implode(', ', $links));
+                    })
+                    ->html(),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'primary' => 'pending',
