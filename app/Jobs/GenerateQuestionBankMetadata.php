@@ -43,9 +43,10 @@ class GenerateQuestionBankMetadata implements ShouldQueue
 
             if ($isUrl) {
                 try {
-                    // Download file to a temporary local path
                     $tempFile = tempnam(sys_get_temp_dir(), 'qb_');
-                    $contents = file_get_contents($path);
+                    // Get authenticated URL instead of public URL to bypass 401 restrict!
+                    $signedUrl = \App\Models\QuestionBank::getCloudinaryDownloadUrl($path);
+                    $contents = file_get_contents($signedUrl);
                     if ($contents === false) {
                         Log::warning("[AI:Job] Failed to download file from URL: {$path}");
                         continue;

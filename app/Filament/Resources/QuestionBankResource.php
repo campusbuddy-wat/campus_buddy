@@ -90,7 +90,8 @@ class QuestionBankResource extends Resource
                                 $html = '<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">';
                                 foreach ($files as $index => $url) {
                                     $num = $index + 1;
-                                    $html .= "<a href='{$url}' target='_blank' style='color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; width: fit-content; text-decoration: none;'>📄 Open File {$num} (Cloudinary)</a>";
+                                    $signedUrl = \App\Models\QuestionBank::getCloudinaryDownloadUrl($url);
+                                    $html .= "<a href='{$signedUrl}' target='_blank' style='color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 16px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; width: fit-content; text-decoration: none;'>📄 Open File {$num} (Cloudinary)</a>";
                                 }
                                 $html .= '</div>';
                                 return new \Illuminate\Support\HtmlString($html);

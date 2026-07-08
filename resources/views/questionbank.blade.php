@@ -264,7 +264,7 @@
                      data-tags="{{ $question->tags }}"
                      data-course="{{ $question->course_name }}"
                      data-date="{{ $question->year_semester }}"
-                     data-files="{{ json_encode($question->file_path) }}"
+                     data-files="{{ json_encode($question->signed_file_paths) }}"
                      data-selected="false">
 
                     <div class="qb-id-badge">QB-{{ str_pad($question->id, 4, '0', STR_PAD_LEFT) }}</div>
@@ -311,16 +311,16 @@
                     </div>
                     <div class="card-action-overlay">
                         <button type="button" class="action-btn view-btn">View</button>
-                        @if($question->file_path && is_array($question->file_path))
-                            @if(count($question->file_path) === 1)
-                                <a href="{{ Str::startsWith($question->file_path[0], 'http') ? $question->file_path[0] : asset('storage/' . $question->file_path[0]) }}"
+                        @if($question->signed_file_paths && is_array($question->signed_file_paths))
+                            @if(count($question->signed_file_paths) === 1)
+                                <a href="{{ Str::startsWith($question->signed_file_paths[0], 'http') ? $question->signed_file_paths[0] : asset('storage/' . $question->signed_file_paths[0]) }}"
                                    class="action-btn download-btn stop-prop"
                                    download onclick="event.stopPropagation()">
                                     Download
                                 </a>
                             @else
                                 <div class="multi-download-badge">
-                                    {{ count($question->file_path) }} Files
+                                    {{ count($question->signed_file_paths) }} Files
                                 </div>
                             @endif
                         @endif
@@ -638,14 +638,15 @@
                             if (files && Array.isArray(files) && files.length > 0) {
                                 fileSection.style.display = 'block';
                                 files.forEach(file => {
-                                    const isImage = /\.(jpg|jpeg|png|webp)$/i.test(file);
+                                    const isImage = /\.(jpg|jpeg|png|webp|gif)$/i.test(file) || file.includes('/image/upload/');
                                     const link = document.createElement('a');
-                                    link.href = '/storage/' + file;
+                                    link.href = file.startsWith('http') ? file : '/storage/' + file;
                                     link.target = '_blank';
                                     link.className = 'modal-file-link';
                                     
                                     if (isImage) {
-                                        link.innerHTML = `<img src="/storage/${file}" class="modal-preview-img">`;
+                                        const imgUrl = file.startsWith('http') ? file : '/storage/' + file;
+                                        link.innerHTML = `<img src="${imgUrl}" class="modal-preview-img">`;
                                     } else {
                                         link.innerHTML = `
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
