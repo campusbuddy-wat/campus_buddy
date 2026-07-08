@@ -175,6 +175,21 @@
                 });
             }
 
+            // Prevent double submissions
+            const signupForm = document.querySelector('form');
+            if (signupForm) {
+                signupForm.addEventListener('submit', function () {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        setTimeout(() => {
+                            submitBtn.disabled = true;
+                            submitBtn.style.opacity = '0.7';
+                            submitBtn.textContent = 'Processing...';
+                        }, 50);
+                    }
+                });
+            }
+
             // ==================== PASSWORD STRENGTH & MATCH INDICATORS ====================
             const passwordInput = document.getElementById('password');
             const confirmInput = document.getElementById('password_confirmation');

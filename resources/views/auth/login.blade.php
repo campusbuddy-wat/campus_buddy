@@ -70,3 +70,24 @@
         </section>
     </main>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Prevent double submissions on Login forms
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function () {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        setTimeout(() => {
+                            submitBtn.disabled = true;
+                            submitBtn.style.opacity = '0.7';
+                            submitBtn.textContent = 'Processing...';
+                        }, 50);
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
