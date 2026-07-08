@@ -267,14 +267,14 @@
                      data-files="{{ json_encode($question->file_path) }}"
                      data-selected="false">
 
-                    {{-- QB Unique ID + Select Checkbox --}}
-                    <div class="qb-select-overlay" onclick="toggleQBSelect(event, this.closest('.question-card'))">
-                        <div class="qb-checkbox" id="qbcheck-{{ $question->id }}">☐</div>
-                    </div>
                     <div class="qb-id-badge">QB-{{ str_pad($question->id, 4, '0', STR_PAD_LEFT) }}</div>
 
                     <div class="question-header">
                         <div class="card-meta">
+                            {{-- Select Checkbox --}}
+                            <div class="qb-select-inline" onclick="toggleQBSelect(event, this.closest('.question-card'))" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; margin-right: 4px;">
+                                <div class="qb-checkbox" id="qbcheck-{{ $question->id }}" style="width: 20px; height: 20px; border-radius: 4px; border: 2px solid rgba(99,102,241,0.4); display: flex; align-items: center; justify-content: center; font-size: 13px; background: rgba(255,255,255,0.9); color: #4f46e5; transition: all 0.18s;">☐</div>
+                            </div>
                             <span class="dept">{{ $question->department }}</span>
                             <span class="code">{{ $question->course_code }}</span>
                         </div>
@@ -377,6 +377,7 @@
                     <button class="practice-ai-pill" onclick="askPracticeAI('What are the most frequently tested topics based on the question bank?')">📊 Most tested topics</button>
                     <button class="practice-ai-pill" onclick="askPracticeAI('Create a mini practice quiz with short answer questions')">✍️ Short answer quiz</button>
                     <button class="practice-ai-pill" onclick="askPracticeAI('Suggest a study strategy based on the question patterns and difficulty levels')">🧠 Study strategy</button>
+                    <button class="practice-ai-pill" id="quizSampleBtn" onclick="generateQuizSheet()">📝 Quiz Sample</button>
                 </div>
                 
                 <div style="display: flex; gap: 8px; position:relative; z-index:10; pointer-events:auto;">
@@ -884,29 +885,77 @@
         }
 
         async function generateQuizSheet() {
-            if (selectedQBCards.length === 0) {
-                alert('Please select at least one Question Bank card first!');
-                return;
-            }
+            const courseCodeInput = (document.getElementById('aiFilterCourse')?.value || '').trim();
+            const termSelect = document.getElementById('aiFilterTerm')?.value || '';
 
-            // ── Validate: all selected must share the same course code ──
-            const uniqueCodes = [...new Set(selectedQBCards.map(c => c.code).filter(Boolean))];
-            if (uniqueCodes.length > 1) {
+            // Check if user entered multiple course codes in the input field
+            const courseCodeMatches = courseCodeInput.match(/[A-Za-z]+\s*\d+/g) || [];
+            const normalizedCodes = courseCodeMatches.map(c => c.replace(/\s+/g, '').toUpperCase());
+            const uniqueInputCodes = [...new Set(normalizedCodes)];
+
+            if (uniqueInputCodes.length > 1) {
                 const savageReplies = [
-                    `Bro... seriously? 🤦 You picked questions from ${uniqueCodes.join(', ')}. A quiz has ONE course code, not a buffet menu. Pick ONE course and try again.`,
-                    `Come on! ${uniqueCodes.join(' + ')}?? What is this — a crossover episode?? A single quiz belongs to ONE course code. Go back and select questions from the SAME course.`,
-                    `Oh wow, ${uniqueCodes.join(' and ')} together in one quiz? Bold move. Sadly, that's not how exams work. Stick to ONE course code per quiz. Thank you.`,
-                    `${uniqueCodes.length} different course codes?? You really said "why not all of them"  😭 Please — ONE course code. That's it. That's the rule.`
+                    `Whoa there! You entered multiple course codes: ${uniqueInputCodes.join(', ')}. A quiz cannot be in two places at once. Please enter only ONE course code!`,
+                    `A single exam covering ${uniqueInputCodes.join(' and ')}? Your brain might explode. Please enter only ONE course code to generate a quiz.`,
+                    `Error: Too many course codes! A quiz must belong to exactly one course, not a combo of ${uniqueInputCodes.join(' and ')}.`
                 ];
-                const msg = savageReplies[Math.floor(Math.random() * savageReplies.length)];
-                alert('⚠️ Mixed Course Codes Detected!\n\n' + msg);
+                alert('⚠️ Multiple Course Codes Detected!\n\n' + savageReplies[Math.floor(Math.random() * savageReplies.length)]);
                 return;
             }
 
-            const primaryCard = selectedQBCards[0];
-            const courseCode  = primaryCard.code;
-            const courseName  = primaryCard.course || 'Subject Course';
-            const userDept    = "{{ Auth::user()->department ?? '' }}";
+            let payload = {};
+            let courseCode = '';
+            let courseName = 'Subject Course';
+
+            if (selectedQBCards.length > 0) {
+                // Validate: all selected cards must share the same course code
+                const uniqueCodes = [...new Set(selectedQBCards.map(c => c.code).filter(Boolean))];
+                if (uniqueCodes.length > 1) {
+                    const savageReplies = [
+                        `Bro... seriously? 🤦 You picked questions from ${uniqueCodes.join(', ')}. A quiz has ONE course code, not a buffet menu. Pick ONE course and try again.`,
+                        `Come on! ${uniqueCodes.join(' + ')}?? What is this — a crossover episode?? A single quiz belongs to ONE course code. Go back and select questions from the SAME course.`,
+                        `Oh wow, ${uniqueCodes.join(' and ')} together in one quiz? Bold move. Sadly, that's not how exams work. Stick to ONE course code per quiz. Thank you.`,
+                        `${uniqueCodes.length} different course codes?? You really said "why not all of them"  😭 Please — ONE course code. That's it. That's the rule.`
+                    ];
+                    alert('⚠️ Mixed Course Codes Detected!\n\n' + savageReplies[Math.floor(Math.random() * savageReplies.length)]);
+                    return;
+                }
+
+                const primaryCard = selectedQBCards[0];
+                courseCode = primaryCard.code;
+                courseName = primaryCard.course || 'Subject Course';
+
+                payload = {
+                    message: 'GENERATE_QUIZ_SAMPLE',
+                    history: [],
+                    course_code: courseCode,
+                    selected_qb_data: selectedQBCards
+                };
+            } else {
+                // No cards selected. Must have input course code.
+                if (!courseCodeInput) {
+                    alert('Please select at least one Question Bank card OR enter a Course Code in the input field above!');
+                    document.getElementById('aiFilterCourse')?.focus();
+                    return;
+                }
+
+                courseCode = uniqueInputCodes[0] || courseCodeInput.toUpperCase();
+                // Map course code and names from page if available
+                const matchingCard = document.querySelector(`.question-card[data-code*="${courseCode}"]`);
+                if (matchingCard && matchingCard.dataset.course) {
+                    courseName = matchingCard.dataset.course;
+                }
+
+                const messageText = `Generate exactly 5 realistic exam questions for course ${courseCode}. Output ONLY the questions as a numbered list. Do not include any greeting, introduction, instructions, markdown headers, or answer explanations. Format them as a simple numbered list from 1 to 5.`;
+                payload = {
+                    message: messageText,
+                    history: [],
+                    course_code: courseCode,
+                    term: termSelect
+                };
+            }
+
+            const userDept = "{{ Auth::user()->department ?? '' }}";
 
             // Build faculty
             const facultyEl = document.getElementById('quizFacultyName');
@@ -932,12 +981,7 @@
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                     },
-                    body: JSON.stringify({
-                        message: 'GENERATE_QUIZ_SAMPLE',   // sentinel — backend detects this
-                        history: [],
-                        course_code: courseCode,
-                        selected_qb_data: selectedQBCards   // full rich context
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 const data = await res.json();
@@ -998,34 +1042,6 @@
             letter-spacing: 0.5px;
             z-index: 5;
             pointer-events: none;
-        }
-
-        /* QB Select Overlay (top-left checkbox) */
-        .qb-select-overlay {
-            position: absolute;
-            top: 10px;
-            left: 12px;
-            z-index: 10;
-            cursor: pointer;
-        }
-        .qb-checkbox {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.9);
-            border: 2px solid rgba(99,102,241,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            transition: all 0.18s ease;
-            line-height: 1;
-            color: #4f46e5;
-        }
-        .qb-select-overlay:hover .qb-checkbox {
-            background: rgba(99,102,241,0.15);
-            border-color: #4f46e5;
-            transform: scale(1.1);
         }
 
         /* Selected card highlight */
