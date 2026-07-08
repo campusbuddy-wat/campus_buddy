@@ -884,6 +884,66 @@
             return hasItems ? olHtml : `<div style="white-space: pre-wrap; font-family: 'Times New Roman', serif; font-size: 16px; line-height: 1.6; color: #111;">${text}</div>`;
         }
 
+        function showSavageToast(title, message) {
+            const existing = document.getElementById('savageToast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'savageToast';
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                z-index: 100000;
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                padding: 16px 20px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.4), 0 8px 10px -6px rgba(220, 38, 38, 0.3);
+                max-width: 380px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                font-family: 'Inter', sans-serif;
+                animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+            `;
+
+            toast.innerHTML = `
+                <div style="display:flex; align-items:center; justify-content:between; gap:12px; width:100%;">
+                    <strong style="font-size: 14px; font-weight:700; display:flex; align-items:center; gap:6px;">⚠️ ${title}</strong>
+                    <button onclick="document.getElementById('savageToast').remove()" style="background:none; border:none; color:white; opacity:0.8; font-size:18px; cursor:pointer; font-weight:bold; padding:0; margin-left:auto; line-height:1;">&times;</button>
+                </div>
+                <div style="font-size: 13px; opacity:0.95; line-height:1.4; margin-top: 4px;">${message}</div>
+            `;
+
+            if (!document.getElementById('toastStyles')) {
+                const style = document.createElement('style');
+                style.id = 'toastStyles';
+                style.textContent = `
+                    @keyframes toastSlideIn {
+                        from { transform: translateY(30px) scale(0.95); opacity: 0; }
+                        to { transform: translateY(0) scale(1); opacity: 1; }
+                    }
+                    @keyframes toastFadeOut {
+                        from { opacity: 1; transform: scale(1); }
+                        to { opacity: 0; transform: scale(0.95); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                const current = document.getElementById('savageToast');
+                if (current && current === toast) {
+                    toast.style.animation = 'toastFadeOut 0.4s ease forwards';
+                    setTimeout(() => toast.remove(), 400);
+                }
+            }, 6500);
+        }
+
         async function generateQuizSheet() {
             const courseCodeInput = (document.getElementById('aiFilterCourse')?.value || '').trim();
             const termSelect = document.getElementById('aiFilterTerm')?.value || '';
@@ -899,7 +959,7 @@
                     `A single exam covering ${uniqueInputCodes.join(' and ')}? Your brain might explode. Please enter only ONE course code to generate a quiz.`,
                     `Error: Too many course codes! A quiz must belong to exactly one course, not a combo of ${uniqueInputCodes.join(' and ')}.`
                 ];
-                alert('⚠️ Multiple Course Codes Detected!\n\n' + savageReplies[Math.floor(Math.random() * savageReplies.length)]);
+                showSavageToast('Multiple Course Codes', savageReplies[Math.floor(Math.random() * savageReplies.length)]);
                 return;
             }
 
@@ -917,7 +977,7 @@
                         `Oh wow, ${uniqueCodes.join(' and ')} together in one quiz? Bold move. Sadly, that's not how exams work. Stick to ONE course code per quiz. Thank you.`,
                         `${uniqueCodes.length} different course codes?? You really said "why not all of them"  😭 Please — ONE course code. That's it. That's the rule.`
                     ];
-                    alert('⚠️ Mixed Course Codes Detected!\n\n' + savageReplies[Math.floor(Math.random() * savageReplies.length)]);
+                    showSavageToast('Mixed Course Codes', savageReplies[Math.floor(Math.random() * savageReplies.length)]);
                     return;
                 }
 
@@ -934,7 +994,7 @@
             } else {
                 // No cards selected. Must have input course code.
                 if (!courseCodeInput) {
-                    alert('Please select at least one Question Bank card OR enter a Course Code in the input field above!');
+                    showSavageToast('Required Field Missing', 'Please select at least one Question Bank card OR enter a Course Code in the input field above!');
                     document.getElementById('aiFilterCourse')?.focus();
                     return;
                 }
