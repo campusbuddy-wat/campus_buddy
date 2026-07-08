@@ -130,17 +130,27 @@ PROMPT;
 
             $data = json_decode($jsonResponse, true);
             if (json_last_error() === JSON_ERROR_NONE) {
+                // If sub_questions is returned as an array, convert to newline-separated string
+                if (isset($data['sub_questions']) && is_array($data['sub_questions'])) {
+                    $data['sub_questions'] = implode("\n", $data['sub_questions']);
+                }
+
+                // If tags is returned as an array, convert to comma-separated string
+                if (isset($data['tags']) && is_array($data['tags'])) {
+                    $data['tags'] = implode(", ", $data['tags']);
+                }
+
                 // Update the model with the extracted data, falling back to what's already there
                 $this->questionBank->update([
-                    'department' => $data['department'] ?: $this->questionBank->department,
-                    'course_code' => $data['course_code'] ?: $this->questionBank->course_code,
-                    'course_name' => $data['course_name'] ?: $this->questionBank->course_name,
-                    'title' => $data['title'] ?: $this->questionBank->title,
-                    'difficulty' => $data['difficulty'] ?: $this->questionBank->difficulty,
-                    'year_semester' => $data['year_semester'] ?: $this->questionBank->year_semester,
-                    'question_heading' => $data['question_heading'] ?: $this->questionBank->question_heading,
-                    'sub_questions' => $data['sub_questions'] ?: $this->questionBank->sub_questions,
-                    'tags' => $data['tags'] ?: $this->questionBank->tags,
+                    'department' => ($data['department'] ?? null) ?: $this->questionBank->department,
+                    'course_code' => ($data['course_code'] ?? null) ?: $this->questionBank->course_code,
+                    'course_name' => ($data['course_name'] ?? null) ?: $this->questionBank->course_name,
+                    'title' => ($data['title'] ?? null) ?: $this->questionBank->title,
+                    'difficulty' => ($data['difficulty'] ?? null) ?: $this->questionBank->difficulty,
+                    'year_semester' => ($data['year_semester'] ?? null) ?: $this->questionBank->year_semester,
+                    'question_heading' => ($data['question_heading'] ?? null) ?: $this->questionBank->question_heading,
+                    'sub_questions' => ($data['sub_questions'] ?? null) ?: $this->questionBank->sub_questions,
+                    'tags' => ($data['tags'] ?? null) ?: $this->questionBank->tags,
                 ]);
             }
         } catch (\Exception $e) {
