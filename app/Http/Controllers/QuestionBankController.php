@@ -59,9 +59,16 @@ class QuestionBankController extends Controller
                 foreach ($request->file('files') as $file) {
                     $ext = strtolower($file->getClientOriginalExtension());
                     $resourceType = ($ext === 'pdf') ? 'raw' : 'image';
+                    // Preserve the original filename WITH extension so Cloudinary URL ends in .pdf/.png/etc.
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename  = preg_replace('/[^a-zA-Z0-9_-]/', '_', $originalName);
                     $filePaths[] = cloudinary()->uploadApi()->upload($file->getRealPath(), [
-                        'folder' => 'question_banks', 
-                        'resource_type' => $resourceType
+                        'folder'          => 'question_banks',
+                        'resource_type'   => $resourceType,
+                        'use_filename'    => true,
+                        'unique_filename' => false,
+                        'public_id'       => $safeFilename . '_' . time(),
+                        'format'          => $ext,  // force correct extension in URL (.pdf, .png, etc.)
                     ])['secure_url'];
                 }
             }

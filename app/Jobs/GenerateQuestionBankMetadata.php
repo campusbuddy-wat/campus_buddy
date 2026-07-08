@@ -70,7 +70,36 @@ class GenerateQuestionBankMetadata implements ShouldQueue
                 continue;
             }
 
-            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+            // ── Detect extension from URL path first, then fall back to Cloudinary resource_type ──
+            $ext = strtolower(pathinfo(parse_url($path, PHP_URL_PATH), PATHINFO_EXTENSION));
+
+            // If URL has no extension (old Cloudinary uploads), sniff from resource_type in URL
+            if (empty($ext)) {
+                if (str_contains($path, '/raw/upload/')) {
+                    // It was uploaded as resource_type=raw which we use for PDFs
+                    $ext = 'pdf';
+                } elseif (str_contains($path, '/image/upload/')) {
+                    // It was uploaded as resource_type=image (PNG/JPG)
+                    $ext = 'jpg';
+                } else {
+                    // Last resort: sniff magic bytes from the downloaded temp file
+                    $fh = @fopen($localPath, 'rb');
+                    if ($fh) {
+                        $magic = fread($fh, 5);
+                        fclose($fh);
+                        if (str_starts_with($magic, '%PDF')) {
+                            $ext = 'pdf';
+                        } elseif (substr($magic, 0, 4) === "\x89PNG") {
+                            $ext = 'png';
+                        } elseif (substr($magic, 0, 2) === "\xFF\xD8") {
+                            $ext = 'jpg';
+                        }
+                    }
+                }
+            }
+
+            Log::info("[AI:Job] Processing file: ext={$ext} url={$path}");
+
 
             if ($ext === 'pdf') {
                 try {

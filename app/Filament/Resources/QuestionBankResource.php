@@ -99,11 +99,17 @@ class QuestionBankResource extends Resource
                         Forms\Components\FileUpload::make('file_path')
                             ->label('Upload New Files')
                             ->saveUploadedFileUsing(function ($file) {
-                                $ext = strtolower($file->getClientOriginalExtension());
+                                $ext          = strtolower($file->getClientOriginalExtension());
                                 $resourceType = ($ext === 'pdf') ? 'raw' : 'image';
+                                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                                $safeFilename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $originalName);
                                 return cloudinary()->uploadApi()->upload($file->getRealPath(), [
-                                    'folder' => 'question_banks', 
-                                    'resource_type' => $resourceType
+                                    'folder'          => 'question_banks',
+                                    'resource_type'   => $resourceType,
+                                    'use_filename'    => true,
+                                    'unique_filename' => false,
+                                    'public_id'       => $safeFilename . '_' . time(),
+                                    'format'          => $ext,  // force correct extension in URL (.pdf, .png, etc.)
                                 ])['secure_url'];
                             })
                             ->multiple()
