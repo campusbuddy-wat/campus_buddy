@@ -253,7 +253,8 @@
 
         <div class="question-grid reveal" id="questionGrid">
             @forelse($questions as $question)
-                <div class="question-card animate-in trigger-view" 
+                <div class="question-card animate-in trigger-view"
+                     data-qb-id="{{ $question->id }}"
                      data-dept="{{ $question->department }}"
                      data-code="{{ $question->course_code }}"
                      data-title="{{ $question->title }}"
@@ -263,7 +264,15 @@
                      data-tags="{{ $question->tags }}"
                      data-course="{{ $question->course_name }}"
                      data-date="{{ $question->year_semester }}"
-                     data-files="{{ json_encode($question->file_path) }}">
+                     data-files="{{ json_encode($question->file_path) }}"
+                     data-selected="false">
+
+                    {{-- QB Unique ID + Select Checkbox --}}
+                    <div class="qb-select-overlay" onclick="toggleQBSelect(event, this.closest('.question-card'))">
+                        <div class="qb-checkbox" id="qbcheck-{{ $question->id }}">☐</div>
+                    </div>
+                    <div class="qb-id-badge">QB-{{ str_pad($question->id, 4, '0', STR_PAD_LEFT) }}</div>
+
                     <div class="question-header">
                         <div class="card-meta">
                             <span class="dept">{{ $question->department }}</span>
@@ -304,8 +313,8 @@
                         <button type="button" class="action-btn view-btn">View</button>
                         @if($question->file_path && is_array($question->file_path))
                             @if(count($question->file_path) === 1)
-                                <a href="{{ Str::startsWith($question->file_path[0], 'http') ? $question->file_path[0] : asset('storage/' . $question->file_path[0]) }}" 
-                                   class="action-btn download-btn stop-prop" 
+                                <a href="{{ Str::startsWith($question->file_path[0], 'http') ? $question->file_path[0] : asset('storage/' . $question->file_path[0]) }}"
+                                   class="action-btn download-btn stop-prop"
                                    download onclick="event.stopPropagation()">
                                     Download
                                 </a>
@@ -324,6 +333,21 @@
             @endforelse
         </div>
 
+        {{-- Floating Generate Quiz Bar (appears when cards are selected) --}}
+        <div id="quizFloatingBar" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999;
+             background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; padding:14px 24px;
+             display:none; align-items:center; justify-content:space-between; gap:16px;
+             box-shadow:0 -4px 24px rgba(79,70,229,0.4); border-top: 1px solid rgba(255,255,255,0.15);">
+            <div style="font-weight:600; font-size:15px;">
+                <span id="quizFloatingCount">0</span> Question(s) Selected
+                <span id="quizFloatingCodes" style="opacity:0.75; font-size:13px; margin-left:10px;"></span>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="clearQBSelection()" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(255,255,255,0.4); background:transparent; color:#fff; font-size:13px; cursor:pointer; font-weight:500;">✖ Clear</button>
+                <button onclick="generateQuizSheet()" style="padding:8px 22px; border-radius:8px; border:none; background:#fff; color:#4f46e5; font-size:14px; font-weight:700; cursor:pointer;">📝 Generate Quiz: Sample</button>
+            </div>
+        </div>
+
         <div class="load-more reveal">
             <button class="load-more-btn">Load More Questions</button>
         </div>
@@ -334,21 +358,25 @@
                 <h3>✨ AI Practice Generator</h3>
                 <p style="margin-bottom: 12px; opacity: 0.85;">Generate practice quizzes, get explanations, or discover frequently tested topics.</p>
                 
+                <div style="background:rgba(79,70,229,0.05); border:1px solid rgba(79,70,229,0.15); border-radius:12px; padding:12px 16px; margin-bottom:14px; font-size:13px; color:#4f46e5; font-weight:500;">
+                    💡 <strong>Quiz Sample:</strong> Select one or more Question Bank cards above (same course code), then click <em>"Generate Quiz: Sample"</em> in the bar that appears at the bottom.
+                </div>
+
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; position:relative; z-index:10; pointer-events:auto; background: rgba(99,102,241,0.03); padding: 10px; border-radius: 10px; border: 1px solid rgba(99,102,241,0.1);">
                     <input type="text" id="aiFilterCourse" placeholder="Course Code (e.g. CSE421)" style="flex:1; min-width:150px; padding:8px 12px; border-radius:8px; border:1px solid rgba(99,102,241,0.2); font-size:13px; outline:none;">
                     <select id="aiFilterTerm" style="flex:1; min-width:150px; padding:8px 12px; border-radius:8px; border:1px solid rgba(99,102,241,0.2); font-size:13px; outline:none; background:white;">
                         <option value="">Any Term</option>
                         <option value="Mid">Midterm</option>
                         <option value="Final">Final</option>
+                        <option value="Quiz">Quiz</option>
                     </select>
                 </div>
-                
+
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; position:relative; z-index:10; pointer-events:auto;">
                     <button class="practice-ai-pill" onclick="askPracticeAI('Generate 5 practice MCQ questions from the question bank')">📝 5 MCQs</button>
                     <button class="practice-ai-pill" onclick="askPracticeAI('What are the most frequently tested topics based on the question bank?')">📊 Most tested topics</button>
                     <button class="practice-ai-pill" onclick="askPracticeAI('Create a mini practice quiz with short answer questions')">✍️ Short answer quiz</button>
                     <button class="practice-ai-pill" onclick="askPracticeAI('Suggest a study strategy based on the question patterns and difficulty levels')">🧠 Study strategy</button>
-                    <button class="practice-ai-pill" id="quizSampleBtn" onclick="generateQuizSheet()">📝 Quiz Sample</button>
                 </div>
                 
                 <div style="display: flex; gap: 8px; position:relative; z-index:10; pointer-events:auto;">
@@ -743,6 +771,73 @@
             }
         }
 
+        // ==================== MULTI-SELECT QB CARDS ====================
+        let selectedQBCards = [];
+
+        function toggleQBSelect(event, card) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const isSelected = card.dataset.selected === 'true';
+            const qbId = card.dataset.qbId;
+
+            if (isSelected) {
+                card.dataset.selected = 'false';
+                card.classList.remove('qb-card-selected');
+                const checkbox = card.querySelector('.qb-checkbox');
+                if (checkbox) checkbox.textContent = '☐';
+                selectedQBCards = selectedQBCards.filter(c => c.qbId !== qbId);
+            } else {
+                card.dataset.selected = 'true';
+                card.classList.add('qb-card-selected');
+                const checkbox = card.querySelector('.qb-checkbox');
+                if (checkbox) checkbox.textContent = '☑';
+                selectedQBCards.push({
+                    qbId: qbId,
+                    code: (card.dataset.code || '').toUpperCase(),
+                    course: card.dataset.course || '',
+                    title: card.dataset.title || '',
+                    difficulty: card.dataset.difficulty || '',
+                    heading: card.dataset.heading || '',
+                    subs: card.dataset.subs || '',
+                    tags: card.dataset.tags || '',
+                    date: card.dataset.date || '',
+                    dept: card.dataset.dept || ''
+                });
+            }
+
+            updateFloatingBar();
+        }
+
+        function clearQBSelection() {
+            document.querySelectorAll('.question-card[data-selected="true"]').forEach(card => {
+                card.dataset.selected = 'false';
+                card.classList.remove('qb-card-selected');
+                const checkbox = card.querySelector('.qb-checkbox');
+                if (checkbox) checkbox.textContent = '☐';
+            });
+            selectedQBCards = [];
+            updateFloatingBar();
+        }
+
+        function updateFloatingBar() {
+            const bar = document.getElementById('quizFloatingBar');
+            const countEl = document.getElementById('quizFloatingCount');
+            const codesEl = document.getElementById('quizFloatingCodes');
+
+            if (selectedQBCards.length === 0) {
+                bar.style.display = 'none';
+                return;
+            }
+
+            bar.style.display = 'flex';
+            countEl.textContent = selectedQBCards.length;
+
+            const uniqueCodes = [...new Set(selectedQBCards.map(c => c.code))].filter(Boolean);
+            const uniqueIds = selectedQBCards.map(c => `QB-${String(c.qbId).padStart(4,'0')}`).join(', ');
+            codesEl.textContent = `(${uniqueIds})`;
+        }
+
         // ==================== QUIZ SAMPLE GENERATOR ====================
         function getFacultyForDept(dept) {
             if (!dept) return "Faculty of Science & Information Technology";
@@ -769,69 +864,65 @@
             const lines = text.split(/\r?\n/);
             let olHtml = '<ol style="list-style-type: decimal; padding-left: 20px; margin: 0;">';
             let hasItems = false;
-            
+
             lines.forEach(line => {
                 const trimmed = line.trim();
                 if (!trimmed) return;
-                
-                // Check if it starts with a number like "1." or "1)"
                 const match = trimmed.match(/^\d+[\.\)]\s*(.*)/);
                 if (match) {
                     olHtml += `<li style="margin-bottom: 18px; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 16px; color: #111;">${match[1]}</li>`;
                     hasItems = true;
                 } else if (trimmed.length > 3) {
-                    if (trimmed.toLowerCase().startsWith('set-') || trimmed.toLowerCase().startsWith('set ')) {
-                        // Ignore/skip set titles completely
-                    } else {
+                    if (!trimmed.toLowerCase().startsWith('set-') && !trimmed.toLowerCase().startsWith('set ')) {
                         olHtml += `<p style="margin-bottom: 12px; font-family: 'Times New Roman', serif; font-size: 16px; color: #111;">${trimmed}</p>`;
                     }
                 }
             });
-            
+
             olHtml += '</ol>';
             return hasItems ? olHtml : `<div style="white-space: pre-wrap; font-family: 'Times New Roman', serif; font-size: 16px; line-height: 1.6; color: #111;">${text}</div>`;
         }
 
         async function generateQuizSheet() {
-            const courseCodeInput = (document.getElementById('aiFilterCourse')?.value || '').trim();
-            const termSelect = document.getElementById('aiFilterTerm')?.value || '';
-            const quizContainer = document.getElementById('generatedQuizContainer');
-            const questionsWrap = document.getElementById('quizQuestionsContent');
-            
-            if (!courseCodeInput) {
-                alert("Please enter a Course Code (e.g. CSE421) first in the filter block above!");
-                document.getElementById('aiFilterCourse').focus();
+            if (selectedQBCards.length === 0) {
+                alert('Please select at least one Question Bank card first!');
                 return;
             }
 
-            // Map course code and names from page if available
-            let courseName = "Subject Course";
-            const codeUpper = courseCodeInput.toUpperCase();
-            const matchingCard = document.querySelector(`.question-card[data-code*="${codeUpper}"]`);
-            if (matchingCard && matchingCard.dataset.course) {
-                courseName = matchingCard.dataset.course;
+            // ── Validate: all selected must share the same course code ──
+            const uniqueCodes = [...new Set(selectedQBCards.map(c => c.code).filter(Boolean))];
+            if (uniqueCodes.length > 1) {
+                const savageReplies = [
+                    `Bro... seriously? 🤦 You picked questions from ${uniqueCodes.join(', ')}. A quiz has ONE course code, not a buffet menu. Pick ONE course and try again.`,
+                    `Come on! ${uniqueCodes.join(' + ')}?? What is this — a crossover episode?? A single quiz belongs to ONE course code. Go back and select questions from the SAME course.`,
+                    `Oh wow, ${uniqueCodes.join(' and ')} together in one quiz? Bold move. Sadly, that's not how exams work. Stick to ONE course code per quiz. Thank you.`,
+                    `${uniqueCodes.length} different course codes?? You really said "why not all of them"  😭 Please — ONE course code. That's it. That's the rule.`
+                ];
+                const msg = savageReplies[Math.floor(Math.random() * savageReplies.length)];
+                alert('⚠️ Mixed Course Codes Detected!\n\n' + msg);
+                return;
             }
 
-            // Map Faculty
-            const userDept = "{{ Auth::user()->department ?? '' }}";
-            const facultyName = getFacultyForDept(userDept);
+            const primaryCard = selectedQBCards[0];
+            const courseCode  = primaryCard.code;
+            const courseName  = primaryCard.course || 'Subject Course';
+            const userDept    = "{{ Auth::user()->department ?? '' }}";
+
+            // Build faculty
             const facultyEl = document.getElementById('quizFacultyName');
-            if (facultyEl) facultyEl.textContent = facultyName;
+            if (facultyEl) facultyEl.textContent = getFacultyForDept(userDept);
 
-            // Update details
-            document.getElementById('quizCourseCode').textContent = codeUpper;
+            // Fill header
+            document.getElementById('quizCourseCode').textContent = courseCode;
             document.getElementById('quizCourseName').textContent = courseName;
-            
-            document.querySelector('.quiz-title').textContent = "Quiz: Sample";
+            document.querySelector('.quiz-title').textContent = 'Quiz: Sample';
 
-            // Show container and loading status
+            // Show sheet + loader
+            const quizContainer = document.getElementById('generatedQuizContainer');
+            const questionsWrap = document.getElementById('quizQuestionsContent');
             quizContainer.style.display = 'block';
-            questionsWrap.innerHTML = '<div style="opacity:0.6; text-align:center; padding: 30px 0;">🧠 Generating academic quiz questions...</div>';
-            
-            // Scroll to the sheet
+            questionsWrap.innerHTML = '<div style="opacity:0.6; text-align:center; padding: 30px 0;">🧠 Analysing selected papers and generating style-matched questions...</div>';
             quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-            const message = `Generate exactly 5 realistic exam questions for course ${codeUpper}. Output ONLY the questions as a numbered list. Do not include any greeting, introduction, instructions, markdown headers, or answer explanations. Format them as a simple numbered list from 1 to 5.`;
 
             try {
                 const res = await fetch('/api/ai/practice-generator', {
@@ -841,11 +932,11 @@
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                     },
-                    body: JSON.stringify({ 
-                        message: message,
-                        history: [], // clean start
-                        course_code: codeUpper,
-                        term: termSelect
+                    body: JSON.stringify({
+                        message: 'GENERATE_QUIZ_SAMPLE',   // sentinel — backend detects this
+                        history: [],
+                        course_code: courseCode,
+                        selected_qb_data: selectedQBCards   // full rich context
                     })
                 });
 
@@ -853,18 +944,17 @@
                 if (data.response) {
                     questionsWrap.innerHTML = parseQuizQuestions(data.response);
                 } else {
-                    questionsWrap.innerHTML = '<div style="color:red; text-align:center;">Failed to generate content. Please try again.</div>';
+                    questionsWrap.innerHTML = '<div style="color:red;text-align:center;">Failed to generate. Please try again.</div>';
                 }
             } catch (error) {
                 console.error(error);
-                questionsWrap.innerHTML = '<div style="color:red; text-align:center;">Error communicating with AI service. Please try again.</div>';
+                questionsWrap.innerHTML = '<div style="color:red;text-align:center;">Error communicating with AI. Please try again.</div>';
             }
         }
 
         function downloadQuizPDF() {
             const element = document.getElementById('quizPrintArea');
-            const courseCode = (document.getElementById('aiFilterCourse')?.value || 'SAMPLE').toUpperCase();
-            
+            const courseCode = (document.getElementById('quizCourseCode')?.textContent || 'SAMPLE').toUpperCase();
             const opt = {
                 margin:       15,
                 filename:     `sample_quiz_${courseCode}.pdf`,
@@ -872,7 +962,6 @@
                 html2canvas:  { scale: 2.5, useCORS: true, letterRendering: true },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-            
             html2pdf().set(opt).from(element).save();
         }
     </script>
@@ -893,6 +982,67 @@
             background: rgba(102,126,234,0.3);
             border-color: rgba(102,126,234,0.6);
             transform: translateY(-1px);
+        }
+
+        /* QB Unique ID Badge */
+        .qb-id-badge {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* QB Select Overlay (top-left checkbox) */
+        .qb-select-overlay {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            z-index: 10;
+            cursor: pointer;
+        }
+        .qb-checkbox {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.9);
+            border: 2px solid rgba(99,102,241,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.18s ease;
+            line-height: 1;
+            color: #4f46e5;
+        }
+        .qb-select-overlay:hover .qb-checkbox {
+            background: rgba(99,102,241,0.15);
+            border-color: #4f46e5;
+            transform: scale(1.1);
+        }
+
+        /* Selected card highlight */
+        .question-card.qb-card-selected {
+            outline: 3px solid #4f46e5;
+            box-shadow: 0 0 0 5px rgba(79,70,229,0.18), 0 8px 24px rgba(79,70,229,0.15);
+            transform: translateY(-2px);
+        }
+        .question-card.qb-card-selected .qb-checkbox {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: #fff;
+        }
+
+        /* Ensure cards are positioned relative for absolute children */
+        .question-card {
+            position: relative;
         }
     </style>
 @endpush

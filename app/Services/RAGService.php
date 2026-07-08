@@ -606,4 +606,68 @@ You are an expert exam preparation assistant for {$user->department} students at
 - If no data exists for a requested course, use your general knowledge but mention this clearly
 PROMPT;
     }
+
+    /**
+     * Build a style-aware system prompt for quiz generation from selected QB cards.
+     * Analyses the question style (scenario-based, MCQ, descriptive) and topic coverage.
+     */
+    public function buildQuizGeneratorPrompt(array $selectedQbData, string $courseCode = ''): string
+    {
+        $count = count($selectedQbData);
+        $codes = implode(', ', array_unique(array_column($selectedQbData, 'code')));
+        $examTypes = implode(', ', array_unique(array_filter(array_column($selectedQbData, 'title'))));
+
+        return <<<PROMPT
+You are an expert university exam question generator for Daffodil International University.
+
+You have been given {$count} past exam paper(s) from course {$codes} (exam type(s): {$examTypes}).
+
+## YOUR TASK
+Generate exactly 5 new SAMPLE exam questions for this course.
+
+## CRITICAL STYLE RULES — READ CAREFULLY
+1. **Mirror the question format exactly**: 
+   - If the source questions are scenario-based (give a real-world situation, then ask to solve/analyze), your generated questions MUST also be scenario-based with a real-world context.
+   - If the source questions are MCQ (multiple choice with options A/B/C/D), your questions MUST also be MCQ.
+   - If the source questions are descriptive/short-answer, yours must be too.
+   - If the source questions are mixed, distribute your output accordingly.
+
+2. **Cover ALL topic areas**: If multiple exam papers are provided (different terms), ensure your 5 questions collectively touch ALL the major topics found across all selected papers — not just one paper's topics.
+
+3. **Match difficulty**: Mirror the difficulty level of the original questions.
+
+4. **Question numbering**: Output ONLY a clean numbered list from 1 to 5. No introductions, no markdown headers, no explanations, no answers.
+
+5. **Exam authenticity**: Write questions that feel like they would genuinely appear on a university exam paper for this course.
+PROMPT;
+    }
+
+    /**
+     * Build the user message (the actual question content context) for quiz generation.
+     */
+    public function buildQuizUserMessage(array $selectedQbData): string
+    {
+        $msg = "Here are the selected past exam papers to analyse:\n\n";
+        foreach ($selectedQbData as $i => $qb) {
+            $num = $i + 1;
+            $id   = $qb['qbId'] ?? '?';
+            $code = $qb['code'] ?? '';
+            $type = $qb['title'] ?? 'Unknown';
+            $diff = $qb['difficulty'] ?? 'Medium';
+            $sem  = $qb['date'] ?? '';
+            $head = $qb['heading'] ?? '';
+            $subs = $qb['subs'] ?? '';
+            $tags = $qb['tags'] ?? '';
+
+            $msg .= "--- Paper {$num} (QB-" . str_pad($id, 4, '0', STR_PAD_LEFT) . ") ---\n";
+            $msg .= "Course Code: {$code} | Exam Type: {$type} | Difficulty: {$diff} | Semester: {$sem}\n";
+            if ($head) $msg .= "Question Topic: {$head}\n";
+            if ($subs) $msg .= "Sub-questions:\n{$subs}\n";
+            if ($tags) $msg .= "Tags: {$tags}\n";
+            $msg .= "\n";
+        }
+
+        $msg .= "Now generate exactly 5 new sample exam questions that mirror the style and cover all topic areas above. Output ONLY the numbered questions, nothing else.";
+        return $msg;
+    }
 }

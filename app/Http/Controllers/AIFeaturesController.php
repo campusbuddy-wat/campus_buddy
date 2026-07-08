@@ -240,20 +240,20 @@ class AIFeaturesController extends Controller
     public function practiceGenerator(Request $request): JsonResponse
     {
         $request->validate([
-            'message'     => 'required|string|max:2000',
-            'history'     => 'nullable|array',
-            'history.*.role' => 'required|string|in:user,assistant',
-            'history.*.content' => 'required|string',
-            'department'  => 'nullable|string|max:100',
-            'course_code' => 'nullable|string|max:50',
-            'semester'    => 'nullable|string|max:50',
-            'term'        => 'nullable|string|max:20',
+            'message'          => 'required|string|max:2000',
+            'history'          => 'nullable|array',
+            'history.*.role'   => 'required|string|in:user,assistant',
+            'history.*.content'=> 'required|string',
+            'department'       => 'nullable|string|max:100',
+            'course_code'      => 'nullable|string|max:50',
+            'semester'         => 'nullable|string|max:50',
+            'term'             => 'nullable|string|max:20',
+            'selected_qb_data' => 'nullable|array',
         ]);
 
-        $user       = Auth::user();
-        $message    = strip_tags($request->input('message'));
-        $history    = $request->input('history', []);
-        
+        $user    = Auth::user();
+        $message = strip_tags($request->input('message'));
+        $history = $request->input('history', []);
         $filters = $request->only(['department', 'course_code', 'semester', 'term']);
 
         try {
@@ -264,18 +264,29 @@ class AIFeaturesController extends Controller
                 ], 503);
             }
 
+            $selectedQbData = $request->input('selected_qb_data');
+
+            // ── Style-aware quiz generation when QB cards are selected ──
+            if ($message === 'GENERATE_QUIZ_SAMPLE' && !empty($selectedQbData)) {
+                $systemPrompt = $this->rag->buildQuizGeneratorPrompt($selectedQbData, $filters['course_code'] ?? '');
+                $userMessage  = $this->rag->buildQuizUserMessage($selectedQbData);
+                $response = $this->groq->chat($systemPrompt, [
+                    ['role' => 'user', 'content' => $userMessage]
+                ]);
+                return response()->json(['response' => $response, 'error' => false]);
+            }
+
+            // ── Default generic practice generation ──
             $systemPrompt = $this->rag->buildQuestionBankPrompt($user, $filters);
 
             $messages = [];
-            // Take the last 10 messages from history to keep context without overloading tokens
             $limitedHistory = array_slice($history, -10);
             foreach ($limitedHistory as $msg) {
                 $messages[] = [
-                    'role' => $msg['role'],
+                    'role'    => $msg['role'],
                     'content' => strip_tags($msg['content'])
                 ];
             }
-            // Append the new message
             $messages[] = ['role' => 'user', 'content' => $message];
 
             $response = $this->groq->chat($systemPrompt, $messages);
