@@ -33,36 +33,43 @@ class QuestionBankController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'files.*' => 'required|file|max:15360|mimes:pdf,jpg,jpeg,png', // 15MB max per file, allowing images
-            'department' => 'nullable|string',
-            'course_code' => 'nullable|string',
-            'course_name' => 'nullable|string',
-            'title' => 'nullable|string',
-            'difficulty' => 'nullable|string',
-            'question_heading' => 'nullable|string',
-            'sub_questions' => 'nullable|string',
-            'year_semester' => 'nullable|string',
-        ]);
+        try {
+            $request->validate([
+                'files.*' => 'required|file|max:15360|mimes:pdf,jpg,jpeg,png', // 15MB max per file, allowing images
+                'department' => 'nullable|string',
+                'course_code' => 'nullable|string',
+                'course_name' => 'nullable|string',
+                'title' => 'nullable|string',
+                'difficulty' => 'nullable|string',
+                'question_heading' => 'nullable|string',
+                'sub_questions' => 'nullable|string',
+                'year_semester' => 'nullable|string',
+            ]);
 
-        $data = $request->only([
-            'department', 'course_code', 'course_name', 'title', 
-            'difficulty', 'question_heading', 'sub_questions', 'year_semester'
-        ]);
-        
-        $data['user_id'] = auth()->id();
-        $data['status'] = 'pending'; 
+            $data = $request->only([
+                'department', 'course_code', 'course_name', 'title', 
+                'difficulty', 'question_heading', 'sub_questions', 'year_semester'
+            ]);
+            
+            $data['user_id'] = auth()->id();
+            $data['status'] = 'pending'; 
 
-        $filePaths = [];
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                $filePaths[] = cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'question_banks', 'resource_type' => 'auto'])['secure_url'];
+            $filePaths = [];
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $filePaths[] = cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'question_banks', 'resource_type' => 'auto'])['secure_url'];
+                }
             }
+            $data['file_path'] = $filePaths;
+
+            QuestionBank::create($data);
+
+            return redirect()->back()->with('success', 'Question files uploaded successfully! They will appear once approved by admin.');
+        } catch (\Exception $e) {
+            \Log::error('[QuestionBank] Upload error: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
+            return redirect()->back()->withInput()->with('error', '❌ Server Error during upload: ' . $e->getMessage());
         }
-        $data['file_path'] = $filePaths;
-
-        QuestionBank::create($data);
-
-        return redirect()->back()->with('success', 'Question files uploaded successfully! They will appear once approved by admin.');
     }
 }

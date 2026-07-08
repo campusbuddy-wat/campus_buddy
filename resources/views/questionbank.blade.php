@@ -229,6 +229,12 @@
             </div>
         @endif
 
+        @if (session('error'))
+            <div class="alert alert-danger" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 12px 20px; border-radius: 12px; margin-bottom: 20px;">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="filter-container reveal">
             <div class="filter-bar">
                 <form action="{{ route('question-bank') }}" method="GET" style="display: flex; gap: 15px; flex: 1;">
