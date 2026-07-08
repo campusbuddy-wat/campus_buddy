@@ -195,6 +195,42 @@
     transform: translate(3px, -3px);
 }
 
+.glass-btn-container {
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    z-index: 25;
+}
+
+#aiBriefingContent {
+    max-height: 140px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* Custom premium scrollbar for #aiBriefingContent */
+#aiBriefingContent::-webkit-scrollbar {
+    width: 6px;
+}
+
+#aiBriefingContent::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+#aiBriefingContent::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+#aiBriefingContent::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
 .glass-shimmer {
     position: absolute;
     top: -100%;

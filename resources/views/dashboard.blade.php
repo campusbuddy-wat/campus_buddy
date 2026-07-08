@@ -47,7 +47,7 @@ Standardized structure matching all pages
                             <span class="briefing-skeleton" style="display:inline-block;width:60%;height:12px;background:rgba(255,255,255,0.08);border-radius:4px;animation:pulse 1.5s infinite;"></span>
                         </p>
                     </div>
-                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                    <div class="glass-btn-container">
                         <a href="{{ route('buddy-chat') }}" class="glass-btn">
                             <span>Let's Talk</span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>

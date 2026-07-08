@@ -5,6 +5,197 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/question-bank.css') }}">
     <link rel="stylesheet" href="{{ asset('css/buddy-card.css') }}">
+    <style>
+        /* Quiz Sheet Outer Wrapper */
+        .quiz-sheet-outer {
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        /* Quiz Sheet Action Buttons */
+        .quiz-download-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white !important;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            text-decoration: none;
+        }
+
+        .quiz-download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .quiz-download-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Quiz Paper Sheet (mimics physical paper) */
+        .quiz-sheet-paper {
+            background: white;
+            color: #111111;
+            padding: 45px 55px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            line-height: 1.5;
+            position: relative;
+        }
+
+        /* Print and PDF Specific Rules */
+        @media print {
+            .quiz-sheet-paper {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+        }
+
+        /* Headings & Centered Info */
+        .quiz-sheet-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .quiz-sheet-logo {
+            display: block;
+            margin: 0 auto 12px;
+            width: 70px;
+            height: auto;
+        }
+
+        .university-name {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0 0 4px;
+            color: #000 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .faculty-name {
+            font-size: 16px;
+            font-weight: normal;
+            margin: 0 0 4px;
+            color: #222 !important;
+        }
+
+        .dept-name {
+            font-size: 15px;
+            font-weight: bold;
+            margin: 0 0 6px;
+            color: #111 !important;
+        }
+
+        .quiz-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 4px;
+            text-transform: uppercase;
+            color: #000 !important;
+        }
+
+        .semester-name {
+            font-size: 14px;
+            font-weight: normal;
+            margin: 0 0 6px;
+            font-style: italic;
+            color: #333 !important;
+        }
+
+        .course-info {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 0 4px;
+            color: #000 !important;
+        }
+
+        .teacher-info {
+            font-size: 13px;
+            font-weight: normal;
+            margin: 0 0 10px;
+            color: #222 !important;
+        }
+
+        .exam-meta {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border-top: 1px dashed #ccc;
+            padding-top: 8px;
+            color: #000 !important;
+        }
+
+        /* Divider */
+        .quiz-divider {
+            border: 0;
+            border-top: 1px solid #111;
+            margin: 15px 0 20px;
+        }
+
+        /* Set Title styling */
+        .quiz-set-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000 !important;
+        }
+
+        /* Questions list styling */
+        .quiz-questions-wrap {
+            font-size: 15px;
+            color: #111 !important;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .quiz-questions-wrap p {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .quiz-questions-wrap ol, .quiz-questions-wrap ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-questions-wrap li {
+            margin-bottom: 14px;
+            line-height: 1.6;
+            list-style-type: decimal;
+        }
+
+        /* Footer notice style */
+        .quiz-sheet-footer {
+            margin-top: 40px;
+            border-top: 1px dashed #ccc;
+            padding-top: 15px;
+            font-size: 12px;
+            text-align: center;
+            font-style: italic;
+            color: #555 !important;
+            letter-spacing: 0.2px;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -151,6 +342,7 @@
                     <button class="practice-ai-pill" onclick="askPracticeAI('What are the most frequently tested topics based on the question bank?')">📊 Most tested topics</button>
                     <button class="practice-ai-pill" onclick="askPracticeAI('Create a mini practice quiz with short answer questions')">✍️ Short answer quiz</button>
                     <button class="practice-ai-pill" onclick="askPracticeAI('Suggest a study strategy based on the question patterns and difficulty levels')">🧠 Study strategy</button>
+                    <button class="practice-ai-pill" id="quizSampleBtn" onclick="generateQuizSheet()">📝 Quiz Sample</button>
                 </div>
                 
                 <div style="display: flex; gap: 8px; position:relative; z-index:10; pointer-events:auto;">
@@ -165,6 +357,51 @@
                 
                 <div id="practiceAiResponse" style="display:none; margin-top:14px; padding:14px; background:rgba(99,102,241,0.05); border-radius:12px; border:1px solid rgba(99,102,241,0.1); max-height:450px; overflow-y:auto; position:relative; z-index:10; pointer-events:auto;">
                     <div id="practiceAiText" style="color:#334155; font-size:14px; line-height:1.7;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Generated Quiz Sheet Container -->
+        <div class="quiz-sheet-outer" id="generatedQuizContainer" style="display: none;">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                <button type="button" onclick="downloadQuizPDF()" class="quiz-download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download PDF
+                </button>
+            </div>
+            
+            <div class="quiz-sheet-paper" id="quizPrintArea">
+                <div class="quiz-sheet-header">
+                    <img src="{{ asset('images/diu_logo.png') }}" alt="DIU Logo" class="quiz-sheet-logo">
+                    <h2 class="university-name">Daffodil International University</h2>
+                    <h3 class="faculty-name" id="quizFacultyName">Faculty of Science & Information Technology</h3>
+                    <h4 class="dept-name">Department of {{ Auth::user()->department ?? 'Software Engineering' }}</h4>
+                    <h4 class="quiz-title">Quiz: Sample</h4>
+                    <h5 class="semester-name">{{ Auth::user()->semester ?? 'Spring-2026' }}</h5>
+                    <h5 class="course-info">
+                        Course Code: <span id="quizCourseCode">N/A</span>; 
+                        Course: <span id="quizCourseName">N/A</span>
+                    </h5>
+                    <h5 class="teacher-info">Teacher: <span id="quizTeacher">AI Assistant</span></h5>
+                    <div class="exam-meta">
+                        <span>Time: 30 minutes</span>
+                        <span>Marks: 15</span>
+                    </div>
+                </div>
+                
+                <hr class="quiz-divider">
+                
+                <div class="quiz-sheet-body">
+                    
+                    <div class="quiz-questions-wrap" id="quizQuestionsContent">
+                        <!-- Questions will go here -->
+                    </div>
+                </div>
+                
+                <div class="quiz-sheet-footer">
+                    This is not a real quiz question, it's a sample so read all from your resource.
                 </div>
             </div>
         </div>
@@ -252,6 +489,7 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // ================= REVEAL ANIMATIONS =================
@@ -497,6 +735,139 @@
                 responseText.innerHTML += `<div id="practiceAiError" style="color:#ef4444; margin-top:10px;">Failed to generate content. Please try again.</div>`;
                 responseBox.scrollTop = responseBox.scrollHeight;
             }
+        }
+
+        // ==================== QUIZ SAMPLE GENERATOR ====================
+        function getFacultyForDept(dept) {
+            if (!dept) return "Faculty of Science & Information Technology";
+            const d = dept.toUpperCase();
+            if (d.includes("CSE") || d.includes("COMPUTER") || d.includes("SWE") || d.includes("SOFTWARE") || d.includes("CIS") || d.includes("MCT") || d.includes("IT")) {
+                return "Faculty of Science & Information Technology";
+            }
+            if (d.includes("EEE") || d.includes("TEXTILE") || d.includes("CIVIL") || d.includes("ENGINEERING")) {
+                return "Faculty of Engineering";
+            }
+            if (d.includes("BBA") || d.includes("MBA") || d.includes("BUSINESS") || d.includes("ENTREPRENEURSHIP")) {
+                return "Faculty of Business & Entrepreneurship";
+            }
+            if (d.includes("ENGLISH") || d.includes("LAW") || d.includes("HUMANITIES") || d.includes("SOCIAL")) {
+                return "Faculty of Humanities & Social Science";
+            }
+            if (d.includes("PHARMACY") || d.includes("NFE") || d.includes("HEALTH")) {
+                return "Faculty of Allied Health Sciences";
+            }
+            return "Faculty of Science & Information Technology";
+        }
+
+        function parseQuizQuestions(text) {
+            const lines = text.split(/\r?\n/);
+            let olHtml = '<ol style="list-style-type: decimal; padding-left: 20px; margin: 0;">';
+            let hasItems = false;
+            
+            lines.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+                
+                // Check if it starts with a number like "1." or "1)"
+                const match = trimmed.match(/^\d+[\.\)]\s*(.*)/);
+                if (match) {
+                    olHtml += `<li style="margin-bottom: 18px; line-height: 1.6; font-family: 'Times New Roman', serif; font-size: 16px; color: #111;">${match[1]}</li>`;
+                    hasItems = true;
+                } else if (trimmed.length > 3) {
+                    if (trimmed.toLowerCase().startsWith('set-') || trimmed.toLowerCase().startsWith('set ')) {
+                        // Ignore/skip set titles completely
+                    } else {
+                        olHtml += `<p style="margin-bottom: 12px; font-family: 'Times New Roman', serif; font-size: 16px; color: #111;">${trimmed}</p>`;
+                    }
+                }
+            });
+            
+            olHtml += '</ol>';
+            return hasItems ? olHtml : `<div style="white-space: pre-wrap; font-family: 'Times New Roman', serif; font-size: 16px; line-height: 1.6; color: #111;">${text}</div>`;
+        }
+
+        async function generateQuizSheet() {
+            const courseCodeInput = (document.getElementById('aiFilterCourse')?.value || '').trim();
+            const termSelect = document.getElementById('aiFilterTerm')?.value || '';
+            const quizContainer = document.getElementById('generatedQuizContainer');
+            const questionsWrap = document.getElementById('quizQuestionsContent');
+            
+            if (!courseCodeInput) {
+                alert("Please enter a Course Code (e.g. CSE421) first in the filter block above!");
+                document.getElementById('aiFilterCourse').focus();
+                return;
+            }
+
+            // Map course code and names from page if available
+            let courseName = "Subject Course";
+            const codeUpper = courseCodeInput.toUpperCase();
+            const matchingCard = document.querySelector(`.question-card[data-code*="${codeUpper}"]`);
+            if (matchingCard && matchingCard.dataset.course) {
+                courseName = matchingCard.dataset.course;
+            }
+
+            // Map Faculty
+            const userDept = "{{ Auth::user()->department ?? '' }}";
+            const facultyName = getFacultyForDept(userDept);
+            const facultyEl = document.getElementById('quizFacultyName');
+            if (facultyEl) facultyEl.textContent = facultyName;
+
+            // Update details
+            document.getElementById('quizCourseCode').textContent = codeUpper;
+            document.getElementById('quizCourseName').textContent = courseName;
+            
+            document.querySelector('.quiz-title').textContent = "Quiz: Sample";
+
+            // Show container and loading status
+            quizContainer.style.display = 'block';
+            questionsWrap.innerHTML = '<div style="opacity:0.6; text-align:center; padding: 30px 0;">🧠 Generating academic quiz questions...</div>';
+            
+            // Scroll to the sheet
+            quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            const message = `Generate exactly 5 realistic exam questions for course ${codeUpper}. Output ONLY the questions as a numbered list. Do not include any greeting, introduction, instructions, markdown headers, or answer explanations. Format them as a simple numbered list from 1 to 5.`;
+
+            try {
+                const res = await fetch('/api/ai/practice-generator', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        history: [], // clean start
+                        course_code: codeUpper,
+                        term: termSelect
+                    })
+                });
+
+                const data = await res.json();
+                if (data.response) {
+                    questionsWrap.innerHTML = parseQuizQuestions(data.response);
+                } else {
+                    questionsWrap.innerHTML = '<div style="color:red; text-align:center;">Failed to generate content. Please try again.</div>';
+                }
+            } catch (error) {
+                console.error(error);
+                questionsWrap.innerHTML = '<div style="color:red; text-align:center;">Error communicating with AI service. Please try again.</div>';
+            }
+        }
+
+        function downloadQuizPDF() {
+            const element = document.getElementById('quizPrintArea');
+            const courseCode = (document.getElementById('aiFilterCourse')?.value || 'SAMPLE').toUpperCase();
+            
+            const opt = {
+                margin:       15,
+                filename:     `sample_quiz_${courseCode}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2.5, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 

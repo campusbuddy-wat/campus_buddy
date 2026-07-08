@@ -37,7 +37,7 @@ class SignupController extends Controller
             ],
             'student_id' => ['required', 'string', 'max:20', 'unique:' . User::class],
             'role' => ['required', 'string', 'in:student,cr'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::min(6)->numbers()->symbols()],
             'department' => ['required', 'string', 'max:255'],
             'batch' => ['required', 'string', 'max:20'],
             'semester' => ['required', 'string', 'max:20'],

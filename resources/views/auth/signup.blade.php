@@ -108,12 +108,43 @@
                     <input id="password" name="password" type="password"
                         class="input @error('password') input--error @enderror" placeholder="••••••••" required>
                     @error('password') <p class="error" role="alert">{{ $message }}</p> @enderror
+                    
+                    <!-- Password Strength Indicator -->
+                    <div id="password-strength-container" style="margin-top: 8px;">
+                        <div style="display: flex; gap: 4px; height: 6px; width: 100%; border-radius: 3px; background: #e2e8f0; overflow: hidden;">
+                            <div id="strength-bar" style="width: 0%; height: 100%; transition: width 0.3s ease, background-color 0.3s ease; background-color: #ef4444;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 4px; color: #64748b;">
+                            <span>Strength: <span id="strength-text" style="font-weight: 600; color: #ef4444;">Weak</span></span>
+                        </div>
+                        <!-- Password criteria list -->
+                        <ul id="password-criteria" style="margin: 8px 0 0; padding-left: 0; list-style: none; font-size: 12px; display: flex; flex-direction: column; gap: 6px;">
+                            <li id="criterion-length" style="color: #ef4444; display: flex; align-items: center; gap: 6px; transition: color 0.2s ease;">
+                                <span class="criterion-dot" style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #ef4444; transition: background-color 0.2s ease;"></span>
+                                At least 6 characters
+                            </li>
+                            <li id="criterion-special" style="color: #ef4444; display: flex; align-items: center; gap: 6px; transition: color 0.2s ease;">
+                                <span class="criterion-dot" style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #ef4444; transition: background-color 0.2s ease;"></span>
+                                At least 1 special character
+                            </li>
+                            <li id="criterion-number" style="color: #ef4444; display: flex; align-items: center; gap: 6px; transition: color 0.2s ease;">
+                                <span class="criterion-dot" style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #ef4444; transition: background-color 0.2s ease;"></span>
+                                At least 1 number
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="field">
                     <label for="password_confirmation" class="label">Confirm Password</label>
                     <input id="password_confirmation" name="password_confirmation" type="password" class="input"
                         placeholder="••••••••" required>
+                    
+                    <!-- Password Match Indicator -->
+                    <div id="match-indicator" style="margin-top: 6px; font-size: 12px; display: none; align-items: center; gap: 6px; transition: color 0.2s ease;">
+                        <span id="match-dot" style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; transition: background-color 0.2s ease;"></span>
+                        <span id="match-text">Passwords match</span>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn--primary">Create Account</button>
@@ -142,6 +173,111 @@
                         document.getElementById('major').value = '';
                     }
                 });
+            }
+
+            // ==================== PASSWORD STRENGTH & MATCH INDICATORS ====================
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('password_confirmation');
+            const strengthBar = document.getElementById('strength-bar');
+            const strengthText = document.getElementById('strength-text');
+            const lengthCriterion = document.getElementById('criterion-length');
+            const specialCriterion = document.getElementById('criterion-special');
+            const numberCriterion = document.getElementById('criterion-number');
+            const matchIndicator = document.getElementById('match-indicator');
+            const matchDot = document.getElementById('match-dot');
+            const matchText = document.getElementById('match-text');
+
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function () {
+                    const val = this.value;
+                    
+                    // Validation criteria matching
+                    const meetsLength = val.length >= 6;
+                    const meetsSpecial = /[!@#$%^&*(),.?":{}|<>_+\-=\[\]]/.test(val);
+                    const meetsNumber = /\d/.test(val);
+                    
+                    // Update check item text & dot colors
+                    updateCriterionUI(lengthCriterion, meetsLength);
+                    updateCriterionUI(specialCriterion, meetsSpecial);
+                    updateCriterionUI(numberCriterion, meetsNumber);
+                    
+                    // Compute criteria score (0 to 3)
+                    let score = 0;
+                    if (val.length > 0) {
+                        if (meetsLength) score++;
+                        if (meetsSpecial) score++;
+                        if (meetsNumber) score++;
+                    }
+                    
+                    // Map score to bar width and colors (red to blue)
+                    let barWidth = '0%';
+                    let barColor = '#ef4444'; // Default weak red
+                    let strengthLabel = 'Weak';
+                    
+                    if (val.length > 0) {
+                        if (score <= 1) {
+                            barWidth = '33%';
+                            barColor = '#ef4444'; // Weak = Red
+                            strengthLabel = 'Weak';
+                        } else if (score === 2) {
+                            barWidth = '66%';
+                            barColor = '#6366f1'; // Moderate = Purple/Indigo
+                            strengthLabel = 'Moderate';
+                        } else if (score === 3) {
+                            barWidth = '100%';
+                            barColor = '#2563eb'; // Strong = Blue
+                            strengthLabel = 'Strong';
+                        }
+                    }
+                    
+                    strengthBar.style.width = barWidth;
+                    strengthBar.style.backgroundColor = barColor;
+                    strengthText.textContent = strengthLabel;
+                    strengthText.style.color = barColor;
+
+                    // Re-verify confirmation matches
+                    checkPasswordMatch();
+                });
+            }
+
+            if (confirmInput) {
+                confirmInput.addEventListener('input', checkPasswordMatch);
+            }
+
+            function updateCriterionUI(element, isMet) {
+                if (!element) return;
+                const dot = element.querySelector('.criterion-dot');
+                if (isMet) {
+                    element.style.color = '#2563eb'; // Blue for valid
+                    if (dot) dot.style.backgroundColor = '#2563eb';
+                } else {
+                    element.style.color = '#ef4444'; // Red for invalid
+                    if (dot) dot.style.backgroundColor = '#ef4444';
+                }
+            }
+
+            function checkPasswordMatch() {
+                if (!confirmInput || !passwordInput || !matchIndicator) return;
+                const pVal = passwordInput.value;
+                const cVal = confirmInput.value;
+                
+                // Hide indicator if confirm input is empty
+                if (cVal.length === 0) {
+                    matchIndicator.style.display = 'none';
+                    return;
+                }
+                
+                matchIndicator.style.display = 'flex';
+                
+                if (pVal === cVal) {
+                    matchIndicator.style.color = '#2563eb'; // Blue for match
+                    if (matchDot) matchDot.style.backgroundColor = '#2563eb';
+                    if (matchText) matchText.textContent = 'Passwords match';
+                } else {
+                    matchIndicator.style.color = '#ef4444'; // Red for mismatch
+                    if (matchDot) matchDot.style.backgroundColor = '#ef4444';
+                    if (matchText) matchText.textContent = 'Passwords do not match';
+                }
             }
         });
     </script>
