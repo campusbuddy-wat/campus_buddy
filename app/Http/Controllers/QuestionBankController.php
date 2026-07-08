@@ -11,11 +11,14 @@ class QuestionBankController extends Controller
     {
         $query = QuestionBank::query()->where('status', 'approved');
 
+        if (auth()->check() && auth()->user()->department) {
+            $query->where('department', auth()->user()->department);
+        }
+
         if ($request->filled('course')) {
             $query->where(function($q) use ($request) {
                 $q->where('course_code', 'like', '%' . $request->course . '%')
-                  ->orWhere('course_name', 'like', '%' . $request->course . '%')
-                  ->orWhere('department', 'like', '%' . $request->course . '%');
+                  ->orWhere('course_name', 'like', '%' . $request->course . '%');
             });
         }
 
@@ -23,15 +26,7 @@ class QuestionBankController extends Controller
             $query->where('year_semester', 'like', '%' . $request->semester . '%');
         }
 
-        // Prioritize user's department first, then show latest questions
-        if (auth()->check() && auth()->user()->department) {
-            $userDept = auth()->user()->department;
-            $questions = $query->orderByRaw("CASE WHEN department = ? THEN 0 ELSE 1 END", [$userDept])
-                               ->latest()
-                               ->get();
-        } else {
-            $questions = $query->latest()->get();
-        }
+        $questions = $query->latest()->get();
 
         return view('questionbank', compact('questions'));
     }
