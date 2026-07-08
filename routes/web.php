@@ -231,3 +231,13 @@ Route::post('/api/notifications/mark-single-read', function (\Illuminate\Http\Re
     return response()->json(['success' => true]);
 })->middleware('auth')->name('api.notifications.mark-single-read');
 
+Route::get('/debug-session', function () {
+    return response()->json([
+        'session_id' => session()->getId(),
+        'csrf_token' => csrf_token(),
+        'all_headers' => request()->headers->all(),
+        'cookies' => request()->cookies->all(),
+        'session_all' => session()->all(),
+    ]);
+});
+
