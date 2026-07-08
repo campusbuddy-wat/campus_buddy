@@ -98,7 +98,14 @@ class QuestionBankResource extends Resource
                             ->columnSpanFull(),
                         Forms\Components\FileUpload::make('file_path')
                             ->label('Upload New Files')
-                            ->saveUploadedFileUsing(fn ($file) => cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'question_banks'])['secure_url'])
+                            ->saveUploadedFileUsing(function ($file) {
+                                $ext = strtolower($file->getClientOriginalExtension());
+                                $resourceType = ($ext === 'pdf') ? 'raw' : 'image';
+                                return cloudinary()->uploadApi()->upload($file->getRealPath(), [
+                                    'folder' => 'question_banks', 
+                                    'resource_type' => $resourceType
+                                ])['secure_url'];
+                            })
                             ->multiple()
                             ->reorderable()
                             ->appendFiles()

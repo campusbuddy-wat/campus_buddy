@@ -37,23 +37,55 @@ class GenerateQuestionBankMetadata implements ShouldQueue
 
         $extractedText = '';
         foreach ($filePaths as $path) {
-            $fullPath = storage_path('app/public/' . $path);
-            $ext = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+            $isUrl = str_starts_with($path, 'http://') || str_starts_with($path, 'https://');
+            $tempFile = null;
+            $localPath = '';
 
-            if (!file_exists($fullPath)) continue;
+            if ($isUrl) {
+                try {
+                    // Download file to a temporary local path
+                    $tempFile = tempnam(sys_get_temp_dir(), 'qb_');
+                    $contents = file_get_contents($path);
+                    if ($contents === false) {
+                        Log::warning("[AI:Job] Failed to download file from URL: {$path}");
+                        continue;
+                    }
+                    file_put_contents($tempFile, $contents);
+                    $localPath = $tempFile;
+                } catch (\Exception $e) {
+                    Log::warning("[AI:Job] Download failed for {$path}: " . $e->getMessage());
+                    if ($tempFile && file_exists($tempFile)) {
+                        @unlink($tempFile);
+                    }
+                    continue;
+                }
+            } else {
+                $localPath = storage_path('app/public/' . $path);
+            }
+
+            if (empty($localPath) || !file_exists($localPath)) {
+                if ($tempFile && file_exists($tempFile)) {
+                    @unlink($tempFile);
+                }
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
             if ($ext === 'pdf') {
                 try {
                     $parser = new \Smalot\PdfParser\Parser();
-                    $pdf = $parser->parseFile($fullPath);
+                    $pdf = $parser->parseFile($localPath);
                     $extractedText .= $pdf->getText() . "\n";
                 } catch (\Exception $e) {
                     Log::warning('[AI:Job] PDF parse failed: ' . $e->getMessage());
                 }
             } elseif (in_array($ext, ['jpg', 'jpeg', 'png'])) {
                 try {
-                    $ocr = new \thiagoalessio\TesseractOCR\TesseractOCR($fullPath);
-                    if (file_exists('/opt/homebrew/bin/tesseract')) {
+                    $ocr = new \thiagoalessio\TesseractOCR\TesseractOCR($localPath);
+                    if (file_exists('/usr/bin/tesseract')) {
+                        $ocr->executable('/usr/bin/tesseract');
+                    } elseif (file_exists('/opt/homebrew/bin/tesseract')) {
                         $ocr->executable('/opt/homebrew/bin/tesseract');
                     }
                     $extractedText .= $ocr->run() . "\n";
@@ -61,9 +93,15 @@ class GenerateQuestionBankMetadata implements ShouldQueue
                     Log::warning('[AI:Job] OCR failed: ' . $e->getMessage());
                 }
             }
+
+            // Cleanup temp file
+            if ($tempFile && file_exists($tempFile)) {
+                @unlink($tempFile);
+            }
         }
 
         if (empty(trim($extractedText))) {
+            Log::info('[AI:Job] No text was extracted from files.');
             return;
         }
 

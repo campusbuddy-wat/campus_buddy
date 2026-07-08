@@ -57,7 +57,12 @@ class QuestionBankController extends Controller
             $filePaths = [];
             if ($request->hasFile('files')) {
                 foreach ($request->file('files') as $file) {
-                    $filePaths[] = cloudinary()->uploadApi()->upload($file->getRealPath(), ['folder' => 'question_banks', 'resource_type' => 'auto'])['secure_url'];
+                    $ext = strtolower($file->getClientOriginalExtension());
+                    $resourceType = ($ext === 'pdf') ? 'raw' : 'image';
+                    $filePaths[] = cloudinary()->uploadApi()->upload($file->getRealPath(), [
+                        'folder' => 'question_banks', 
+                        'resource_type' => $resourceType
+                    ])['secure_url'];
                 }
             }
             $data['file_path'] = $filePaths;
