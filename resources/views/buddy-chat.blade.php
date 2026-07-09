@@ -213,6 +213,22 @@
                   </svg>
                   <span class="history-text">{{ $chat->title }}</span>
                   <span class="history-time">{{ $chat->created_at->shortAbsoluteDiffForHumans() }}</span>
+                  <div class="history-actions" style="display: none; gap: 6px;">
+                      <button class="rename-chat-btn" data-id="{{ $chat->id }}" style="background: none; border: none; padding: 2px; cursor: pointer; color: var(--text-dim); display: flex; align-items: center;" title="Rename Chat">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                              <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                          </svg>
+                      </button>
+                      <button class="delete-chat-btn" data-id="{{ $chat->id }}" style="background: none; border: none; padding: 2px; cursor: pointer; color: var(--text-dim); display: flex; align-items: center;" title="Delete Chat">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="3 6 5 6 21 6" />
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                              <line x1="10" y1="11" x2="10" y2="17" />
+                              <line x1="14" y1="11" x2="14" y2="17" />
+                          </svg>
+                      </button>
+                  </div>
                 </a>
             @endforeach
         @else
@@ -458,7 +474,43 @@
           } else {
             const data = await response.json();
             if (data.chat_id) {
+                const isNewChat = (currentChatId === null);
                 currentChatId = data.chat_id;
+
+                if (isNewChat) {
+                    const emptyLabel = chatHistoryList.querySelector('.sidebar-label');
+                    if (emptyLabel) emptyLabel.remove();
+
+                    const displayTitle = text.substring(0, 25) + (text.length > 25 ? '...' : '');
+                    const newChatItem = document.createElement('a');
+                    newChatItem.href = '#';
+                    newChatItem.className = 'chat-history-item active';
+                    newChatItem.dataset.id = currentChatId;
+                    newChatItem.innerHTML = `
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                      <span class="history-text">${displayTitle}</span>
+                      <span class="history-time">Just now</span>
+                      <div class="history-actions" style="display: none; gap: 6px;">
+                          <button class="rename-chat-btn" data-id="${currentChatId}" style="background: none; border: none; padding: 2px; cursor: pointer; color: var(--text-dim); display: flex; align-items: center;" title="Rename Chat">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                  <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                              </svg>
+                          </button>
+                          <button class="delete-chat-btn" data-id="${currentChatId}" style="background: none; border: none; padding: 2px; cursor: pointer; color: var(--text-dim); display: flex; align-items: center;" title="Delete Chat">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <polyline points="3 6 5 6 21 6" />
+                                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                  <line x1="10" y1="11" x2="10" y2="17" />
+                                  <line x1="14" y1="11" x2="14" y2="17" />
+                              </svg>
+                          </button>
+                      </div>
+                    `;
+                    chatHistoryList.insertBefore(newChatItem, chatHistoryList.firstChild);
+                }
             }
             const aiResponse = data.response || "I couldn't generate a response. Please try again.";
             addMessage(aiResponse, 'bot', data.sources || []);
@@ -485,15 +537,95 @@
         }
       });
 
-      // Handle loading chat history
-      document.querySelectorAll('.chat-history-item').forEach(item => {
-          item.addEventListener('click', async (e) => {
+      // Handle loading chat history and action buttons via event delegation
+      chatHistoryList.addEventListener('click', async (e) => {
+          const deleteBtn = e.target.closest('.delete-chat-btn');
+          const renameBtn = e.target.closest('.rename-chat-btn');
+          const chatItem = e.target.closest('.chat-history-item');
+
+          if (deleteBtn) {
               e.preventDefault();
-              const id = item.dataset.id;
+              e.stopPropagation();
+              const id = deleteBtn.dataset.id;
+              if (!confirm("Are you sure you want to delete this conversation?")) return;
+              
+              try {
+                  const res = await fetch(`/api/ai-chat/${id}`, {
+                      method: 'DELETE',
+                      headers: {
+                          'X-CSRF-TOKEN': csrfToken,
+                          'Accept': 'application/json'
+                      }
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                      const item = deleteBtn.closest('.chat-history-item');
+                      item.remove();
+                      
+                      // If deleted chat was active, reset chat area
+                      if (currentChatId == id) {
+                          currentChatId = null;
+                          conversationHistory = [];
+                          chatMessages.innerHTML = '';
+                          welcomeSection.style.display = 'flex';
+                          chatMessages.style.display = 'none';
+                      }
+                      
+                      // If no chats left, show 'No recent chats'
+                      if (chatHistoryList.querySelectorAll('.chat-history-item').length === 0) {
+                          chatHistoryList.innerHTML = '<span class="sidebar-label" style="text-align:center; display:block; margin-top:20px;">No recent chats</span>';
+                      }
+                  } else {
+                      alert(data.message || "Failed to delete chat");
+                  }
+              } catch (err) {
+                  console.error(err);
+                  alert("An error occurred while deleting the chat");
+              }
+              return;
+          }
+
+          if (renameBtn) {
+              e.preventDefault();
+              e.stopPropagation();
+              const id = renameBtn.dataset.id;
+              const item = renameBtn.closest('.chat-history-item');
+              const textSpan = item.querySelector('.history-text');
+              const oldTitle = textSpan.textContent.trim();
+              
+              const newTitle = prompt("Rename conversation:", oldTitle);
+              if (!newTitle || newTitle.trim() === "" || newTitle.trim() === oldTitle) return;
+              
+              try {
+                  const res = await fetch(`/api/ai-chat/${id}/rename`, {
+                      method: 'PATCH',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': csrfToken,
+                          'Accept': 'application/json'
+                      },
+                      body: JSON.stringify({ title: newTitle.trim() })
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                      textSpan.textContent = newTitle.trim();
+                  } else {
+                      alert(data.message || "Failed to rename chat");
+                  }
+              } catch (err) {
+                  console.error(err);
+                  alert("An error occurred while renaming the chat");
+              }
+              return;
+          }
+
+          if (chatItem) {
+              e.preventDefault();
+              const id = chatItem.dataset.id;
               if (!id) return;
               
               document.querySelectorAll('.chat-history-item').forEach(i => i.classList.remove('active'));
-              item.classList.add('active');
+              chatItem.classList.add('active');
 
               try {
                   const res = await fetch(`/api/ai-chat/${id}`);
@@ -514,7 +646,7 @@
               } catch (err) {
                   console.error("Failed to load chat", err);
               }
-          });
+          }
       });
       
       // New Chat button
@@ -636,18 +768,12 @@
                 const bubble = row.querySelector('.msg-bubble');
                 const srcDiv = document.createElement('div');
                 srcDiv.className = 'sources-section';
+                srcDiv.style.marginTop = '8px';
+                srcDiv.style.borderTop = '1px solid var(--border)';
+                srcDiv.style.paddingTop = '6px';
                 srcDiv.innerHTML = `
-                    <div class="sources-label">
-                        <span class="sources-icon">🔗</span>
-                        <span>Verify from official source${uniqueSources.length > 1 ? "s" : ""}</span>
-                    </div>
-                    <div class="sources-links">
-                        ${uniqueSources.map(s => `
-                            <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="verify-btn">
-                                <span class="verify-btn-icon">↗</span>
-                                <span>${s.title}</span>
-                            </a>
-                        `).join("")}
+                    <div style="font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
+                        <span>ℹ️ Please visit the official website (https://daffodilvarsity.edu.bd/) to verify manually.</span>
                     </div>
                 `;
                 bubble.appendChild(srcDiv);

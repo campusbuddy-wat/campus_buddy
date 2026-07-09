@@ -207,6 +207,11 @@
         border-radius: 24px !important;
     }
 
+    .glass-btn-container {
+        left: 100px !important;
+        right: 30px !important;
+    }
+
     .hero-mascot {
         width: 320px !important;
         left: -130px !important;

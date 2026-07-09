@@ -241,6 +241,25 @@
     flex-shrink: 0;
 }
 
+/* Actions on hover */
+.history-actions {
+    display: none;
+    gap: 6px;
+    align-items: center;
+}
+.chat-history-item:hover .history-actions {
+    display: flex !important;
+}
+.chat-history-item:hover .history-time {
+    display: none !important;
+}
+.history-actions button:hover {
+    color: var(--primary) !important;
+}
+.history-actions .delete-chat-btn:hover {
+    color: #ef4444 !important;
+}
+
 /* ═══════════════════════════════════════════
    MAIN CHAT
 ═══════════════════════════════════════════ */

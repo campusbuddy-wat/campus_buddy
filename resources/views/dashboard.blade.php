@@ -47,12 +47,12 @@ Standardized structure matching all pages
                             <span class="briefing-skeleton" style="display:inline-block;width:60%;height:12px;background:rgba(255,255,255,0.08);border-radius:4px;animation:pulse 1.5s infinite;"></span>
                         </p>
                     </div>
-                    <div class="glass-btn-container">
-                        <a href="{{ route('buddy-chat') }}" class="glass-btn">
-                            <span>Let's Talk</span>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                        </a>
-                    </div>
+                </div>
+                <div class="glass-btn-container">
+                    <a href="{{ route('buddy-chat') }}" class="glass-btn">
+                        <span>Let's Talk</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </a>
                 </div>
                 <div class="glass-shimmer"></div>
             </div>
@@ -69,7 +69,9 @@ Standardized structure matching all pages
 
           {{-- Section: Study Overview (= Finance row in Pic 1) --}}
           <div class="section-head animate-up delay-1">
-            <h2 class="section-title">Study Overview</h2>
+            <a href="{{ route('routine') }}" style="text-decoration: none; color: inherit;">
+              <h2 class="section-title" style="cursor: pointer;">Study Overview</h2>
+            </a>
           </div>
 
           <div class="stat-row">
@@ -119,7 +121,7 @@ Standardized structure matching all pages
               });
             @endphp
 
-            <div class="stat-card schedule-card animate-scale delay-2 {{ $currentClass ? 'is-class-now' : '' }}" style="justify-content: flex-start; padding: 18px 15px; height: auto;">
+            <a href="{{ route('routine') }}" class="stat-card schedule-card animate-scale delay-2 {{ $currentClass ? 'is-class-now' : '' }}" style="justify-content: flex-start; padding: 18px 15px; height: auto; text-decoration: none; color: inherit; display: flex; flex-direction: column;">
               <div class="stat-icon" style="margin-bottom: 8px;">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -191,7 +193,7 @@ Standardized structure matching all pages
               </div>
 
               <p class="stat-label-footer">Day Tasks</p>
-            </div>
+            </a>
 
             {{-- 2. PRIORITY TASK CARD (Center) --}}
             @php 

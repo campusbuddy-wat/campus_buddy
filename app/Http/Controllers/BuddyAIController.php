@@ -265,6 +265,63 @@ class BuddyAIController extends Controller
     }
 
     /**
+     * Delete a chat session.
+     */
+    public function deleteChat($id): JsonResponse
+    {
+        $chat = \App\Models\AiChat::find($id);
+        if (!$chat) {
+            return response()->json(['error' => 'Chat not found', 'success' => false], 404);
+        }
+
+        // Check ownership
+        if ($chat->type === 'buddy') {
+            if ($chat->user_id !== Auth::id()) {
+                return response()->json(['error' => 'Forbidden', 'success' => false], 403);
+            }
+        } else {
+            if ($chat->session_id !== session()->getId()) {
+                return response()->json(['error' => 'Forbidden', 'success' => false], 403);
+            }
+        }
+
+        $chat->delete();
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Rename a chat session.
+     */
+    public function renameChat(Request $request, $id): JsonResponse
+    {
+        $request->validate([
+            'title' => 'required|string|max:100',
+        ]);
+
+        $chat = \App\Models\AiChat::find($id);
+        if (!$chat) {
+            return response()->json(['error' => 'Chat not found', 'success' => false], 404);
+        }
+
+        // Check ownership
+        if ($chat->type === 'buddy') {
+            if ($chat->user_id !== Auth::id()) {
+                return response()->json(['error' => 'Forbidden', 'success' => false], 403);
+            }
+        } else {
+            if ($chat->session_id !== session()->getId()) {
+                return response()->json(['error' => 'Forbidden', 'success' => false], 403);
+            }
+        }
+
+        $chat->update([
+            'title' => strip_tags($request->input('title'))
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Build the messages array from history + current user message.
      * Sanitizes all content to prevent prompt injection.
      *

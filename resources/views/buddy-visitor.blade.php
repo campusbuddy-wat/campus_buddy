@@ -1080,18 +1080,12 @@
                     const bubble = row.querySelector('.msg-bubble');
                     const srcDiv = document.createElement('div');
                     srcDiv.className = 'sources-section';
+                    srcDiv.style.marginTop = '8px';
+                    srcDiv.style.borderTop = '1px solid var(--border)';
+                    srcDiv.style.paddingTop = '6px';
                     srcDiv.innerHTML = `
-                        <div class="sources-label">
-                            <span class="sources-icon">🔗</span>
-                            <span>Verify from official source${uniqueSources.length > 1 ? "s" : ""}</span>
-                        </div>
-                        <div class="sources-links">
-                            ${uniqueSources.map(s => `
-                                <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="verify-btn">
-                                    <span class="verify-btn-icon">↗</span>
-                                    <span>${s.title}</span>
-                                </a>
-                            `).join("")}
+                        <div style="font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
+                            <span>ℹ️ Please visit the official website (https://daffodilvarsity.edu.bd/) to verify manually.</span>
                         </div>
                     `;
                     bubble.appendChild(srcDiv);

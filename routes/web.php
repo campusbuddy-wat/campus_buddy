@@ -132,6 +132,16 @@ Route::get('/api/ai-chat/{chat}', [BuddyAIController::class, 'getChat'])
     ->middleware('throttle:30,1')
     ->name('api.ai-chat.get');
 
+// Delete chat history
+Route::delete('/api/ai-chat/{chat}', [BuddyAIController::class, 'deleteChat'])
+    ->middleware(['auth', 'throttle:30,1'])
+    ->name('api.ai-chat.delete');
+
+// Rename chat history
+Route::patch('/api/ai-chat/{chat}/rename', [BuddyAIController::class, 'renameChat'])
+    ->middleware(['auth', 'throttle:30,1'])
+    ->name('api.ai-chat.rename');
+
 // ==================== AI FEATURE API ROUTES ====================
 
 // Daily Dashboard Briefing (auto-loads on dashboard)
