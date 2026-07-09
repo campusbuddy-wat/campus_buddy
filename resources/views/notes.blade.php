@@ -124,6 +124,19 @@
         #notesSummaryResponse::-webkit-scrollbar-thumb:hover {
             background: rgba(99, 102, 241, 0.5);
         }
+
+        /* AI loading spinner */
+        .ai-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: ai-spin 0.8s linear infinite;
+        }
+        @keyframes ai-spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 
     <!-- ================= SPLIT SECTION ================= -->
@@ -191,7 +204,7 @@
                                         onclick="summarizeFromBtn(this)" title="AI Summary">
                                         ✨
                                     </button>
-                                    <a href="https://docs.google.com/viewer?url={{ urlencode(Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path)) }}" target="_blank"
+                                    <a href="{{ route('notes.view', $material->id) }}" target="_blank"
                                         class="mini-view-btn pdf">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
@@ -199,7 +212,7 @@
                                             <circle cx="12" cy="12" r="3" />
                                         </svg>
                                     </a>
-                                    <a href="{{ Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path) }}" download
+                                    <a href="{{ route('notes.download', $material->id) }}"
                                         class="mini-dl-btn pdf">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
@@ -286,7 +299,7 @@
                                         onclick="summarizeFromBtn(this)" title="AI Summary">
                                         ✨
                                     </button>
-                                    <a href="https://docs.google.com/viewer?url={{ urlencode(Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path)) }}" target="_blank"
+                                    <a href="{{ route('notes.view', $material->id) }}" target="_blank"
                                         class="mini-view-btn note">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
@@ -294,7 +307,7 @@
                                             <circle cx="12" cy="12" r="3" />
                                         </svg>
                                     </a>
-                                    <a href="{{ Str::startsWith($material->file_path, 'http') ? $material->file_path : asset('storage/' . $material->file_path) }}" download
+                                    <a href="{{ route('notes.download', $material->id) }}"
                                         class="mini-dl-btn note">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2.5">
@@ -556,27 +569,119 @@
 
     <!-- AI Notes Summarizer Script -->
     <script>
+        const SUPPORTED_TYPES = ['pdf', 'docx', 'doc', 'pptx'];
+
         function summarizeFromBtn(btn) {
+            const fileType = (btn.dataset.aiFiletype || '').toLowerCase();
             summarizeNote({
-                title: btn.dataset.aiTitle,
+                title:       btn.dataset.aiTitle,
                 course_code: btn.dataset.aiCourse,
-                department: btn.dataset.aiDept,
-                file_type: btn.dataset.aiFiletype,
-                type: btn.dataset.aiType,
-                file_path: btn.dataset.aiFilepath
+                department:  btn.dataset.aiDept,
+                file_type:   fileType,
+                type:        btn.dataset.aiType,
+                file_path:   btn.dataset.aiFilepath
             });
+        }
+
+        /**
+         * Convert a plain markdown string to safe HTML.
+         * Handles: ### headers, **bold**, numbered lists, bullet lists,
+         *          horizontal rules, and wraps paragraphs.
+         */
+        function markdownToHtml(md) {
+            const lines   = md.split('\n');
+            const out     = [];
+            let inList    = false;
+            let inNumList = false;
+
+            const closeList = () => {
+                if (inList)    { out.push('</ul>'); inList = false; }
+                if (inNumList) { out.push('</ol>'); inNumList = false; }
+            };
+
+            const inline = (s) => s
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g,      '<em>$1</em>')
+                .replace(/`([^`]+)`/g,         '<code style="background:rgba(99,102,241,.1);padding:1px 5px;border-radius:4px;font-size:0.9em;">$1</code>');
+
+            for (let raw of lines) {
+                const line = raw.trimEnd();
+
+                // Blank line → close lists, add spacer
+                if (!line.trim()) { closeList(); out.push('<br>'); continue; }
+
+                // Horizontal rule
+                if (/^---+$/.test(line.trim())) {
+                    closeList();
+                    out.push('<hr style="border:none;border-top:1px solid rgba(99,102,241,.2);margin:14px 0;">');
+                    continue;
+                }
+
+                // H3
+                if (line.startsWith('### ')) {
+                    closeList();
+                    out.push(`<h4 style="margin:18px 0 6px;color:#4338ca;font-size:1rem;font-weight:700;display:flex;align-items:center;gap:6px;">${inline(line.slice(4))}</h4>`);
+                    continue;
+                }
+                // H2
+                if (line.startsWith('## ')) {
+                    closeList();
+                    out.push(`<h4 style="margin:14px 0 6px;color:#6366f1;font-size:0.95rem;font-weight:700;">${inline(line.slice(3))}</h4>`);
+                    continue;
+                }
+                // H1
+                if (line.startsWith('# ')) {
+                    closeList();
+                    out.push(`<h3 style="margin:16px 0 8px;color:#4338ca;">${inline(line.slice(2))}</h3>`);
+                    continue;
+                }
+
+                // Numbered list  (1. / 1) )
+                const numMatch = line.match(/^(\d+)[.)]\s+(.+)/);
+                if (numMatch) {
+                    if (!inNumList) { closeList(); out.push('<ol style="padding-left:22px;margin:6px 0;">'); inNumList = true; }
+                    out.push(`<li style="margin-bottom:4px;">${inline(numMatch[2])}</li>`);
+                    continue;
+                }
+
+                // Bullet list  (* / - / •)
+                const bulletMatch = line.match(/^[*\-•]\s+(.+)/);
+                if (bulletMatch) {
+                    if (!inList) { closeList(); out.push('<ul style="padding-left:20px;margin:6px 0;">'); inList = true; }
+                    out.push(`<li style="margin-bottom:4px;">${inline(bulletMatch[1])}</li>`);
+                    continue;
+                }
+
+                // Normal paragraph line
+                closeList();
+                out.push(`<p style="margin:4px 0 8px;line-height:1.75;">${inline(line)}</p>`);
+            }
+
+            closeList();
+            return out.join('\n');
         }
 
         async function summarizeNote(materialData) {
             const responseBox = document.getElementById('notesSummaryResponse');
-            const titleEl = document.getElementById('notesSummaryTitle');
-            const textEl = document.getElementById('notesSummaryText');
-            
+            const titleEl     = document.getElementById('notesSummaryTitle');
+            const textEl      = document.getElementById('notesSummaryText');
+            const fileType    = (materialData.file_type || '').toLowerCase();
+            const supported   = SUPPORTED_TYPES.includes(fileType);
+
             responseBox.style.display = 'block';
-            titleEl.textContent = `📝 Summarizing: ${materialData.title}`;
-            textEl.innerHTML = '<span style="opacity:0.6;">Generating AI summary... This may take a moment. ✨</span>';
-            
-            // Scroll to the response
+            titleEl.textContent = `📄 Analysing: ${materialData.title} (${materialData.course_code})`;
+
+            const loadingMsg = supported
+                ? `<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 0;">
+                       <div class="ai-spinner"></div>
+                       <span style="opacity:.7;font-size:13px;">Reading your ${fileType.toUpperCase()} and generating academic breakdown… this may take 15–30 seconds ✨</span>
+                   </div>`
+                : `<div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 0;">
+                       <div class="ai-spinner"></div>
+                       <span style="opacity:.7;font-size:13px;">Generating context-aware summary for <strong>${materialData.course_code}</strong>… ✨</span>
+                   </div>`;
+
+            textEl.innerHTML = loadingMsg;
             responseBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             try {
@@ -584,26 +689,29 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json',
+                        'Accept':       'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                     },
                     body: JSON.stringify(materialData)
                 });
 
                 const data = await res.json();
-                let html = (data.response || 'Could not generate summary.')
-                    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                    .replace(/### (.+)/g, '<h4 style="margin:10px 0 6px;color:#4f46e5;">$1</h4>')
-                    .replace(/## (.+)/g, '<h4 style="margin:12px 0 6px;color:#4f46e5;">$1</h4>')
-                    .replace(/# (.+)/g, '<h3 style="margin:14px 0 8px;color:#6366f1;">$1</h3>')
-                    .replace(/- (.+)/g, '• $1')
-                    .replace(/\d+\. /g, (match) => `<br>${match}`)
-                    .replace(/\n/g, '<br>');
 
-                titleEl.textContent = `✨ Summary: ${materialData.title} (${materialData.course_code})`;
-                textEl.innerHTML = html;
+                if (data.error) {
+                    textEl.innerHTML = `<span style="color:#f87171;">${data.response || 'Could not generate summary.'}</span>`;
+                    return;
+                }
+
+                const charsNote = data.chars_extracted > 200
+                    ? `<span style="font-size:11px;opacity:.6;margin-left:8px;">📥 ${data.chars_extracted.toLocaleString()} chars extracted</span>`
+                    : `<span style="font-size:11px;opacity:.6;margin-left:8px;">⚠️ No text extracted — AI used course context</span>`;
+
+                titleEl.innerHTML = `✨ Academic Breakdown: <em>${materialData.title}</em>&nbsp;·&nbsp;<code style="font-size:13px;">${materialData.course_code}</code>${charsNote}`;
+                textEl.innerHTML  = markdownToHtml(data.response || 'Could not generate summary.');
+
             } catch (e) {
-                textEl.innerHTML = '<span style="color:#f87171;">Could not connect to AI. Please try again. 🔄</span>';
+                console.error(e);
+                textEl.innerHTML = '<span style="color:#f87171;">Could not connect to AI service. Please try again. 🔄</span>';
             }
         }
     </script>

@@ -93,8 +93,10 @@ class QuestionBank extends Model
         if (is_string($files)) {
             $files = json_decode($files, true) ?? [];
         }
-        return array_map(function ($url) {
+        $mapped = array_map(function ($url) {
             return self::getCloudinaryDownloadUrl($url);
         }, (array) $files);
+
+        return array_values($mapped);
     }
 }

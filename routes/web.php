@@ -77,6 +77,8 @@ Route::post('/announcements', [AnnouncementController::class, 'store'])->name('a
 
 // Notes/Materials
 Route::get('/notes', [NotesController::class, 'index'])->name('notes')->middleware('auth');
+Route::get('/notes/view/{id}', [NotesController::class, 'viewMaterial'])->name('notes.view')->middleware('auth');
+Route::get('/notes/download/{id}', [NotesController::class, 'downloadMaterial'])->name('notes.download')->middleware('auth');
 Route::post('/materials', [\App\Http\Controllers\MaterialController::class, 'store'])->name('materials.store')->middleware('auth');
 
 // Clubs
@@ -168,6 +170,18 @@ Route::post('/api/ai/summarize-notes', [AIFeaturesController::class, 'summarizeN
 Route::post('/api/ai/practice-generator', [AIFeaturesController::class, 'practiceGenerator'])
     ->middleware(['auth', 'throttle:15,1'])
     ->name('api.ai.practice-generator');
+
+Route::post('/api/ai/final-exam-generator', [AIFeaturesController::class, 'finalExamGenerator'])
+    ->middleware(['auth', 'throttle:15,1'])
+    ->name('api.ai.final-exam-generator');
+
+Route::post('/api/ai/mid-exam-generator', [AIFeaturesController::class, 'midExamGenerator'])
+    ->middleware(['auth', 'throttle:15,1'])
+    ->name('api.ai.mid-exam-generator');
+
+Route::post('/api/ai/check-course-materials', [AIFeaturesController::class, 'checkCourseMaterials'])
+    ->middleware(['auth', 'throttle:30,1'])
+    ->name('api.ai.check-course-materials');
 
 // ==================== AUTOMATED ROUTINE IMPORT ROUTES ====================
 Route::post('/api/routine/parse-file', [\App\Http\Controllers\RoutineImportController::class, 'parseFile'])

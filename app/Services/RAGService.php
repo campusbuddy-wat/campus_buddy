@@ -448,55 +448,84 @@ PROMPT;
     }
 
     /**
-     * Build a prompt for PDF/Notes summarization.
-     * Uses material metadata since we don't extract PDF text yet.
+     * Build a smart, focused prompt for PDF / DOCX / PPTX summarization.
+     * Produces real academic content rather than generic bullet points.
      */
     public function buildNotesSummaryPrompt(User $user, array $materialData, string $extractedText = ''): string
     {
-        $title      = $materialData['title'] ?? 'Untitled';
-        $courseCode  = $materialData['course_code'] ?? 'Unknown';
-        $department  = $materialData['department'] ?? $user->department;
-        $fileType    = $materialData['file_type'] ?? 'pdf';
-        $type        = $materialData['type'] ?? 'class_material';
+        $title         = $materialData['title']         ?? 'Untitled';
+        $courseCode    = $materialData['course_code']   ?? 'Unknown';
+        $department    = $materialData['department']    ?? ($user->department ?? 'N/A');
+        $fileType      = strtoupper($materialData['file_type'] ?? 'PDF');
+        $type          = $materialData['type']          ?? 'class_material';
+        $extractedChars = (int) ($materialData['extracted_chars'] ?? 0);
 
-        $typeLabel = $type === 'hand_note' ? 'Hand Note' : 'Class Material (Lecture/Slides)';
+        $typeLabel = $type === 'hand_note'
+            ? 'Hand-written Note'
+            : 'Class Material (Lecture / Slides)';
 
-        $textContent = "";
-        if (!empty(trim($extractedText))) {
-            $textContent = "\n\nHere is the extracted content from the actual material:\n---\n{$extractedText}\n---\n";
+        // ── Content block: only inject if we actually have text ───────────
+        $contentBlock = '';
+        $contentNote  = '';
+
+        if ($extractedChars > 200) {
+            $wordCount    = str_word_count($extractedText);
+            $contentBlock = "\n\n## EXTRACTED DOCUMENT CONTENT ({$extractedChars} characters / ~{$wordCount} words)\n"
+                          . "```\n{$extractedText}\n```\n";
+            $contentNote  = "The full document content has been provided above. Base your entire response on it — do NOT invent or guess.";
+        } else {
+            $contentNote  = "No readable text could be extracted from the file (it may be scanned/image-based). "
+                          . "Use your academic knowledge of the course \"{$courseCode}\" ({$department}) to generate a high-quality, "
+                          . "realistic breakdown of what this type of material would typically cover. Clearly state at the top: "
+                          . "\"⚠️ Note: Document text could not be read. Content below is AI-generated based on the course context.\"";
         }
 
         return <<<PROMPT
 You are an expert academic tutor for {$department} students at Daffodil International University.
 
-A student is studying this material:
-- Title: {$title}
-- Course Code: {$courseCode}
-- Department: {$department}
-- File Type: {$fileType}
-- Material Type: {$typeLabel}{$textContent}
+## MATERIAL DETAILS
+- **Title:** {$title}
+- **Course:** {$courseCode}
+- **Type:** {$typeLabel}  ({$fileType})
+- **Department:** {$department}
+{$contentBlock}
 
-Based on the provided material text, provide a comprehensive list of all the key topics covered in the material along with a detailed explanation for each topic. 
+## YOUR TASK
+{$contentNote}
 
-Format your response strictly as follows:
+Produce a **precise, structured academic breakdown** of this material. Your response must feel like it was written by a knowledgeable tutor — not a summarizer. Every section must be grounded in the actual content above.
 
-### Key Topics & Explanations
-* **[Topic 1 Name]:** [Detailed explanation of Topic 1 based on the text]
-* **[Topic 2 Name]:** [Detailed explanation of Topic 2 based on the text]
-(continue for all key topics found)
+---
 
-### Practice Questions
-* [Question 1]
-* [Question 2]
-* [Question 3]
+## REQUIRED OUTPUT FORMAT (follow exactly)
 
-## RULES
-- DO NOT generate a "Likely Summary" or guess the content if the text is provided. 
-- Base your explanations strictly on the extracted text provided above.
-- If no text is provided, do your best to list the expected key topics and explanations based on the course code and title.
-- Be highly educational and specific.
-- IMPORTANT: If you see questions from multiple different courses, DO NOT mix them together. Focus on ONE specific course (the one requested by the user or the most prominent one) and generate practice material ONLY for that course. Ensure the generation is strictly course-specific.
-- If you cannot determine the subject from the course code, provide general academic study guidance for the title.
+### 📌 Overview
+Write 3–5 sentences summarising the entire material: what it covers, why it matters for the course, and the main intellectual thread running through it. NO bullet points here — write in flowing paragraphs.
+
+### 🧠 Core Concepts
+For each major concept found in the material, write:
+* **[Concept Name]:** A clear, substantive explanation (3–6 sentences). Include how it works, why it is important, and any formulas / definitions present in the text.
+
+(List all significant concepts — do not pick only 2 or 3 if more exist.)
+
+### 🔗 Key Relationships & Insights
+Identify 3–5 non-obvious connections or insights within the material — things a student might miss on a first read but that are critical for deep understanding. Write each as a short paragraph.
+
+### ❓ Likely Exam Questions
+Generate 5 exam-style questions that target the most important ideas in this material. Mix question types: at least one short-answer, one analytical, and one application/scenario-based question. Number them 1–5.
+
+### 📝 Quick Revision Cheatsheet
+A compact table or numbered list of the most important terms, definitions, or formulas. Keep it scannable.
+
+---
+
+## STRICT RULES
+1. **Stay 100% faithful to the provided text** — do not add content that is not there.
+2. **No padding or filler** — every sentence must carry real information.
+3. **No generic advice** like "study hard" or "review your notes".
+4. If the material is slides / PPTX, infer the lecture narrative from the slide headings and body text.
+5. Write at the level of a university student who already understands the basics — be precise and technical where appropriate.
+6. If a section has no relevant content (e.g., no formulas exist), skip that sub-section cleanly rather than writing placeholder text.
 PROMPT;
     }
 
@@ -623,7 +652,17 @@ You are an expert university exam question generator for Daffodil International 
 You have been given {$count} past exam paper(s) from course {$codes} (exam type(s): {$examTypes}).
 
 ## YOUR TASK
-Generate exactly 5 new SAMPLE exam questions for this course.
+Generate a new SAMPLE quiz paper for this course. The total marks for the quiz must be exactly 15.
+Choose one of the following two question structures randomly/dynamically:
+1. **Structure A (Exactly 2 questions)**:
+   - Question 1: worth **7 to 10 marks**.
+   - Question 2: worth **5 to 8 marks**.
+   - Total marks of Q1 + Q2 must sum to exactly **15**.
+2. **Structure B (Exactly 3 questions)**:
+   - Question 1: worth **3 to 5 marks**.
+   - Question 2: worth **3 to 5 marks**.
+   - Question 3: worth **3 to 5 marks**.
+   - Total marks of Q1 + Q2 + Q3 must sum to exactly **15**.
 
 ## CRITICAL STYLE RULES — READ CAREFULLY
 1. **Mirror the question format exactly**: 
@@ -631,14 +670,11 @@ Generate exactly 5 new SAMPLE exam questions for this course.
    - If the source questions are MCQ (multiple choice with options A/B/C/D), your questions MUST also be MCQ.
    - If the source questions are descriptive/short-answer, yours must be too.
    - If the source questions are mixed, distribute your output accordingly.
-
-2. **Cover ALL topic areas**: If multiple exam papers are provided (different terms), ensure your 5 questions collectively touch ALL the major topics found across all selected papers — not just one paper's topics.
-
+2. **Cover ALL topic areas**: If multiple exam papers are provided (different terms), ensure your questions collectively touch ALL the major topics found across all selected papers — not just one paper's topics.
 3. **Match difficulty**: Mirror the difficulty level of the original questions.
-
-4. **Question numbering**: Output ONLY a clean numbered list from 1 to 5. No introductions, no markdown headers, no explanations, no answers.
-
-5. **Exam authenticity**: Write questions that feel like they would genuinely appear on a university exam paper for this course.
+4. **Question numbering**: Output ONLY a clean numbered list from 1 to 2 (Structure A) or 1 to 3 (Structure B). No introductions, no markdown headers, no explanations, no answers.
+5. **Marks formatting**: Append the marks at the end of each question as `[Marks-X]` (e.g. `[Marks-10]`, `[Marks-5]`).
+6. **Exam authenticity**: Write questions that feel like they would genuinely appear on a university exam paper for this course.
 PROMPT;
     }
 
@@ -667,7 +703,203 @@ PROMPT;
             $msg .= "\n";
         }
 
-        $msg .= "Now generate exactly 5 new sample exam questions that mirror the style and cover all topic areas above. Output ONLY the numbered questions, nothing else.";
+        $msg .= "Now generate a new sample quiz paper of either 2 or 3 questions totaling exactly 15 marks. Output ONLY the numbered questions, nothing else.";
         return $msg;
+    }
+
+    /**
+     * Build system prompt for style-aware Final Exam generation.
+     */
+    public function buildFinalExamPrompt(array $selectedQbData, string $courseCode = '', string $extractedText = ''): string
+    {
+        $count = count($selectedQbData);
+        $codes = implode(', ', array_unique(array_column($selectedQbData, 'code'))) ?: $courseCode;
+
+        $qbPrompt = '';
+        if ($count > 0) {
+            $qbPrompt = "Here are style-reference questions from past exam papers:\n";
+            foreach ($selectedQbData as $i => $qb) {
+                $num = $i + 1;
+                $qbPrompt .= "Paper {$num} (Code: {$qb['code']} | Topic: {$qb['heading']}):\n{$qb['subs']}\n\n";
+            }
+        }
+
+        $materialPrompt = '';
+        if (!empty($extractedText)) {
+            $materialPrompt = "Here is the course material content extracted from lecture/notes:\n{$extractedText}\n\n";
+        }
+
+        // Determine if starting from a past Final Exam card
+        $hasFinalExamCard = false;
+        foreach ($selectedQbData as $qb) {
+            $title = strtolower($qb['title'] ?? '');
+            if (str_contains($title, 'final')) {
+                $hasFinalExamCard = true;
+                break;
+            }
+        }
+
+        $structureInstruction = '';
+        if ($hasFinalExamCard) {
+            $structureInstruction = <<<INSTRUCTION
+- Since the reference paper is a **PAST FINAL EXAM**:
+  - You **MUST strictly keep the exact same structure** (number of questions, sub-questions, distribution, and exact marks) as the selected reference final exam paper. Mirror its structural blueprint perfectly.
+INSTRUCTION;
+        } else {
+            $structureInstruction = <<<INSTRUCTION
+- Since the reference paper(s) are **QUIZZES / CLASS TESTS / MIDTERMS / LOW / MIXED RESOURCES**:
+  - The generated Final Exam paper must have a total of 40 marks.
+  - You **MUST structure the questions** using exactly three categories of questions:
+    1. **Simple questions** (worth 2-3 marks each; maximum of 2 such questions/sub-parts across the entire paper). These should be definitions or simple concepts.
+    2. **Moderate questions** (worth 4-7 marks each; maximum of 3 such questions/sub-parts across the entire paper). These should be comparisons, explanations, or analysis.
+    3. **High questions** (worth 7-12 marks each; maximum of 2 such questions/sub-parts across the entire paper). These must be full mathematical calculations, table computations, or complex scenario solvings.
+INSTRUCTION;
+        }
+
+        return <<<PROMPT
+You are an expert university final exam question paper generator for Daffodil International University (DIU).
+Your task is to generate exactly 5 realistic, high-quality, comprehensive final exam questions for the course {$codes}.
+
+## REFERENCES PROVIDED:
+{$qbPrompt}
+{$materialPrompt}
+
+## EXAM STRUCTURE RULES:
+{$structureInstruction}
+- Regardless of the resource type, ensure the total marks for all questions sum up to exactly 40.
+
+## CRITICAL INSTRUCTIONS — RESOURCE PRIORITIZATION:
+1. **PRIMARY FOCUS: Selected Past Exam Questions**:
+   - You must treat the selected past exam questions above as your **primary blueprint and resource**.
+   - Focus heavily on the topics, style, phrasing, question complexity, and types of questions found in these selected questions.
+2. **SECONDARY FOCUS: Course Materials**:
+   - Treat the uploaded course materials/notes only as a **secondary background resource**.
+   - Use the course materials solely to retrieve supplementary detail, definitions, or context to enrich the questions generated from the primary selected past questions.
+   - Do not let the course materials distract from the core style and structure of the selected past questions.
+3. **STRICT TABLE & MATHEMATICAL PROBLEM REPLICATION**:
+   - If any of the selected past exam questions contain mathematical equations, formulas, calculations (e.g. multivariate linear regression $\hat{y} = w_1x_1 + w_2x_2 + w_0$, gradient descent weights update with learning rate $\alpha$ and loss function, PCA manually), or dataset tables, the generated question **MUST STRICTLY contain a corresponding mathematical problem, equation, and data table** for the students to compute and solve.
+   - Do not convert a mathematical calculation problem into a descriptive/theory explanation question. Keep it as an active calculation problem with new values.
+   - If a table is required, you must format it using **raw, valid HTML table tags** (e.g. `<table class="exam-table"><thead><tr><th>Header</th></tr></thead><tbody><tr><td>Data</td></tr></tbody></table>`). Do not use markdown tables.
+
+## CRITICAL STYLE & FORMATTING RULES:
+1. **Output Format**: Output ONLY a clean numbered list from 1 to 5. Do not include any introductions, markdown headers (e.g. #, ##, ###), greeting, preamble, or summary. Start directly with the first question: "1. ..."
+2. **Sub-parts and Marks**:
+   - Each question must consist of sub-parts (a), (b), etc.
+   - For example:
+     "1. (a) Define supervised learning. [Marks-2]
+     (b) Explain the difference between regression and classification with an example. [Marks-3]
+     (c) Solve the given scenario. [Marks-3]"
+   - Every question (1 to 5) must have sub-parts and the total marks for each question's sub-parts must sum up to exactly 8 marks (so 5 questions * 8 marks = 40 marks total, unless mirroring a past final exam structure).
+   - Append the marks at the end of each sub-part line as `[Marks-X]` (e.g. `[Marks-5]`, `[Marks-3]`).
+3. **Content and Authenticity**:
+   - Make the questions look like they came from a genuine DIU Semester Final Exam paper.
+   - Mimic the complexity/difficulty of the past exam questions.
+   - Ensure a mix of theoretical, analytical, and application-based/scenario questions.
+PROMPT;
+    }
+
+    /**
+     * Build system prompt for style-aware Midterm Exam generation (Total marks: 25).
+     */
+    public function buildMidExamPrompt(array $selectedQbData, string $courseCode = '', string $extractedText = ''): string
+    {
+        $count = count($selectedQbData);
+        $codes = implode(', ', array_unique(array_column($selectedQbData, 'code'))) ?: $courseCode;
+
+        $qbPrompt = '';
+        if ($count > 0) {
+            $qbPrompt = "Here are style-reference questions from past exam papers:\n";
+            foreach ($selectedQbData as $i => $qb) {
+                $num = $i + 1;
+                $qbPrompt .= "Paper {$num} (Code: {$qb['code']} | Topic: {$qb['heading']}):\n{$qb['subs']}\n\n";
+            }
+        }
+
+        $materialPrompt = '';
+        if (!empty($extractedText)) {
+            $materialPrompt = "Here is the course material content extracted from lecture/notes:\n{$extractedText}\n\n";
+        }
+
+        // Determine the type of reference cards selected
+        $hasMidExamCard = false;
+        $hasFinalExamCard = false;
+        $hasQuizCard = false;
+
+        foreach ($selectedQbData as $qb) {
+            $title = strtolower($qb['title'] ?? '');
+            if (str_contains($title, 'mid') || str_contains($title, 'midterm')) {
+                $hasMidExamCard = true;
+            } else if (str_contains($title, 'final')) {
+                $hasFinalExamCard = true;
+            } else if (str_contains($title, 'quiz') || str_contains($title, 'class test') || str_contains($title, 'test') || str_contains($title, 'practice')) {
+                $hasQuizCard = true;
+            }
+        }
+
+        $structureInstruction = '';
+        if ($hasMidExamCard) {
+            $structureInstruction = <<<INSTRUCTION
+- Since the reference paper is a **PAST MIDTERM EXAM**:
+  - You **MUST strictly keep the exact same structure** (number of questions, sub-questions, distribution, and exact marks) as the selected reference midterm exam paper. Mirror its structural blueprint perfectly. The total marks of all questions combined MUST be exactly 25.
+INSTRUCTION;
+        } else if ($hasFinalExamCard) {
+            $structureInstruction = <<<INSTRUCTION
+- Since the reference paper is a **PAST FINAL EXAM**:
+  - The generated paper must be a Midterm Exam, so it **must contain exactly 25 marks** in total. Adapt the questions down and structure them so they do not exceed 25 marks. You must generate exactly 2 or 3 main numbered questions, with a grand total of 4 to 6 subparts across the entire paper.
+INSTRUCTION;
+        } else {
+            // Default to Quiz / Low resource style splits as specified
+            $structureInstruction = <<<INSTRUCTION
+- Since the reference paper(s) are **QUIZZES / CLASS TESTS / LOW RESOURCES**:
+  - The generated Midterm Exam paper must have a total of exactly 25 marks.
+  - You **MUST structure the questions** using exactly three categories of questions:
+    1. **Simple questions** (worth 2-3 marks each; exactly **1 to 2 such questions/sub-parts** across the entire paper). These should be definitions or simple concepts.
+    2. **Moderate questions** (worth 4-6 marks each; exactly **1 to 2 such questions/sub-parts** across the entire paper). These should be comparisons, explanations, or analysis.
+    3. **High questions** (worth 7-10 marks each; exactly **1 such question/sub-part** across the entire paper). This must be a full mathematical calculation, table computation, or complex scenario solving.
+  - The total number of all sub-parts (a, b, etc.) across all main questions in the entire paper must be **exactly 4 to 6 sub-questions**.
+  - The total marks of all simple, moderate, and high sub-parts combined must sum up to exactly 25 marks.
+INSTRUCTION;
+        }
+
+        return <<<PROMPT
+You are an expert university midterm exam question paper generator for Daffodil International University (DIU).
+Your task is to generate exactly 2 or 3 main numbered midterm exam questions (e.g. 1, 2, and optionally 3) for the course {$codes}.
+
+## REFERENCES PROVIDED:
+{$qbPrompt}
+{$materialPrompt}
+
+## EXAM STRUCTURE RULES:
+{$structureInstruction}
+- Regardless of the resource type, ensure the total marks for all subparts across the entire paper sum up to exactly 25.
+- The paper must consist of exactly 4 to 6 total subparts (e.g., 1(a), 1(b), 2(a), 2(b), 2(c), 3(a)) across the entire exam sheet.
+
+## CRITICAL INSTRUCTIONS — RESOURCE PRIORITIZATION:
+1. **PRIMARY FOCUS: Selected Past Exam Questions**:
+   - You must treat the selected past exam questions above as your **primary blueprint and resource**.
+   - Focus heavily on the topics, style, phrasing, question complexity, and types of questions found in these selected questions.
+2. **SECONDARY FOCUS: Course Materials**:
+   - Treat the uploaded course materials/notes only as a **secondary background resource**.
+   - Use the course materials solely to retrieve supplementary detail, definitions, or context to enrich the questions generated from the primary selected past questions.
+   - Do not let the course materials distract from the core style and structure of the selected past questions.
+3. **STRICT TABLE & MATHEMATICAL PROBLEM REPLICATION**:
+   - If any of the selected past exam questions contain mathematical equations, formulas, calculations (e.g. multivariate linear regression $\hat{y} = w_1x_1 + w_2x_2 + w_0$, gradient descent weights update with learning rate $\alpha$ and loss function, PCA manually), or dataset tables, the generated question **MUST STRICTLY contain a corresponding mathematical problem, equation, and data table** for the students to compute and solve.
+   - Do not convert a mathematical calculation problem into a descriptive/theory explanation question. Keep it as an active calculation problem with new values.
+   - If a table is required, you must format it using **raw, valid HTML table tags** (e.g. `<table class="exam-table"><thead><tr><th>Header</th></tr></thead><tbody><tr><td>Data</td></tr></tbody></table>`). Do not use markdown tables.
+
+## CRITICAL STYLE & FORMATTING RULES:
+1. **Output Format**: Output ONLY a clean numbered list of main questions (e.g., starting with 1 to 2 or 3). Do not include any introductions, markdown headers (e.g. #, ##, ###), greeting, preamble, or summary. Start directly with the first question: "1. ..."
+2. **Sub-parts and Marks**:
+   - Each question must consist of sub-parts (a), (b), etc.
+   - For example:
+     "1. (a) Define supervised learning. [Marks-3]
+     (b) Explain the difference between regression and classification with an example. [Marks-5]"
+   - Append the marks at the end of each sub-part line as `[Marks-X]` (e.g. `[Marks-5]`, `[Marks-3]`).
+   - Double check your math: the sum of all `[Marks-X]` on the entire sheet MUST equal exactly 25.
+3. **Content and Authenticity**:
+   - Make the questions look like they came from a genuine DIU Semester Midterm Exam paper.
+   - Mimic the complexity/difficulty of the past exam questions.
+   - Ensure a mix of theoretical, analytical, and application-based/scenario questions.
+PROMPT;
     }
 }

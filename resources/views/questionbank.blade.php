@@ -311,12 +311,12 @@
                     </div>
                     <div class="card-action-overlay">
                         <button type="button" class="action-btn view-btn">View</button>
-                        @if($question->signed_file_paths && is_array($question->signed_file_paths))
+                        @if($question->signed_file_paths && is_array($question->signed_file_paths) && count($question->signed_file_paths) > 0)
                             @if(count($question->signed_file_paths) === 1)
-                                <a href="{{ Str::startsWith($question->signed_file_paths[0], 'http') ? $question->signed_file_paths[0] : asset('storage/' . $question->signed_file_paths[0]) }}"
+                                <a href="{{ str_starts_with($question->signed_file_paths[0] ?? '', 'http') ? $question->signed_file_paths[0] : asset('storage/' . $question->signed_file_paths[0]) }}"
                                    class="action-btn download-btn stop-prop"
                                    download onclick="event.stopPropagation()">
-                                    Download
+                                     Download
                                 </a>
                             @else
                                 <div class="multi-download-badge">
@@ -345,6 +345,8 @@
             <div style="display:flex; gap:10px;">
                 <button onclick="clearQBSelection()" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(255,255,255,0.4); background:transparent; color:#fff; font-size:13px; cursor:pointer; font-weight:500;">✖ Clear</button>
                 <button onclick="generateQuizSheet()" style="padding:8px 22px; border-radius:8px; border:none; background:#fff; color:#4f46e5; font-size:14px; font-weight:700; cursor:pointer;">📝 Generate Quiz: Sample</button>
+                <button onclick="startMidExamFlow()" style="padding:8px 22px; border-radius:8px; border:none; background:#f59e0b; color:#fff; font-size:14px; font-weight:700; cursor:pointer;">📝 Generate Mid Exam</button>
+                <button onclick="startFinalExamFlow()" style="padding:8px 22px; border-radius:8px; border:none; background:#10b981; color:#fff; font-size:14px; font-weight:700; cursor:pointer;">🎓 Generate Final Exam</button>
             </div>
         </div>
 
@@ -359,7 +361,7 @@
                 <p style="margin-bottom: 12px; opacity: 0.85;">Generate practice quizzes, get explanations, or discover frequently tested topics.</p>
                 
                 <div style="background:rgba(79,70,229,0.05); border:1px solid rgba(79,70,229,0.15); border-radius:12px; padding:12px 16px; margin-bottom:14px; font-size:13px; color:#4f46e5; font-weight:500;">
-                    💡 <strong>Quiz Sample:</strong> Select one or more Question Bank cards above (same course code), then click <em>"Generate Quiz: Sample"</em> in the bar that appears at the bottom.
+                    💡 <strong>Quiz / Mid / Final Exam:</strong> Select one or more Question Bank cards above (same course code), then click <em>"Generate Quiz"</em>, <em>"Generate Mid Exam"</em>, or <em>"Generate Final Exam"</em>.
                 </div>
 
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; position:relative; z-index:10; pointer-events:auto; background: rgba(99,102,241,0.03); padding: 10px; border-radius: 10px; border: 1px solid rgba(99,102,241,0.1);">
@@ -375,19 +377,9 @@
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; position:relative; z-index:10; pointer-events:auto;">
                     <button class="practice-ai-pill" onclick="askPracticeAI('Generate 5 practice MCQ questions from the question bank')">📝 5 MCQs</button>
                     <button class="practice-ai-pill" onclick="askPracticeAI('What are the most frequently tested topics based on the question bank?')">📊 Most tested topics</button>
-                    <button class="practice-ai-pill" onclick="askPracticeAI('Create a mini practice quiz with short answer questions')">✍️ Short answer quiz</button>
-                    <button class="practice-ai-pill" onclick="askPracticeAI('Suggest a study strategy based on the question patterns and difficulty levels')">🧠 Study strategy</button>
+                    <button class="practice-ai-pill" onclick="startMidExamFlow()">📝 Mid Exam Sample</button>
+                    <button class="practice-ai-pill" onclick="startFinalExamFlow()">🎓 Final Exam Sample</button>
                     <button class="practice-ai-pill" id="quizSampleBtn" onclick="generateQuizSheet()">📝 Quiz Sample</button>
-                </div>
-                
-                <div style="display: flex; gap: 8px; position:relative; z-index:10; pointer-events:auto;">
-                    <input type="text" id="practiceAiInput" placeholder="Ask about any course or topic..." 
-                           style="flex:1; padding:10px 14px; border-radius:10px; border:1px solid rgba(99,102,241,0.2); background:rgba(99,102,241,0.05); color:#334155; font-size:14px; outline:none;"
-                           onkeypress="if(event.key==='Enter') askPracticeAI(this.value)">
-                    <button onclick="askPracticeAI(document.getElementById('practiceAiInput').value)" 
-                            style="padding:10px 18px; border-radius:10px; border:none; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; font-weight:600; cursor:pointer; font-size:14px; white-space:nowrap;">
-                        Generate ✨
-                    </button>
                 </div>
                 
                 <div id="practiceAiResponse" style="display:none; margin-top:14px; padding:14px; background:rgba(99,102,241,0.05); border-radius:12px; border:1px solid rgba(99,102,241,0.1); max-height:450px; overflow-y:auto; position:relative; z-index:10; pointer-events:auto;">
@@ -409,7 +401,7 @@
             
             <div class="quiz-sheet-paper" id="quizPrintArea">
                 <div class="quiz-sheet-header">
-                    <img src="{{ asset('images/diu_logo.png') }}" alt="DIU Logo" class="quiz-sheet-logo">
+                    <img src="/images/diu_logo.png" alt="DIU Logo" class="quiz-sheet-logo">
                     <h2 class="university-name">Daffodil International University</h2>
                     <h3 class="faculty-name" id="quizFacultyName">Faculty of Science & Information Technology</h3>
                     <h4 class="dept-name">Department of {{ Auth::user()->department ?? 'Software Engineering' }}</h4>
@@ -438,6 +430,24 @@
                 <div class="quiz-sheet-footer">
                     This is not a real quiz question, it's a sample so read all from your resource.
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Exam Consent Modal -->
+    <div id="finalExamModal" class="modal" style="display: none; align-items: center; justify-content: center; z-index: 110000; background: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; right: 0; bottom: 0;">
+        <div class="modal-content" style="max-width: 500px; padding: 24px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); background: white; margin: auto; border: none; font-family: 'Inter', sans-serif;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 12px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <h2 style="font-size: 18px; font-weight: 700; color: #1e1b4b; display: flex; align-items: center; gap: 8px; margin: 0;">🎓 Final Exam Generator</h2>
+                <button type="button" onclick="closeFinalExamModal()" style="font-size: 24px; font-weight: bold; background: none; border: none; cursor: pointer; color: #6b7280; padding: 0; line-height: 1;">&times;</button>
+            </div>
+            
+            <div id="finalExamModalBody" style="font-size: 14px; color: #4b5563; line-height: 1.6; margin-bottom: 24px; text-align: left;">
+                <!-- Dynamically filled by JavaScript based on flows -->
+            </div>
+
+            <div id="finalExamModalFooter" style="display: flex; gap: 10px; justify-content: flex-end; width: 100%;">
+                <!-- Dynamically filled buttons -->
             </div>
         </div>
     </div>
@@ -1022,6 +1032,16 @@
             const facultyEl = document.getElementById('quizFacultyName');
             if (facultyEl) facultyEl.textContent = getFacultyForDept(userDept);
 
+            // Clear Final Exam instructions if they exist
+            document.getElementById('quizInstructionsLine')?.remove();
+            document.getElementById('quizItalicInstructions')?.remove();
+
+            // Restore Quiz meta
+            const metaContainer = document.querySelector('.exam-meta');
+            if (metaContainer) {
+                metaContainer.innerHTML = '<span>Time: 30 minutes</span><span>Marks: 15</span>';
+            }
+
             // Fill header
             document.getElementById('quizCourseCode').textContent = courseCode;
             document.getElementById('quizCourseName').textContent = courseName;
@@ -1059,15 +1079,568 @@
 
         function downloadQuizPDF() {
             const element = document.getElementById('quizPrintArea');
+            if (!element) {
+                showSavageToast('Export Failed', 'No question paper found to export.');
+                return;
+            }
+
             const courseCode = (document.getElementById('quizCourseCode')?.textContent || 'SAMPLE').toUpperCase();
+            const titleText = (document.querySelector('.quiz-title')?.textContent || '').toLowerCase();
+            const isFinal = titleText.includes('final');
+            const isMid = titleText.includes('mid');
+            
+            let filename = `sample_quiz_${courseCode}.pdf`;
+            if (isFinal) {
+                filename = `final_exam_${courseCode}.pdf`;
+            } else if (isMid) {
+                filename = `midterm_exam_${courseCode}.pdf`;
+            }
+
+            // Create a temporary clone of the element to isolate it from parent CSS/flex layout conflicts
+            const clone = element.cloneNode(true);
+            
+            // Set styles to mimic a standard A4 page layout during render
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
+            clone.style.top = '0';
+            clone.style.width = '800px';
+            clone.style.background = '#ffffff';
+            clone.style.color = '#111111';
+            clone.style.padding = '40px 50px';
+            clone.style.boxSizing = 'border-box';
+            clone.style.display = 'block';
+
+            document.body.appendChild(clone);
+
             const opt = {
-                margin:       15,
-                filename:     `sample_quiz_${courseCode}.pdf`,
+                margin:       10,
+                filename:     filename,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2.5, useCORS: true, letterRendering: true },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: false,
+                    logging: true,
+                    backgroundColor: '#ffffff'
+                },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-            html2pdf().set(opt).from(element).save();
+
+            // Run standard chain and clean up clone
+            html2pdf().from(clone).set(opt).save().then(() => {
+                document.body.removeChild(clone);
+            }).catch(err => {
+                console.error('PDF Generation Error:', err);
+                document.body.removeChild(clone);
+                showSavageToast('Export Error', 'An error occurred while rendering the PDF.');
+            });
+        }
+
+        // ==================== MID TERM EXAM SAMPLE GENERATOR ====================
+        async function startMidExamFlow() {
+            let courseCode = '';
+            let isQuizSelection = false;
+            let isMidSelection = false;
+
+            if (selectedQBCards.length > 0) {
+                const uniqueCodes = [...new Set(selectedQBCards.map(c => c.code).filter(Boolean))];
+                if (uniqueCodes.length > 1) {
+                    showSavageToast('Mixed Course Codes', 'Please select questions from the SAME course code to generate a Midterm Exam sample.');
+                    return;
+                }
+                courseCode = uniqueCodes[0];
+
+                selectedQBCards.forEach(c => {
+                    const t = (c.title || '').toLowerCase();
+                    if (t.includes('quiz') || t.includes('test') || t.includes('class test') || t.includes('practice')) {
+                        isQuizSelection = true;
+                    } else if (t.includes('mid') || t.includes('midterm')) {
+                        isMidSelection = true;
+                    } else {
+                        isQuizSelection = true;
+                    }
+                });
+            } else {
+                const courseCodeInput = (document.getElementById('aiFilterCourse')?.value || '').trim();
+                if (!courseCodeInput) {
+                    showSavageToast('Required Field Missing', 'Please select at least one Question Bank card OR enter a Course Code in the input field above!');
+                    return;
+                }
+                courseCode = courseCodeInput.toUpperCase();
+                
+                const termSelect = document.getElementById('aiFilterTerm')?.value || '';
+                if (termSelect === 'Mid') {
+                    isMidSelection = true;
+                } else {
+                    isQuizSelection = true;
+                }
+            }
+
+            openFinalExamModal(
+                `<div style="display:flex; align-items:center; gap:10px; justify-content:center; padding: 20px 0; font-weight: 500;">
+                    <div class="ai-spinner" style="border-width:3px; width:24px; height:24px; border-top-color:#f59e0b; border-right-color:transparent; border-bottom-color:transparent; border-left-color:transparent; border-style:solid; border-radius:50%; animation: ai-spinner-spin 1s linear infinite;"></div>
+                    <span>Checking for uploaded materials for ${courseCode}...</span>
+                </div>`,
+                `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer;">Cancel</button>`
+            );
+
+            // Inject spinner keyframes if not defined
+            if (!document.getElementById('aiSpinnerStyle')) {
+                const style = document.createElement('style');
+                style.id = 'aiSpinnerStyle';
+                style.textContent = `
+                    @keyframes ai-spinner-spin {
+                        to { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            try {
+                const response = await fetch('/api/ai/check-course-materials', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({ course_code: courseCode })
+                });
+                const data = await response.json();
+                const hasMaterials = data.has_materials;
+
+                if (isQuizSelection && !isMidSelection) {
+                    if (hasMaterials) {
+                        openFinalExamModal(
+                            `<div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="font-size:24px;">💡</div>
+                                <div>
+                                    <p style="font-weight:600; font-size:15px; color:#1f2937; margin-bottom:6px; margin-top:0;">Enhance with Course Materials?</p>
+                                    <p style="margin-bottom:8px; margin-top:0;">You selected <strong>Quiz questions</strong>. Quizzes are typically low-resource and do not cover a full midterm exam syllabus.</p>
+                                    <p style="margin-top:0; margin-bottom:0;">I found <strong>${data.count} document(s)</strong> in class notes/PDFs for <strong>${courseCode}</strong>. May I analyze these materials along with your quiz selection to build a high-quality Midterm Exam sample?</p>
+                                </div>
+                            </div>`,
+                            `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; font-weight:500;">Cancel</button>
+                             <button onclick="closeFinalExamModal(); triggerMidExamGeneration('${courseCode}', true)" style="padding:8px 16px; border-radius:8px; border:none; background:#f59e0b; color:white; cursor:pointer; font-weight:700;">✨ Yes, Use Materials</button>`
+                        );
+                    } else {
+                        openFinalExamModal(
+                            `<div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="font-size:24px;">⚠️</div>
+                                <div>
+                                    <p style="font-weight:600; font-size:15px; color:#ef4444; margin-bottom:6px; margin-top:0;">Insufficient Resources</p>
+                                    <p style="margin-bottom:8px; margin-top:0;">You selected <strong>Quiz questions</strong>, which is too low-resource to construct a midterm exam.</p>
+                                    <p style="color:#ef4444; font-weight:500; margin-top:0; margin-bottom:0;">I couldn't find any uploaded notes/materials for <strong>${courseCode}</strong> in the notes database. So sorry for this time, please upload materials first!</p>
+                                </div>
+                            </div>`,
+                            `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:none; background:#ef4444; color:white; cursor:pointer; font-weight:700;">OK</button>`
+                        );
+                    }
+                } else {
+                    if (hasMaterials) {
+                        openFinalExamModal(
+                            `<div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="font-size:24px;">📝</div>
+                                <div>
+                                    <p style="font-weight:600; font-size:15px; color:#1f2937; margin-bottom:6px; margin-top:0;">Use Course Materials?</p>
+                                    <p style="margin-bottom:8px; margin-top:0;">You are generating a Midterm Exam sample for <strong>${courseCode}</strong>.</p>
+                                    <p style="margin-top:0; margin-bottom:0;">I found <strong>${data.count} document(s)</strong> in class notes/PDFs. Would you like to use these materials to generate an even more accurate and smarter midterm exam sample?</p>
+                                </div>
+                            </div>`,
+                            `<button onclick="closeFinalExamModal(); triggerMidExamGeneration('${courseCode}', false)" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; font-weight:500;">No, Just Past Questions</button>
+                             <button onclick="closeFinalExamModal(); triggerMidExamGeneration('${courseCode}', true)" style="padding:8px 16px; border-radius:8px; border:none; background:#f59e0b; color:white; cursor:pointer; font-weight:700;">✨ Yes, Use Materials</button>`
+                        );
+                    } else {
+                        openFinalExamModal(
+                            `<div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="font-size:24px;">💡</div>
+                                <div>
+                                    <p style="font-weight:600; font-size:15px; color:#1f2937; margin-bottom:6px; margin-top:0;">No Materials Found</p>
+                                    <p style="margin-bottom:8px; margin-top:0;">I couldn't find any uploaded notes/materials for <strong>${courseCode}</strong>.</p>
+                                    <p style="margin-top:0; margin-bottom:0;">However, since we have past exam data, I can proceed to generate a midterm sample exam based solely on the past questions. Shall we proceed?</p>
+                                </div>
+                            </div>`,
+                            `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; font-weight:500;">Cancel</button>
+                             <button onclick="closeFinalExamModal(); triggerMidExamGeneration('${courseCode}', false)" style="padding:8px 16px; border-radius:8px; border:none; background:#f59e0b; color:white; cursor:pointer; font-weight:700;">Generate Sample</button>`
+                        );
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                openFinalExamModal(
+                    `<div style="color:#ef4444; font-weight:500;">Failed to check course materials. Please try again.</div>`,
+                    `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer;">OK</button>`
+                );
+            }
+        }
+
+        async function triggerMidExamGeneration(courseCode, useMaterials) {
+            let courseName = 'Subject Course';
+            const matchingCard = document.querySelector(`.question-card[data-code*="${courseCode}"]`);
+            if (matchingCard && matchingCard.dataset.course) {
+                courseName = matchingCard.dataset.course;
+            }
+
+            const userDept = "{{ Auth::user()->department ?? 'Software Engineering' }}";
+
+            const quizContainer = document.getElementById('generatedQuizContainer');
+            const questionsWrap = document.getElementById('quizQuestionsContent');
+            quizContainer.style.display = 'block';
+
+            document.querySelector('.quiz-title').textContent = 'Midterm Examination, Spring 2026';
+            document.getElementById('quizCourseCode').textContent = courseCode;
+            document.getElementById('quizCourseName').textContent = courseName;
+
+            const metaContainer = document.querySelector('.exam-meta');
+            if (metaContainer) {
+                metaContainer.innerHTML = '<span>Time: 1:30 Hrs</span><span>Marks: 25</span>';
+            }
+
+            let bodyContainer = document.querySelector('.quiz-sheet-body');
+            let instructionsEl = document.getElementById('quizInstructionsLine');
+            if (!instructionsEl) {
+                instructionsEl = document.createElement('div');
+                instructionsEl.id = 'quizInstructionsLine';
+                instructionsEl.style.cssText = "text-align: center; font-family: 'Times New Roman', serif; font-size: 16px; font-weight: bold; margin-bottom: 12px; text-decoration: underline;";
+                instructionsEl.textContent = "Answer ALL Questions";
+                bodyContainer.insertBefore(instructionsEl, questionsWrap);
+            }
+
+            let italicInstructions = document.getElementById('quizItalicInstructions');
+            if (!italicInstructions) {
+                italicInstructions = document.createElement('div');
+                italicInstructions.id = 'quizItalicInstructions';
+                italicInstructions.style.cssText = "text-align: center; font-family: 'Times New Roman', serif; font-size: 14px; font-style: italic; font-weight: bold; max-width: 600px; margin: 0 auto 18px auto; line-height: 1.4;";
+                italicInstructions.textContent = "[The figures in the right margin indicate the full marks and corresponding course outcomes. All portions of each question must be answered sequentially.]";
+                bodyContainer.insertBefore(italicInstructions, questionsWrap);
+            }
+
+            questionsWrap.innerHTML = '<div style="opacity:0.6; text-align:center; padding: 40px 0;">🧠 Creating high-quality style-matched Midterm Exam questions...</div>';
+            quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            try {
+                const res = await fetch('/api/ai/mid-exam-generator', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({
+                        course_code: courseCode,
+                        selected_qb_data: selectedQBCards,
+                        use_materials: useMaterials
+                    })
+                });
+
+                const data = await res.json();
+                if (data.response) {
+                    questionsWrap.innerHTML = parseFinalExamQuestions(data.response);
+                } else {
+                    questionsWrap.innerHTML = '<div style="color:#ef4444; padding: 20px 0; text-align:center;">Could not generate questions.</div>';
+                }
+            } catch (err) {
+                console.error(err);
+                questionsWrap.innerHTML = '<div style="color:#ef4444; padding: 20px 0; text-align:center;">An error occurred during midterm exam generation.</div>';
+            }
+        }
+
+        // ==================== FINAL EXAM SAMPLE GENERATOR ====================
+        function openFinalExamModal(bodyHtml, buttonsHtml) {
+            document.getElementById('finalExamModalBody').innerHTML = bodyHtml;
+            document.getElementById('finalExamModalFooter').innerHTML = buttonsHtml;
+            document.getElementById('finalExamModal').style.display = 'flex';
+        }
+
+        function closeFinalExamModal() {
+            document.getElementById('finalExamModal').style.display = 'none';
+        }
+
+        async function startFinalExamFlow() {
+            let courseCode = '';
+            let isQuizSelection = false;
+            let isFinalSelection = false;
+
+            if (selectedQBCards.length > 0) {
+                const uniqueCodes = [...new Set(selectedQBCards.map(c => c.code).filter(Boolean))];
+                if (uniqueCodes.length > 1) {
+                    showSavageToast('Mixed Course Codes', 'Please select questions from the SAME course code to generate a Final Exam sample.');
+                    return;
+                }
+                courseCode = uniqueCodes[0];
+
+                selectedQBCards.forEach(c => {
+                    const t = (c.title || '').toLowerCase();
+                    if (t.includes('quiz') || t.includes('test') || t.includes('class test') || t.includes('practice')) {
+                        isQuizSelection = true;
+                    } else if (t.includes('final')) {
+                        isFinalSelection = true;
+                    } else {
+                        isQuizSelection = true;
+                    }
+                });
+            } else {
+                const courseCodeInput = (document.getElementById('aiFilterCourse')?.value || '').trim();
+                if (!courseCodeInput) {
+                    showSavageToast('Required Field Missing', 'Please select at least one Question Bank card OR enter a Course Code in the input field above!');
+                    return;
+                }
+                courseCode = courseCodeInput.toUpperCase();
+                
+                const termSelect = document.getElementById('aiFilterTerm')?.value || '';
+                if (termSelect === 'Final') {
+                    isFinalSelection = true;
+                } else {
+                    isQuizSelection = true;
+                }
+            }
+
+            openFinalExamModal(
+                `<div style="display:flex; align-items:center; gap:10px; justify-content:center; padding: 20px 0; font-weight: 500;">
+                    <div class="ai-spinner" style="border-width:3px; width:24px; height:24px; border-top-color:#10b981; border-right-color:transparent; border-bottom-color:transparent; border-left-color:transparent; border-style:solid; border-radius:50%; animation: ai-spinner-spin 1s linear infinite;"></div>
+                    <span>Checking for uploaded materials for ${courseCode}...</span>
+                </div>`,
+                `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer;">Cancel</button>`
+            );
+
+            // Inject spinner keyframes if not defined
+            if (!document.getElementById('aiSpinnerStyle')) {
+                const style = document.createElement('style');
+                style.id = 'aiSpinnerStyle';
+                style.textContent = `
+                    @keyframes ai-spinner-spin {
+                        to { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            try {
+                const response = await fetch('/api/ai/check-course-materials', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({ course_code: courseCode })
+                });
+                const data = await response.json();
+                const hasMaterials = data.has_materials;
+
+                if (isQuizSelection && !isFinalSelection) {
+                    if (hasMaterials) {
+                        openFinalExamModal(
+                            `<div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="font-size:24px;">💡</div>
+                                <div>
+                                    <p style="font-weight:600; font-size:15px; color:#1f2937; margin-bottom:6px; margin-top:0;">Enhance with Course Materials?</p>
+                                    <p style="margin-bottom:8px; margin-top:0;">You selected <strong>Quiz questions</strong>. Quizzes are typically low-resource and do not cover a full final exam syllabus.</p>
+                                    <p style="margin-top:0; margin-bottom:0;">I found <strong>${data.count} document(s)</strong> in class notes/PDFs for <strong>${courseCode}</strong>. May I analyze these materials along with your quiz selection to build a high-quality Final Exam sample?</p>
+                                </div>
+                            </div>`,
+                            `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; font-weight:500;">Cancel</button>
+                             <button onclick="closeFinalExamModal(); triggerFinalExamGeneration('${courseCode}', true)" style="padding:8px 16px; border-radius:8px; border:none; background:#10b981; color:white; cursor:pointer; font-weight:700;">✨ Yes, Use Materials</button>`
+                        );
+                    } else {
+                        openFinalExamModal(
+                            `<div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="font-size:24px;">⚠️</div>
+                                <div>
+                                    <p style="font-weight:600; font-size:15px; color:#ef4444; margin-bottom:6px; margin-top:0;">Insufficient Resources</p>
+                                    <p style="margin-bottom:8px; margin-top:0;">You selected <strong>Quiz questions</strong>, which is too low-resource to construct a comprehensive final exam.</p>
+                                    <p style="color:#ef4444; font-weight:500; margin-top:0; margin-bottom:0;">I couldn't find any uploaded notes/materials for <strong>${courseCode}</strong> in the notes database. So sorry for this time, please upload materials first!</p>
+                                </div>
+                            </div>`,
+                            `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:none; background:#ef4444; color:white; cursor:pointer; font-weight:700;">OK</button>`
+                        );
+                    }
+                } else {
+                    if (hasMaterials) {
+                        openFinalExamModal(
+                            `<div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="font-size:24px;">🎓</div>
+                                <div>
+                                    <p style="font-weight:600; font-size:15px; color:#1f2937; margin-bottom:6px; margin-top:0;">Use Course Materials?</p>
+                                    <p style="margin-bottom:8px; margin-top:0;">You are generating a Final Exam sample for <strong>${courseCode}</strong>.</p>
+                                    <p style="margin-top:0; margin-bottom:0;">I found <strong>${data.count} document(s)</strong> in class notes/PDFs. Would you like to use these materials to generate an even more accurate and smarter final exam sample?</p>
+                                </div>
+                            </div>`,
+                            `<button onclick="closeFinalExamModal(); triggerFinalExamGeneration('${courseCode}', false)" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; font-weight:500;">No, Just Past Questions</button>
+                             <button onclick="closeFinalExamModal(); triggerFinalExamGeneration('${courseCode}', true)" style="padding:8px 16px; border-radius:8px; border:none; background:#10b981; color:white; cursor:pointer; font-weight:700;">✨ Yes, Use Materials</button>`
+                        );
+                    } else {
+                        openFinalExamModal(
+                            `<div style="display:flex; gap:12px; align-items:flex-start;">
+                                <div style="font-size:24px;">💡</div>
+                                <div>
+                                    <p style="font-weight:600; font-size:15px; color:#1f2937; margin-bottom:6px; margin-top:0;">No Materials Found</p>
+                                    <p style="margin-bottom:8px; margin-top:0;">I couldn't find any uploaded notes/materials for <strong>${courseCode}</strong>.</p>
+                                    <p style="margin-top:0; margin-bottom:0;">However, since we have past exam data, I can proceed to generate a sample exam based solely on the past questions. Shall we proceed?</p>
+                                </div>
+                            </div>`,
+                            `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; font-weight:500;">Cancel</button>
+                             <button onclick="closeFinalExamModal(); triggerFinalExamGeneration('${courseCode}', false)" style="padding:8px 16px; border-radius:8px; border:none; background:#10b981; color:white; cursor:pointer; font-weight:700;">Generate Sample</button>`
+                        );
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                openFinalExamModal(
+                    `<div style="color:#ef4444; font-weight:500;">Failed to check course materials. Please try again.</div>`,
+                    `<button onclick="closeFinalExamModal()" style="padding:8px 16px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer;">OK</button>`
+                );
+            }
+        }
+
+        async function triggerFinalExamGeneration(courseCode, useMaterials) {
+            let courseName = 'Subject Course';
+            const matchingCard = document.querySelector(`.question-card[data-code*="${courseCode}"]`);
+            if (matchingCard && matchingCard.dataset.course) {
+                courseName = matchingCard.dataset.course;
+            }
+
+            const userDept = "{{ Auth::user()->department ?? 'Software Engineering' }}";
+
+            const quizContainer = document.getElementById('generatedQuizContainer');
+            const questionsWrap = document.getElementById('quizQuestionsContent');
+            quizContainer.style.display = 'block';
+
+            document.querySelector('.quiz-title').textContent = 'Final Examination, Spring 2026';
+            document.getElementById('quizCourseCode').textContent = courseCode;
+            document.getElementById('quizCourseName').textContent = courseName;
+
+            const metaContainer = document.querySelector('.exam-meta');
+            if (metaContainer) {
+                metaContainer.innerHTML = '<span>Time: 2:00 Hrs</span><span>Marks: 40</span>';
+            }
+
+            let bodyContainer = document.querySelector('.quiz-sheet-body');
+            let instructionsEl = document.getElementById('quizInstructionsLine');
+            if (!instructionsEl) {
+                instructionsEl = document.createElement('div');
+                instructionsEl.id = 'quizInstructionsLine';
+                instructionsEl.style.cssText = "text-align: center; font-family: 'Times New Roman', serif; font-size: 16px; font-weight: bold; margin-bottom: 12px; text-decoration: underline;";
+                instructionsEl.textContent = "Answer ALL Questions";
+                bodyContainer.insertBefore(instructionsEl, questionsWrap);
+            }
+
+            let italicInstructions = document.getElementById('quizItalicInstructions');
+            if (!italicInstructions) {
+                italicInstructions = document.createElement('div');
+                italicInstructions.id = 'quizItalicInstructions';
+                italicInstructions.style.cssText = "text-align: center; font-family: 'Times New Roman', serif; font-size: 14px; font-style: italic; font-weight: bold; max-width: 600px; margin: 0 auto 18px auto; line-height: 1.4;";
+                italicInstructions.textContent = "[The figures in the right margin indicate the full marks and corresponding course outcomes. All portions of each question must be answered sequentially.]";
+                bodyContainer.insertBefore(italicInstructions, questionsWrap);
+            }
+
+            questionsWrap.innerHTML = '<div style="opacity:0.6; text-align:center; padding: 40px 0;">🧠 Creating high-quality style-matched Final Exam questions...</div>';
+            quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            try {
+                const res = await fetch('/api/ai/final-exam-generator', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({
+                        course_code: courseCode,
+                        selected_qb_data: selectedQBCards,
+                        use_materials: useMaterials
+                    })
+                });
+
+                const data = await res.json();
+                if (data.response) {
+                    questionsWrap.innerHTML = parseFinalExamQuestions(data.response);
+                } else {
+                    questionsWrap.innerHTML = '<div style="color:#ef4444; padding: 20px 0; text-align:center;">Could not generate questions.</div>';
+                }
+            } catch (err) {
+                console.error(err);
+                questionsWrap.innerHTML = '<div style="color:#ef4444; padding: 20px 0; text-align:center;">An error occurred during final exam generation.</div>';
+            }
+        }
+
+        function parseFinalExamQuestions(text) {
+            const lines = text.split(/\r?\n/);
+            let html = '<div style="font-family: \'Times New Roman\', serif; font-size: 15px; color: #111;">';
+
+            lines.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+
+                const lower = trimmed.toLowerCase();
+                if (lower.startsWith('<table') || lower.startsWith('</table') || 
+                    lower.startsWith('<tr') || lower.startsWith('</tr') || 
+                    lower.startsWith('<td') || lower.startsWith('</td') || 
+                    lower.startsWith('<th') || lower.startsWith('</th') || 
+                    lower.startsWith('<thead') || lower.startsWith('</thead') || 
+                    lower.startsWith('<tbody') || lower.startsWith('</tbody')) {
+                    html += trimmed;
+                    return;
+                }
+
+                const qMatch = trimmed.match(/^(\d+)[\.\)]\s*(.*)/);
+                if (qMatch) {
+                    const qNum = qMatch[1];
+                    let rest = qMatch[2];
+
+                    const subMatch = rest.match(/^\(([a-z])\)\s*(.*)/);
+                    if (subMatch) {
+                        const subLetter = subMatch[1];
+                        let content = subMatch[2];
+                        let marks = '';
+
+                        const marksMatch = content.match(/\[Marks?[-:]\s*(\d+)\]/i);
+                        if (marksMatch) {
+                            marks = `Marks-${marksMatch[1]}`;
+                            content = content.replace(/\[Marks?[-:]\s*\d+\]/i, '').trim();
+                        }
+
+                        html += `
+                        <div style="display: flex; margin-top: 14px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 8px;">
+                            <div style="width: 25px; font-weight: bold; font-size:16px;">${qNum}.</div>
+                            <div style="width: 25px; font-style: italic; font-weight: 500;">(${subLetter})</div>
+                            <div style="flex: 1; text-align: justify; padding-right: 15px;">${content}</div>
+                            <div style="width: 80px; text-align: right; font-weight: bold; font-size: 14px; white-space: nowrap;">[${marks || 'Marks-2'}]</div>
+                        </div>`;
+                    } else {
+                        html += `
+                        <div style="display: flex; margin-top: 16px; font-weight: bold; font-size: 16px;">
+                            <div style="width: 25px;">${qNum}.</div>
+                            <div style="flex: 1;">${rest}</div>
+                        </div>`;
+                    }
+                } else {
+                    const subOnlyMatch = trimmed.match(/^\(([a-z])\)\s*(.*)/);
+                    if (subOnlyMatch) {
+                        const subLetter = subOnlyMatch[1];
+                        let content = subOnlyMatch[2];
+                        let marks = '';
+
+                        const marksMatch = content.match(/\[Marks?[-:]\s*(\d+)\]/i);
+                        if (marksMatch) {
+                            marks = `Marks-${marksMatch[1]}`;
+                            content = content.replace(/\[Marks?[-:]\s*\d+\]/i, '').trim();
+                        }
+
+                        html += `
+                        <div style="display: flex; margin-top: 8px;">
+                            <div style="width: 25px;"></div>
+                            <div style="width: 25px; font-style: italic; font-weight: 500;">(${subLetter})</div>
+                            <div style="flex: 1; text-align: justify; padding-right: 15px;">${content}</div>
+                            <div style="width: 80px; text-align: right; font-weight: bold; font-size: 14px; white-space: nowrap;">[${marks || 'Marks-2'}]</div>
+                        </div>`;
+                    } else {
+                        html += `<p style="margin-left: 50px; margin-top: 6px; text-align: justify; line-height: 1.5; margin-bottom: 0;">${trimmed}</p>`;
+                    }
+                }
+            });
+
+            html += '</div>';
+            return html;
         }
     </script>
 
@@ -1120,6 +1693,24 @@
         /* Ensure cards are positioned relative for absolute children */
         .question-card {
             position: relative;
+        }
+
+        /* Real DIU Exam Table Styling */
+        .exam-table {
+            width: 85%;
+            margin: 14px auto;
+            border-collapse: collapse;
+            font-family: 'Times New Roman', serif;
+            font-size: 15px;
+        }
+        .exam-table th, .exam-table td {
+            border: 1px solid #111;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        .exam-table th {
+            background-color: #f8fafc;
+            font-weight: bold;
         }
     </style>
 @endpush

@@ -159,15 +159,19 @@ class QuestionBankResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('file_path')
                     ->label('Files')
-                    ->formatStateUsing(function ($state, $record) {
-                        if (!$record || !$record->file_path) {
+                    ->formatStateUsing(function ($record) {
+                        if (!$record) {
                             return 'No files';
                         }
-                        $files = is_array($record->file_path) ? $record->file_path : [$record->file_path];
+                        $files = $record->signed_file_paths;
+                        if (empty($files)) {
+                            return 'No files';
+                        }
                         $links = [];
-                        foreach ($files as $index => $url) {
-                            $num = $index + 1;
-                            $links[] = "<a href='{$url}' target='_blank' style='color: #0ea5e9; text-decoration: underline; font-weight: 600; font-size: 13px;'>File {$num}</a>";
+                        $i = 1;
+                        foreach ($files as $url) {
+                            $links[] = "<a href='{$url}' target='_blank' style='color: #0ea5e9; text-decoration: underline; font-weight: 600; font-size: 13px;'>File {$i}</a>";
+                            $i++;
                         }
                         return new \Illuminate\Support\HtmlString(implode(', ', $links));
                     })

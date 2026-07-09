@@ -167,7 +167,111 @@ class AIFeaturesController extends Controller
     }
 
     /**
-     * Summarize a PDF/note material using AI.
+     * Extract text content from uploaded file (PDF, DOCX, DOC, PPTX).
+     *
+     * @param  string $fullPath    Absolute filesystem path to the file
+     * @param  string $extension   File extension (lowercase)
+     * @return string              Extracted raw text (up to 12 000 chars)
+     */
+    private function extractFileText(string $fullPath, string $extension): string
+    {
+        $text = '';
+
+        try {
+            switch ($extension) {
+
+                // ── PDF ───────────────────────────────────────────────────────
+                case 'pdf':
+                    $parser = new \Smalot\PdfParser\Parser();
+                    $pdf    = $parser->parseFile($fullPath);
+                    $text   = $pdf->getText();
+                    break;
+
+                // ── DOCX ──────────────────────────────────────────────────────
+                // PhpWord's Word2007 reader supports .docx reading
+                case 'docx':
+                    $phpWord = \PhpOffice\PhpWord\IOFactory::load($fullPath, 'Word2007');
+                    foreach ($phpWord->getSections() as $section) {
+                        $text .= $this->extractPhpWordSectionText($section);
+                    }
+                    break;
+
+                // ── DOC (legacy Word) ──────────────────────────────────────────
+                case 'doc':
+                    $phpWord = \PhpOffice\PhpWord\IOFactory::load($fullPath, 'MsDoc');
+                    foreach ($phpWord->getSections() as $section) {
+                        $text .= $this->extractPhpWordSectionText($section);
+                    }
+                    break;
+
+                // ── PPTX ──────────────────────────────────────────────────────
+                // PhpWord has NO PowerPoint reader — use ZipArchive to parse
+                // the raw slide XML directly (PPTX is just a ZIP of XML files).
+                case 'pptx':
+                    $zip = new \ZipArchive();
+                    if ($zip->open($fullPath) === true) {
+                        // Sort slide filenames so text is ordered slide 1 → N
+                        $slideFiles = [];
+                        for ($i = 0; $i < $zip->numFiles; $i++) {
+                            $name = $zip->getNameIndex($i);
+                            if (preg_match('/^ppt\/slides\/slide(\d+)\.xml$/', $name, $m)) {
+                                $slideFiles[(int)$m[1]] = $name;
+                            }
+                        }
+                        ksort($slideFiles);
+
+                        foreach ($slideFiles as $slideNum => $name) {
+                            $xml = $zip->getFromName($name);
+                            // Extract every <a:t> text run — these hold all visible slide text
+                            if (preg_match_all('/<a:t[^>]*>(.*?)<\/a:t>/su', $xml, $matches)) {
+                                $slideText = implode(' ', $matches[1]);
+                                // Decode XML entities
+                                $slideText = html_entity_decode($slideText, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+                                $text .= "--- Slide {$slideNum} ---\n" . trim($slideText) . "\n";
+                            }
+                        }
+                        $zip->close();
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (\Exception $e) {
+            Log::warning("[AI:Notes] Text extraction failed ({$extension}): " . $e->getMessage());
+        }
+
+        // Normalise whitespace: collapse excessive blank lines / spaces
+        $text = preg_replace('/ {2,}/', ' ', $text);
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
+        $text = trim($text);
+
+        // Return up to 12 000 characters — enough for a thorough summary without blowing tokens
+        return mb_substr($text, 0, 12000);
+    }
+
+    /**
+     * Recursively walk a PhpWord section and collect all text runs.
+     */
+    private function extractPhpWordSectionText($container): string
+    {
+        $out = '';
+        if (!method_exists($container, 'getElements')) {
+            return $out;
+        }
+        foreach ($container->getElements() as $el) {
+            if (method_exists($el, 'getText')) {
+                $t = $el->getText();
+                if (is_string($t) && $t !== '') $out .= $t . "\n";
+            }
+            // Recurse into tables, list items, etc.
+            $out .= $this->extractPhpWordSectionText($el);
+        }
+        return $out;
+    }
+
+    /**
+     * Summarize a PDF / DOCX / DOC / PPTX material using AI.
      * Route: POST /api/ai/summarize-notes
      */
     public function summarizeNotes(Request $request): JsonResponse
@@ -195,32 +299,59 @@ class AIFeaturesController extends Controller
                 'title', 'course_code', 'department', 'file_type', 'type', 'file_path',
             ]);
 
-            // Attempt to extract text if it's a PDF
-            $extractedText = '';
-            if (!empty($materialData['file_path']) && strtolower($materialData['file_type'] ?? '') === 'pdf') {
-                $fullPath = storage_path('app/public/' . $materialData['file_path']);
-                if (file_exists($fullPath)) {
-                    try {
-                        $parser = new \Smalot\PdfParser\Parser();
-                        $pdf    = $parser->parseFile($fullPath);
-                        $extractedText = $pdf->getText();
-                        // Truncate to avoid exceeding max tokens (roughly ~3000 chars is safe for prompt context)
-                        $extractedText = substr($extractedText, 0, 4000); 
-                    } catch (\Exception $e) {
-                        Log::warning('[AI:Notes] Could not parse PDF for user ' . $user->id . ': ' . $e->getMessage());
+            $extractedText   = '';
+            $extractedChars  = 0;
+            $supportedTypes  = ['pdf', 'docx', 'doc', 'pptx'];
+            $extension       = strtolower(trim($materialData['file_type'] ?? ''));
+
+            if (!empty($materialData['file_path']) && in_array($extension, $supportedTypes)) {
+                $filePath = $materialData['file_path'];
+                $tempPath = null;
+                $fullPath = null;
+
+                try {
+                    if (str_starts_with($filePath, 'http://') || str_starts_with($filePath, 'https://')) {
+                        // Remote file (Cloudinary)
+                        $response = \Illuminate\Support\Facades\Http::timeout(30)->get($filePath);
+                        if ($response->successful()) {
+                            $tempPath = tempnam(sys_get_temp_dir(), 'remote_material_') . '.' . $extension;
+                            file_put_contents($tempPath, $response->body());
+                            $fullPath = $tempPath;
+                        } else {
+                            Log::warning("[AI:Notes] Failed to fetch remote file: {$filePath}");
+                        }
+                    } else {
+                        // Local file
+                        $fullPath = storage_path('app/public/' . $filePath);
+                    }
+
+                    if ($fullPath && file_exists($fullPath)) {
+                        $extractedText  = $this->extractFileText($fullPath, $extension);
+                        $extractedChars = mb_strlen($extractedText);
+                        Log::info("[AI:Notes] Extracted {$extractedChars} chars from {$extension} for user {$user->id}");
+                    }
+                } catch (\Exception $e) {
+                    Log::error("[AI:Notes] Error loading/parsing file: " . $e->getMessage());
+                } finally {
+                    if ($tempPath && file_exists($tempPath)) {
+                        @unlink($tempPath);
                     }
                 }
             }
 
+            // Pass extraction stats so the prompt can calibrate its tone
+            $materialData['extracted_chars'] = $extractedChars;
+
             $systemPrompt = $this->rag->buildNotesSummaryPrompt($user, $materialData, $extractedText);
 
             $response = $this->groq->chat($systemPrompt, [
-                ['role' => 'user', 'content' => "Summarize this material and give me key study points."],
+                ['role' => 'user', 'content' => "Analyse this material thoroughly and produce a comprehensive academic breakdown."],
             ]);
 
             return response()->json([
                 'response' => $response,
                 'error'    => false,
+                'chars_extracted' => $extractedChars,
             ]);
 
         } catch (\RuntimeException $e) {
@@ -337,11 +468,205 @@ class AIFeaturesController extends Controller
     /**
      * Get time-of-day greeting.
      */
+    /**
+     * Get time-of-day greeting.
+     */
     protected function getTimeGreeting(): string
     {
         $hour = (int) now()->format('G');
         if ($hour < 12) return 'morning';
         if ($hour < 17) return 'afternoon';
         return 'evening';
+    }
+
+    /**
+     * Check if there are any uploaded materials for a given course code.
+     */
+    public function checkCourseMaterials(Request $request): JsonResponse
+    {
+        $request->validate([
+            'course_code' => 'required|string|max:50',
+        ]);
+
+        $courseCode = $request->input('course_code');
+        $normalizedCode = str_replace([' ', '-'], '', strtoupper($courseCode));
+
+        $materials = \App\Models\Material::whereRaw("REPLACE(REPLACE(course_code, ' ', ''), '-', '') = ?", [$normalizedCode])->get();
+
+        return response()->json([
+            'has_materials' => $materials->isNotEmpty(),
+            'count'         => $materials->count(),
+            'materials'     => $materials->map(fn($m) => [
+                'id'             => $m->id,
+                'title'          => $m->title,
+                'file_extension' => $m->file_extension,
+            ]),
+        ]);
+    }
+
+    /**
+     * Generate style-matched practice Final Exam paper from course materials and/or past QB papers.
+     */
+    public function finalExamGenerator(Request $request): JsonResponse
+    {
+        $request->validate([
+            'course_code'      => 'required|string|max:50',
+            'selected_qb_data' => 'nullable|array',
+            'use_materials'    => 'required|boolean',
+        ]);
+
+        $courseCode     = $request->input('course_code');
+        $selectedQbData = $request->input('selected_qb_data', []);
+        $useMaterials   = (bool) $request->input('use_materials');
+
+        $user = Auth::user();
+
+        try {
+            if (!$this->groq->isConfigured()) {
+                return response()->json([
+                    'response' => "AI practice generator is currently offline. Please check past questions.",
+                    'error'    => true,
+                ], 503);
+            }
+
+            $extractedText = '';
+            if ($useMaterials) {
+                $normalizedCode = str_replace([' ', '-'], '', strtoupper($courseCode));
+                $materials = \App\Models\Material::whereRaw("REPLACE(REPLACE(course_code, ' ', ''), '-', '') = ?", [$normalizedCode])->get();
+
+                $extractedTexts = [];
+                foreach ($materials as $material) {
+                    $filePath = storage_path('app/public/' . $material->file_path);
+
+                    if (str_starts_with($material->file_path, 'http')) {
+                        try {
+                            $tempFile = tempnam(sys_get_temp_dir(), 'qb_material_');
+                            $content = @file_get_contents($material->file_path);
+                            if ($content !== false) {
+                                file_put_contents($tempFile, $content);
+                                $extracted = $this->extractFileText($tempFile, strtolower($material->file_extension));
+                                if ($extracted) {
+                                    $extractedTexts[] = "--- Document: {$material->title} ---\n" . $extracted;
+                                }
+                            }
+                            @unlink($tempFile);
+                        } catch (\Exception $e) {
+                            Log::warning("[AI:FinalExam] Failed downloading Cloudinary material {$material->id}: " . $e->getMessage());
+                        }
+                    } else if (file_exists($filePath)) {
+                        $extracted = $this->extractFileText($filePath, strtolower($material->file_extension));
+                        if ($extracted) {
+                            $extractedTexts[] = "--- Document: {$material->title} ---\n" . $extracted;
+                        }
+                    }
+                }
+
+                if (!empty($extractedTexts)) {
+                    $extractedText = implode("\n\n", $extractedTexts);
+                }
+            }
+
+            // Build system prompt and user message via RAGService
+            $systemPrompt = $this->rag->buildFinalExamPrompt($selectedQbData, $courseCode, $extractedText);
+
+            $response = $this->groq->chat($systemPrompt, [
+                ['role' => 'user', 'content' => "Generate the Final Exam sample following the instructions."]
+            ]);
+
+            return response()->json([
+                'response' => $response,
+                'error'    => false,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('[AI:FinalExam] Error: ' . $e->getMessage());
+            return response()->json([
+                'response' => "Failed to generate the final exam sample. Please try again.",
+                'error'    => true,
+            ], 500);
+        }
+    }
+
+    /**
+     * Generate style-matched practice Midterm Exam paper from course materials and/or past QB papers.
+     */
+    public function midExamGenerator(Request $request): JsonResponse
+    {
+        $request->validate([
+            'course_code'      => 'required|string|max:50',
+            'selected_qb_data' => 'nullable|array',
+            'use_materials'    => 'required|boolean',
+        ]);
+
+        $courseCode     = $request->input('course_code');
+        $selectedQbData = $request->input('selected_qb_data', []);
+        $useMaterials   = (bool) $request->input('use_materials');
+
+        $user = Auth::user();
+
+        try {
+            if (!$this->groq->isConfigured()) {
+                return response()->json([
+                    'response' => "AI practice generator is currently offline. Please check past questions.",
+                    'error'    => true,
+                ], 503);
+            }
+
+            $extractedText = '';
+            if ($useMaterials) {
+                $normalizedCode = str_replace([' ', '-'], '', strtoupper($courseCode));
+                $materials = \App\Models\Material::whereRaw("REPLACE(REPLACE(course_code, ' ', ''), '-', '') = ?", [$normalizedCode])->get();
+
+                $extractedTexts = [];
+                foreach ($materials as $material) {
+                    $filePath = storage_path('app/public/' . $material->file_path);
+
+                    if (str_starts_with($material->file_path, 'http')) {
+                        try {
+                            $tempFile = tempnam(sys_get_temp_dir(), 'qb_material_');
+                            $content = @file_get_contents($material->file_path);
+                            if ($content !== false) {
+                                file_put_contents($tempFile, $content);
+                                $extracted = $this->extractFileText($tempFile, strtolower($material->file_extension));
+                                if ($extracted) {
+                                    $extractedTexts[] = "--- Document: {$material->title} ---\n" . $extracted;
+                                }
+                            }
+                            @unlink($tempFile);
+                        } catch (\Exception $e) {
+                            Log::warning("[AI:MidExam] Failed downloading Cloudinary material {$material->id}: " . $e->getMessage());
+                        }
+                    } else if (file_exists($filePath)) {
+                        $extracted = $this->extractFileText($filePath, strtolower($material->file_extension));
+                        if ($extracted) {
+                            $extractedTexts[] = "--- Document: {$material->title} ---\n" . $extracted;
+                        }
+                    }
+                }
+
+                if (!empty($extractedTexts)) {
+                    $extractedText = implode("\n\n", $extractedTexts);
+                }
+            }
+
+            // Build system prompt and user message via RAGService
+            $systemPrompt = $this->rag->buildMidExamPrompt($selectedQbData, $courseCode, $extractedText);
+
+            $response = $this->groq->chat($systemPrompt, [
+                ['role' => 'user', 'content' => "Generate the Midterm Exam sample following the instructions."]
+            ]);
+
+            return response()->json([
+                'response' => $response,
+                'error'    => false,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('[AI:MidExam] Error: ' . $e->getMessage());
+            return response()->json([
+                'response' => "Failed to generate the midterm exam sample. Please try again.",
+                'error'    => true,
+            ], 500);
+        }
     }
 }

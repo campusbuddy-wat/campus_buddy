@@ -142,6 +142,15 @@
                 ucfirst(substr($day, 0, 3)) }}</button>
               @endforeach
             </div>
+            @if(auth()->user()->role === 'cr' || auth()->user()->role === 'admin')
+            <button class="add-class-btn" onclick="openAddModal()" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #764ba2); color: white; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); font-size: 13.5px; margin-right: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Class
+            </button>
+            @endif
             <button class="download-btn" id="viewFullBtn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -199,7 +208,7 @@
                   </div>
                 </div>
 
-                @if(auth()->id() === $class->user_id || auth()->user()->role === 'admin')
+                @if(auth()->user()->role === 'admin' || (auth()->user()->role === 'cr' && auth()->user()->department === $class->department && auth()->user()->batch == $class->batch && auth()->user()->section === $class->section))
                 <div class="class-actions">
                   <button onclick="openEditModal({{ json_encode($class) }})" class="action-btn edit-btn">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -285,7 +294,7 @@
         </div>
       </section>
 
-      @if(auth()->user()->role === 'cr' || auth()->user()->role === 'admin')
+      @if(false && (auth()->user()->role === 'cr' || auth()->user()->role === 'admin'))
       <!-- ================= SMART ROUTINE SYNC & IMPORTER ================= -->
       <div class="buddy-card-container" id="smartRoutineImporterSection">
         <div class="buddy-section reveal">
@@ -423,6 +432,90 @@
     </div>
   </div>
 
+  <!-- ================= ADD SCHEDULE MODAL ================= -->
+  <div id="addScheduleModal" class="routine-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add Schedule</h2>
+        <span class="close-modal" onclick="closeAddModal()">&times;</span>
+      </div>
+      <form action="{{ route('schedule.store') }}" method="POST">
+        @csrf
+        <div class="form-group-grid">
+          <div class="form-field">
+            <label>Course Code</label>
+            <input type="text" name="course_code" placeholder="e.g. CSE311" required>
+          </div>
+          <div class="form-field">
+            <label>Course Title</label>
+            <input type="text" name="course_title" placeholder="e.g. Software Engineering" required>
+          </div>
+          <div class="form-field">
+            <label>Instructor Initial</label>
+            <input type="text" name="teacher_initial" placeholder="e.g. FMA" required>
+          </div>
+          <div class="form-field">
+            <label>Room No</label>
+            <input type="text" name="room_no" placeholder="e.g. 402-AB" required>
+          </div>
+          <div class="form-field">
+            <label>Day</label>
+            <select name="day" required>
+              @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
+              <option value="{{ $day }}">{{ $day }}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Time Slot</label>
+            <select name="time_slot" required>
+              <option value="8.30 am-10.00 am">8.30 am-10.00 am</option>
+              <option value="10.00 am-11.30 am">10.00 am-11.30 am</option>
+              <option value="11.30 am-1.00 pm">11.30 am-1.00 pm</option>
+              <option value="1.00 pm-2.30 pm">1.00 pm-2.30 pm</option>
+              <option value="2.30 pm-4.00 pm">2.30 pm-4.00 pm</option>
+              <option value="4.00 pm-5.30 pm">4.00 pm-5.30 pm</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Type</label>
+            <select name="type" required onchange="toggleAddLabSection(this.value)">
+              <option value="theory">Theory</option>
+              <option value="lab">Lab</option>
+            </select>
+          </div>
+          <div class="form-field" id="add_lab_section_group" style="display: none;">
+            <label>Lab Section</label>
+            <input type="text" name="lab_section" id="add_lab_section" placeholder="e.g. B1, B2">
+          </div>
+          <div class="form-field">
+            <label>Section</label>
+            <input type="text" name="section" value="{{ auth()->user()->section }}" readonly
+              style="background: #f4f6f8; cursor: not-allowed;">
+          </div>
+          <div class="form-field">
+            <label>Major</label>
+            <input type="text" name="major" value="{{ auth()->user()->major }}" readonly style="background: #f4f6f8; cursor: not-allowed;">
+          </div>
+        </div>
+        <button type="submit" class="save-btn" style="background: linear-gradient(135deg, #4f46e5, #764ba2);">Save Schedule</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function toggleAddLabSection(value) {
+      const labGroup = document.getElementById('add_lab_section_group');
+      const labInput = document.getElementById('add_lab_section');
+      if (value === 'lab') {
+        labGroup.style.display = 'block';
+      } else {
+        labGroup.style.display = 'none';
+        labInput.value = '';
+      }
+    }
+  </script>
+
   <script>
     function toggleEditLabSection(type) {
       const labGroup = document.getElementById('edit_lab_section_group');
@@ -559,11 +652,24 @@
         document.getElementById('editScheduleModal').style.display = 'none';
       };
 
+      // ================= CR ADD MODAL =================
+      window.openAddModal = function () {
+        document.getElementById('addScheduleModal').style.display = 'block';
+      };
+
+      window.closeAddModal = function () {
+        document.getElementById('addScheduleModal').style.display = 'none';
+      };
+
       // Close on outside click
       window.addEventListener('click', function (event) {
-        const modal = document.getElementById('editScheduleModal');
-        if (event.target == modal) {
-          modal.style.display = 'none';
+        const editModal = document.getElementById('editScheduleModal');
+        const addModal = document.getElementById('addScheduleModal');
+        if (event.target == editModal) {
+          editModal.style.display = 'none';
+        }
+        if (event.target == addModal) {
+          addModal.style.display = 'none';
         }
       });
     });
