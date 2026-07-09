@@ -392,6 +392,43 @@
     </aside>
 
   </div>
+
+  <!-- Custom Rename Modal -->
+  <div id="renameModal" class="custom-modal" style="display: none;">
+      <div class="custom-modal-overlay" onclick="closeRenameModal()"></div>
+      <div class="custom-modal-container">
+          <div class="custom-modal-header">
+              <h3>Rename Chat</h3>
+              <button class="custom-modal-close-btn" onclick="closeRenameModal()">&times;</button>
+          </div>
+          <div class="custom-modal-body">
+              <label for="renameInput" class="custom-modal-label">Enter new chat title:</label>
+              <input type="text" id="renameInput" class="custom-modal-input" placeholder="Chat title...">
+          </div>
+          <div class="custom-modal-footer">
+              <button id="cancelRenameBtn" class="custom-modal-btn btn-secondary" onclick="closeRenameModal()">Cancel</button>
+              <button id="saveRenameBtn" class="custom-modal-btn btn-primary">Save</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- Custom Delete Modal -->
+  <div id="deleteModal" class="custom-modal" style="display: none;">
+      <div class="custom-modal-overlay" onclick="closeDeleteModal()"></div>
+      <div class="custom-modal-container">
+          <div class="custom-modal-header">
+              <h3>Delete Chat</h3>
+              <button class="custom-modal-close-btn" onclick="closeDeleteModal()">&times;</button>
+          </div>
+          <div class="custom-modal-body">
+              <p>Are you sure you want to delete this conversation?</p>
+          </div>
+          <div class="custom-modal-footer">
+              <button id="cancelDeleteBtn" class="custom-modal-btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+              <button id="confirmDeleteBtn" class="custom-modal-btn btn-danger">Delete</button>
+          </div>
+      </div>
+  </div>
 @endsection
 
 @push('scripts')
@@ -537,6 +574,91 @@
         }
       });
 
+      // Modals active states
+      let activeRenameChatId = null;
+      let activeRenameSpan = null;
+      let activeDeleteChatId = null;
+      let activeDeleteElement = null;
+
+      window.closeRenameModal = function() {
+          document.getElementById('renameModal').style.display = 'none';
+          activeRenameChatId = null;
+          activeRenameSpan = null;
+      };
+
+      window.closeDeleteModal = function() {
+          document.getElementById('deleteModal').style.display = 'none';
+          activeDeleteChatId = null;
+          activeDeleteElement = null;
+      };
+
+      // Save Rename click
+      document.getElementById('saveRenameBtn').addEventListener('click', async () => {
+          const newTitle = document.getElementById('renameInput').value.trim();
+          if (!newTitle || !activeRenameChatId) return;
+
+          try {
+              const res = await fetch(`/api/ai-chat/${activeRenameChatId}/rename`, {
+                  method: 'PATCH',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRF-TOKEN': csrfToken,
+                      'Accept': 'application/json'
+                  },
+                  body: JSON.stringify({ title: newTitle })
+              });
+              const data = await res.json();
+              if (data.success) {
+                  if (activeRenameSpan) activeRenameSpan.textContent = newTitle;
+                  closeRenameModal();
+              } else {
+                  alert(data.message || "Failed to rename chat");
+              }
+          } catch (err) {
+              console.error(err);
+              alert("An error occurred while renaming the chat");
+          }
+      });
+
+      // Confirm Delete click
+      document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+          if (!activeDeleteChatId) return;
+
+          try {
+              const res = await fetch(`/api/ai-chat/${activeDeleteChatId}`, {
+                  method: 'DELETE',
+                  headers: {
+                      'X-CSRF-TOKEN': csrfToken,
+                      'Accept': 'application/json'
+                  }
+              });
+              const data = await res.json();
+              if (data.success) {
+                  if (activeDeleteElement) activeDeleteElement.remove();
+                  
+                  // If deleted chat was active, reset chat area
+                  if (currentChatId == activeDeleteChatId) {
+                      currentChatId = null;
+                      conversationHistory = [];
+                      chatMessages.innerHTML = '';
+                      welcomeSection.style.display = 'flex';
+                      chatMessages.style.display = 'none';
+                  }
+                  
+                  // If no chats left, show 'No recent chats'
+                  if (chatHistoryList.querySelectorAll('.chat-history-item').length === 0) {
+                      chatHistoryList.innerHTML = '<span class="sidebar-label" style="text-align:center; display:block; margin-top:20px;">No recent chats</span>';
+                  }
+                  closeDeleteModal();
+              } else {
+                  alert(data.message || "Failed to delete chat");
+              }
+          } catch (err) {
+              console.error(err);
+              alert("An error occurred while deleting the chat");
+          }
+      });
+
       // Handle loading chat history and action buttons via event delegation
       chatHistoryList.addEventListener('click', async (e) => {
           const deleteBtn = e.target.closest('.delete-chat-btn');
@@ -547,41 +669,12 @@
               e.preventDefault();
               e.stopPropagation();
               const id = deleteBtn.dataset.id;
-              if (!confirm("Are you sure you want to delete this conversation?")) return;
+              const item = deleteBtn.closest('.chat-history-item');
               
-              try {
-                  const res = await fetch(`/api/ai-chat/${id}`, {
-                      method: 'DELETE',
-                      headers: {
-                          'X-CSRF-TOKEN': csrfToken,
-                          'Accept': 'application/json'
-                      }
-                  });
-                  const data = await res.json();
-                  if (data.success) {
-                      const item = deleteBtn.closest('.chat-history-item');
-                      item.remove();
-                      
-                      // If deleted chat was active, reset chat area
-                      if (currentChatId == id) {
-                          currentChatId = null;
-                          conversationHistory = [];
-                          chatMessages.innerHTML = '';
-                          welcomeSection.style.display = 'flex';
-                          chatMessages.style.display = 'none';
-                      }
-                      
-                      // If no chats left, show 'No recent chats'
-                      if (chatHistoryList.querySelectorAll('.chat-history-item').length === 0) {
-                          chatHistoryList.innerHTML = '<span class="sidebar-label" style="text-align:center; display:block; margin-top:20px;">No recent chats</span>';
-                      }
-                  } else {
-                      alert(data.message || "Failed to delete chat");
-                  }
-              } catch (err) {
-                  console.error(err);
-                  alert("An error occurred while deleting the chat");
-              }
+              activeDeleteChatId = id;
+              activeDeleteElement = item;
+              
+              document.getElementById('deleteModal').style.display = 'flex';
               return;
           }
 
@@ -593,29 +686,11 @@
               const textSpan = item.querySelector('.history-text');
               const oldTitle = textSpan.textContent.trim();
               
-              const newTitle = prompt("Rename conversation:", oldTitle);
-              if (!newTitle || newTitle.trim() === "" || newTitle.trim() === oldTitle) return;
+              activeRenameChatId = id;
+              activeRenameSpan = textSpan;
               
-              try {
-                  const res = await fetch(`/api/ai-chat/${id}/rename`, {
-                      method: 'PATCH',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'X-CSRF-TOKEN': csrfToken,
-                          'Accept': 'application/json'
-                      },
-                      body: JSON.stringify({ title: newTitle.trim() })
-                  });
-                  const data = await res.json();
-                  if (data.success) {
-                      textSpan.textContent = newTitle.trim();
-                  } else {
-                      alert(data.message || "Failed to rename chat");
-                  }
-              } catch (err) {
-                  console.error(err);
-                  alert("An error occurred while renaming the chat");
-              }
+              document.getElementById('renameInput').value = oldTitle;
+              document.getElementById('renameModal').style.display = 'flex';
               return;
           }
 
