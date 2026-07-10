@@ -29,7 +29,7 @@ class ResetPasswordCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Password Reset Code - Campus Buddy',
+            subject: 'Campus Buddy Verification Code: ' . $this->code,
         );
     }
 
@@ -40,6 +40,7 @@ class ResetPasswordCode extends Mailable
     {
         return new Content(
             view: 'emails.auth.reset_code',
+            text: 'emails.auth.reset_code_plain',
         );
     }
 
