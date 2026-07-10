@@ -17,7 +17,12 @@
     <main class="page">
         <section class="card" aria-labelledby="reset-title">
             <h1 id="reset-title" class="title">Create Password</h1>
-            <p style="text-align: center; color: var(--muted); margin-bottom: 25px;">Please enter the 6-digit code we sent to your email along with your new password.</p>
+            <p style="text-align: center; color: var(--muted); margin-bottom: 15px;">Please enter the 6-digit code we sent to your email along with your new password.</p>
+
+            <div style="background-color: rgba(0, 170, 255, 0.08); border: 1px solid rgba(0, 170, 255, 0.2); border-radius: 10px; padding: 12px 16px; margin-bottom: 25px; font-size: 13px; color: #0077b3; display: flex; align-items: center; gap: 10px; line-height: 1.4;">
+                <span style="font-size: 16px;">💡</span>
+                <span>If you do not see the email in your Inbox, please check your <strong>Spam or Junk folder</strong>.</span>
+            </div>
 
             @if (session('status'))
             <div class="alert alert--success" role="alert">
