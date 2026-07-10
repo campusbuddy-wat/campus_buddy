@@ -66,7 +66,7 @@
             <span class="count">{{ $post->comments->count() }}</span>
         </span>
         
-        <span style="margin-left: auto; font-weight: 500; font-size: 12px; color: #A0AEC0;">{{ $post->created_at->diffForHumans() }}</span>
+        <span style="margin-left: auto; font-weight: 500; font-size: 12px; color: #A0AEC0;">{{ $post->created_at->format('j M, Y') }}</span>
     </div>
 
     <!-- Collapsible Comment Drawer -->
