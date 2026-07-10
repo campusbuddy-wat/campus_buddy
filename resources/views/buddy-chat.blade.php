@@ -379,7 +379,7 @@
         <p class="option-help" id="contextHelpText">Checking your study resources...</p>
         <!-- Warning: shown when no resources -->
         <div id="contextWarning" style="display:none; margin-top:8px; background: #fff8e1; border: 1px solid #f9a825; border-radius:8px; padding:8px 10px;">
-          <p style="font-size:11px; color:#7c5700; margin:0; line-height:1.5;">⚠️ No notes or question bank entries found for your department. Upload materials in <a href="{{ route('notes') }}" style="color:#1a73e8;">Notes</a> or <a href="{{ route('questionbank') }}" style="color:#1a73e8;">Question Bank</a> to enable Context Mode.</p>
+          <p style="font-size:11px; color:#7c5700; margin:0; line-height:1.5;">⚠️ No notes or question bank entries found for your department. Upload materials in <a href="{{ route('notes') }}" style="color:#1a73e8;">Notes</a> or <a href="{{ route('question-bank') }}" style="color:#1a73e8;">Question Bank</a> to enable Context Mode.</p>
         </div>
       </div>
 
