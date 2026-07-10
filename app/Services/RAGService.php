@@ -185,7 +185,7 @@ DIU founded 2002, private, Ashulia campus (20+ acres) + Dhanmondi city campus. V
 Faculties: FSIT (CSE,SWE,CIS,EEE,ESDM), Business (BBA,MBA), Humanities (English,Law), Engineering (Textile,Civil), Health Sciences (Pharmacy).
 Waivers: GPA 5.00 both SSC+HSC = up to 100% waiver. 60%+ students get aid.
 Fees: Credit-based. Admission+development fee applies. Check live data or official site for exact figures.
-Facilities: 10Gbps WiFi, IoT/AR/VR labs, library, gym, cafeteria, medical, transport buses.
+Facilities: 10Gbps WiFi, IoT/AR/VR labs, library, gym, cafeteria, medical. Transport: buses (Tri-Semester: BDT 3000, Bi-Semester: BDT 4500; single ride BDT 20/15 with ID).
 Admission: Apply at admission.daffodilvarsity.edu.bd. Need SSC+HSC certs, photos, NID. Spring/Summer/Fall intakes.
 STATIC;
 

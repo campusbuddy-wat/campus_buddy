@@ -307,6 +307,12 @@ def _fmt_scholarship(data: dict, title: str) -> str:
 def _fmt_transport(data: dict, title: str) -> str:
     """Format transport routes and schedules."""
     lines = [f"# {title}"]
+    lines.append("## Official Transport Fee Structures:")
+    lines.append("- Tri-Semester Subscription Fee: BDT 3,000 per semester (unlimited rides)")
+    lines.append("- Bi-Semester Subscription Fee: BDT 4,500 per semester (unlimited rides)")
+    lines.append("- Single Ride Ticket (Standard Fare): BDT 20 per ride")
+    lines.append("- Single Ride Ticket (Discounted with Student ID card): BDT 15 per ride")
+    lines.append("")
     lines.append(f"Semester: {data.get('semester', '')}")
     lines.append(f"Total Roads: {data.get('total_roads', '')}")
     lines.append("")
