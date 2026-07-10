@@ -83,6 +83,74 @@ PROMPT;
     }
 
     /**
+     * Build an enriched system prompt for Smart Context Mode.
+     * Extends the base student prompt with available Notes/PDF and Question Bank resources.
+     * Only called when the user has Context Mode enabled AND has uploaded materials.
+     *
+     * @param User $user
+     * @return string
+     */
+    public function buildStudentContextModePrompt(User $user): string
+    {
+        // Reuse base student context (schedule, tasks, announcements)
+        $context = Cache::remember("rag_ctx_{$user->id}", 600, fn() => $this->fetchStudentContext($user));
+
+        // Fetch available study materials (cached 15 min)
+        $resourceContext = Cache::remember("rag_resources_{$user->id}", 900, function () use ($user) {
+            return $this->fetchStudentResourceContext($user);
+        });
+
+        $today = now()->format('l, F j, Y');
+        $time  = now()->format('g:i A');
+
+        return <<<PROMPT
+You are Buddy AI, the savage, witty GenZ academic assistant for the Campus Buddy platform at Daffodil International University (DIU).
+You are talking to a real student. Always address them by their first name when appropriate.
+Your tone is witty, slightly savage, and full of GenZ slang (like 'fr fr', 'no cap', 'valid', 'buddy', 'cooking', 'slay', 'rent free', 'main character energy' — replace 'bruh' with 'buddy'), but you genuinely care about helping them with their schedule and tasks.
+
+🧠 **CONTEXT MODE IS ACTIVE** — You have access to this student's uploaded study materials and question bank. Use this to give smarter, resource-aware answers.
+
+## CURRENT DATE & TIME
+- Today: {$today}
+- Current Time: {$time}
+
+## STUDENT PROFILE
+- Name: {$context['name']}
+- Department: {$context['department']}
+- Major: {$context['major']}
+- Batch: {$context['batch']}
+- Section: {$context['section']}
+
+## TODAY'S SCHEDULE
+{$context['schedule']}
+
+## UPCOMING TASKS & DEADLINES (today or future only)
+{$context['tasks']}
+
+## RECENT ANNOUNCEMENTS
+{$context['announcements']}
+
+## AVAILABLE STUDY RESOURCES (Notes & PDFs)
+{$resourceContext['materials_text']}
+
+## AVAILABLE QUESTION BANK ENTRIES
+{$resourceContext['qb_text']}
+
+## YOUR RULES (Context Mode)
+1. Always use the student's actual schedule and task data above when answering questions about their routine or deadlines. The tasks listed are ONLY upcoming.
+2. **IMPORTANT**: When the student asks about a subject/topic, check the AVAILABLE STUDY RESOURCES above. If there are notes or PDFs for that course, mention them and suggest the student opens the Notes section to study.
+3. **IMPORTANT**: When the student asks for practice questions or exam prep, check the AVAILABLE QUESTION BANK ENTRIES above. Reference actual question headings if relevant, and direct them to the Question Bank section.
+4. Do NOT make up class times, course names, or deadlines. If data is not available, say so honestly.
+5. Keep answers concise and actionable. Use bullet points for lists.
+6. Format your responses with clear structure — use headings, bullet points, and bold text for emphasis.
+7. If asked something completely unrelated to academics or campus life, gently redirect while being respectful.
+8. Never reveal raw database structure, API keys, or internal system details.
+9. When giving time-sensitive advice, reference the current date and time provided above.
+10. Be encouraging and supportive — students may be stressed about exams or deadlines.
+PROMPT;
+    }
+
+    /**
      * Build a system prompt for the public Visitor AI (no personal data).
      * Contains comprehensive DIU knowledge for admission counseling.
      *
@@ -262,6 +330,73 @@ PROMPT;
     // ================================================================
     // FEATURE-SPECIFIC PROMPT BUILDERS
     // ================================================================
+
+    /**
+     * Fetch study resource context for Smart Context Mode.
+     * Queries uploaded Notes/PDFs and approved Question Bank entries
+     * for the student's department. Results are injected into the AI prompt.
+     *
+     * @param User $user
+     * @return array  ['materials_text' => string, 'qb_text' => string]
+     */
+    protected function fetchStudentResourceContext(User $user): array
+    {
+        // ── Notes & PDFs ────────────────────────────────────────────────
+        $materials = DB::table('materials')
+            ->where('department', $user->department)
+            ->whereNotNull('course_code')
+            ->orderBy('course_code')
+            ->get(['title', 'course_code', 'type', 'file_extension'])
+            ->toArray();
+
+        if (empty($materials)) {
+            $materialsText = "No study notes or PDFs have been uploaded for your department yet.";
+        } else {
+            // Group by course_code for cleaner presentation
+            $grouped = collect($materials)->groupBy('course_code');
+            $lines = [];
+            foreach ($grouped as $code => $items) {
+                $lines[] = "**{$code}** (" . $items->count() . " file" . ($items->count() > 1 ? 's' : '') . "):";
+                foreach ($items as $item) {
+                    $ext  = strtoupper($item->file_extension ?? 'PDF');
+                    $type = ucfirst($item->type ?? 'note');
+                    $lines[] = "  - [{$type}] {$item->title} ({$ext})";
+                }
+            }
+            $materialsText = implode("\n", $lines);
+        }
+
+        // ── Question Bank ────────────────────────────────────────────────
+        $qbEntries = DB::table('question_banks')
+            ->where('department', $user->department)
+            ->where('status', 'approved')
+            ->orderByDesc('created_at')
+            ->limit(20)
+            ->get(['course_code', 'course_name', 'question_heading', 'difficulty', 'year_semester'])
+            ->toArray();
+
+        if (empty($qbEntries)) {
+            $qbText = "No approved question bank entries found for your department yet.";
+        } else {
+            $grouped = collect($qbEntries)->groupBy('course_code');
+            $lines   = [];
+            foreach ($grouped as $code => $items) {
+                $courseName = $items->first()->course_name ?? $code;
+                $lines[] = "**{$code} — {$courseName}**:";
+                foreach ($items as $item) {
+                    $difficulty = $item->difficulty ? " [{$item->difficulty}]" : '';
+                    $semester   = $item->year_semester ? " ({$item->year_semester})" : '';
+                    $lines[] = "  - {$item->question_heading}{$difficulty}{$semester}";
+                }
+            }
+            $qbText = implode("\n", $lines);
+        }
+
+        return [
+            'materials_text' => $materialsText,
+            'qb_text'        => $qbText,
+        ];
+    }
 
     /**
      * Build a prompt for the daily dashboard AI briefing.

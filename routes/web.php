@@ -126,6 +126,12 @@ Route::post('/api/buddy-chat', [BuddyAIController::class, 'chat'])
     ->middleware(['auth', 'throttle:30,1'])
     ->name('api.buddy-chat');
 
+// Context Mode resource availability check
+Route::get('/api/buddy-chat/context-status', [BuddyAIController::class, 'contextStatus'])
+    ->middleware(['auth', 'throttle:30,1'])
+    ->name('api.buddy-chat.context-status');
+
+
 // Visitor AI (public — DIU admission assistant, no auth needed)
 Route::post('/api/buddy-visitor', [BuddyAIController::class, 'visitorChat'])
     ->middleware('throttle:20,1')

@@ -41,15 +41,17 @@ class BuddyAIController extends Controller
     public function chat(Request $request): JsonResponse
     {
         $request->validate([
-            'chat_id' => 'nullable|integer',
-            'message' => 'required|string|max:2000',
-            'history' => 'nullable|array|max:20',
+            'chat_id'      => 'nullable|integer',
+            'message'      => 'required|string|max:2000',
+            'history'      => 'nullable|array|max:20',
+            'context_mode' => 'nullable|boolean',
         ]);
 
-        $user    = Auth::user();
-        $message = strip_tags($request->input('message'));
-        $history = $request->input('history', []);
-        $chatId  = $request->input('chat_id');
+        $user        = Auth::user();
+        $message     = strip_tags($request->input('message'));
+        $history     = $request->input('history', []);
+        $chatId      = $request->input('chat_id');
+        $contextMode = (bool) $request->input('context_mode', false);
 
         $chat = null;
         if ($chatId) {
@@ -67,7 +69,12 @@ class BuddyAIController extends Controller
                 ], 503);
             }
 
-            $systemPrompt = $this->rag->buildStudentSystemPrompt($user);
+            // Use enriched context-mode prompt if the user has it enabled
+            if ($contextMode) {
+                $systemPrompt = $this->rag->buildStudentContextModePrompt($user);
+            } else {
+                $systemPrompt = $this->rag->buildStudentSystemPrompt($user);
+            }
             $messages = $this->buildMessageArray($history, $message);
             $response = $this->groq->chat($systemPrompt, $messages);
 
@@ -319,6 +326,54 @@ class BuddyAIController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Check whether Context Mode is available for the authenticated student.
+     * Returns counts of their uploaded notes/PDFs and approved question bank entries.
+     * Route: GET /api/buddy-chat/context-status
+     */
+    public function contextStatus(): JsonResponse
+    {
+        $user = Auth::user();
+
+        // Count Notes/PDF materials for the student's department
+        $materialCount = \App\Models\Material::where('department', $user->department)
+            ->where(function ($q) use ($user) {
+                // Match by batch+section if set, else department-wide
+                if ($user->batch && $user->section) {
+                    $q->where(function ($inner) use ($user) {
+                        $inner->where('batch',   $user->batch)
+                              ->where('section', $user->section);
+                    })->orWhere(function ($inner) use ($user) {
+                        $inner->whereNull('batch')->whereNull('section');
+                    });
+                }
+            })
+            ->count();
+
+        // Count approved Question Bank entries for the student's department
+        $qbCount = \App\Models\QuestionBank::where('department', $user->department)
+            ->where('status', 'approved')
+            ->count();
+
+        // Gather unique course codes from materials for display
+        $courses = \App\Models\Material::where('department', $user->department)
+            ->whereNotNull('course_code')
+            ->distinct()
+            ->pluck('course_code')
+            ->take(8)
+            ->values()
+            ->toArray();
+
+        $available = ($materialCount > 0 || $qbCount > 0);
+
+        return response()->json([
+            'available'      => $available,
+            'material_count' => $materialCount,
+            'qb_count'       => $qbCount,
+            'courses'        => $courses,
+        ]);
     }
 
     /**

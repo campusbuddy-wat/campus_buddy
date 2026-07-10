@@ -351,6 +351,8 @@
             </svg>
           </button>
         </div>
+        <!-- Context Mode active indicator -->
+        <div id="contextActiveBadge" style="display:none; font-size:11px; color: var(--primary); margin-top:3px; margin-bottom:1px; font-weight:600; letter-spacing:0.01em;">🧠 Smart Context ON — Buddy is referencing your study materials</div>
         <p class="input-info-text">Buddy AI can make mistakes. Verify important info.</p>
       </div>
 
@@ -365,13 +367,20 @@
         <p><strong>Section:</strong> {{ Auth::user()->section ?? 'D' }}</p>
       </div>
 
-      <div class="section-card">
+      <div class="section-card" id="contextModeCard">
         <h3>Context Mode</h3>
         <div class="toggle-group">
           <span>Smart Context</span>
-          <div class="switch active"></div>
+          <div class="switch" id="contextModeSwitch"></div>
         </div>
-        <p class="option-help">Buddy will prioritize results for your specific section.</p>
+        <!-- Resource stat shown when available -->
+        <p class="context-stat" id="contextStatText" style="display:none; font-size:11px; color: var(--primary); margin-top:4px; font-weight:600;"></p>
+        <!-- Help text: changes dynamically -->
+        <p class="option-help" id="contextHelpText">Checking your study resources...</p>
+        <!-- Warning: shown when no resources -->
+        <div id="contextWarning" style="display:none; margin-top:8px; background: #fff8e1; border: 1px solid #f9a825; border-radius:8px; padding:8px 10px;">
+          <p style="font-size:11px; color:#7c5700; margin:0; line-height:1.5;">⚠️ No notes or question bank entries found for your department. Upload materials in <a href="{{ route('notes') }}" style="color:#1a73e8;">Notes</a> or <a href="{{ route('questionbank') }}" style="color:#1a73e8;">Question Bank</a> to enable Context Mode.</p>
+        </div>
       </div>
 
       <div class="section-card resources">
@@ -496,6 +505,7 @@
               chat_id: currentChatId,
               message: text,
               history: conversationHistory.slice(-16), // Send last 16 messages for context
+              context_mode: contextModeEnabled,
             }),
           });
 
@@ -916,13 +926,77 @@
         });
       }
 
-      // Toggle functionality for the Smart Context switch
-      const contextSwitch = document.querySelector('.switch');
-      if (contextSwitch) {
-        contextSwitch.addEventListener('click', function() {
-          this.classList.toggle('active');
-        });
+      // ================= CONTEXT MODE =================
+      let contextModeEnabled = false;
+      const contextSwitch    = document.getElementById('contextModeSwitch');
+      const contextStatText  = document.getElementById('contextStatText');
+      const contextHelpText  = document.getElementById('contextHelpText');
+      const contextWarning   = document.getElementById('contextWarning');
+      const contextBadge     = document.getElementById('contextActiveBadge');
+
+      function setContextMode(enabled) {
+        contextModeEnabled = enabled;
+        if (enabled) {
+          contextSwitch.classList.add('active');
+          contextBadge.style.display = 'block';
+        } else {
+          contextSwitch.classList.remove('active');
+          contextBadge.style.display = 'none';
+        }
       }
+
+      // Check resource availability from backend
+      async function checkContextStatus() {
+        try {
+          const res  = await fetch('/api/buddy-chat/context-status', {
+            headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }
+          });
+          const data = await res.json();
+
+          if (!data.available) {
+            // Disable toggle — no resources
+            contextSwitch.style.opacity   = '0.4';
+            contextSwitch.style.cursor    = 'not-allowed';
+            contextSwitch.style.pointerEvents = 'none';
+            contextHelpText.style.display = 'none';
+            contextWarning.style.display  = 'block';
+            contextStatText.style.display = 'none';
+            setContextMode(false);
+          } else {
+            // Resources exist — enable toggle
+            contextSwitch.style.opacity       = '1';
+            contextSwitch.style.cursor        = 'pointer';
+            contextSwitch.style.pointerEvents = 'auto';
+            contextWarning.style.display      = 'none';
+
+            const parts = [];
+            if (data.material_count > 0) parts.push(`📚 ${data.material_count} note${data.material_count > 1 ? 's' : ''}`);
+            if (data.qb_count       > 0) parts.push(`📝 ${data.qb_count} question${data.qb_count > 1 ? 's' : ''}`);
+            const statStr = parts.join(' · ');
+
+            contextStatText.textContent = statStr + ' available';
+            contextStatText.style.display = 'block';
+            contextHelpText.textContent = 'Toggle ON so Buddy references your uploaded resources.';
+            contextHelpText.style.display = 'block';
+
+            // Clickable toggle
+            contextSwitch.addEventListener('click', function () {
+              setContextMode(!contextModeEnabled);
+              if (contextModeEnabled) {
+                contextHelpText.textContent = '🧠 Buddy is referencing your ' + statStr + '.';
+              } else {
+                contextHelpText.textContent = 'Toggle ON so Buddy references your uploaded resources.';
+              }
+            });
+          }
+        } catch (err) {
+          console.warn('Context status check failed:', err);
+          contextHelpText.textContent = 'Buddy will prioritize results for your specific section.';
+        }
+      }
+
+      // Run check on page load
+      checkContextStatus();
 
       // Quick prompt click
       document.querySelectorAll('.quick-prompt-chip, .suggestion-pill').forEach(chip => {
