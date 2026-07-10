@@ -91,6 +91,8 @@ Route::post('/question-bank', [\App\Http\Controllers\QuestionBankController::cla
 // Community
 Route::get('/community', [PostController::class, 'index'])->name('community')->middleware('auth');
 Route::post('/community/post', [PostController::class, 'store'])->name('community.post.store')->middleware('auth');
+Route::put('/community/post/{post}', [PostController::class, 'update'])->name('community.post.update')->middleware('auth');
+Route::delete('/community/post/{post}', [PostController::class, 'destroy'])->name('community.post.destroy')->middleware('auth');
 Route::post('/community/post/{post}/like', [PostController::class, 'like'])->name('community.post.like')->middleware('auth');
 
 Route::post('/community/post/{post}/comment', [CommentController::class, 'store'])->name('community.post.comment')->middleware('auth');

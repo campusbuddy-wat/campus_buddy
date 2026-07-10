@@ -1,6 +1,31 @@
 @props(['post'])
 
-<div class="post" id="post-{{ $post->id }}" style="background: transparent; padding: 12px 10px; border-bottom: 1px solid #E2E8F0; border-radius: 0; box-shadow: none; margin-bottom: 8px; transition: transform 0.2s ease;">
+<div class="post" id="post-{{ $post->id }}" style="background: transparent; padding: 12px 10px; border-bottom: 1px solid #E2E8F0; border-radius: 0; box-shadow: none; margin-bottom: 8px; transition: transform 0.2s ease; position: relative;">
+    @if($post->user_id == Auth::id())
+        <div class="post-actions-dropdown" style="position: absolute; top: 12px; right: 10px; z-index: 10;">
+            <button class="post-actions-trigger" style="background: none; border: none; padding: 4px 8px; font-size: 16px; cursor: pointer; color: #a0aec0; transition: color 0.2s ease;" title="Post options">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="post-actions-menu" style="display: none; position: absolute; right: 0; top: 28px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; min-width: 120px; overflow: hidden; padding: 4px 0;">
+                <button class="post-action-edit" 
+                        data-id="{{ $post->id }}" 
+                        data-content="{{ $post->content }}"
+                        data-type="{{ $post->type }}"
+                        data-action-text="{{ $post->action_text }}"
+                        data-action-link="{{ $post->action_link }}"
+                        data-attachment="{{ $post->attachment }}"
+                        style="display: flex; align-items: center; gap: 8px; width: 100%; border: none; background: none; padding: 10px 16px; font-size: 13px; text-align: left; cursor: pointer; color: #4a5568; transition: background 0.2s; font-weight: 600;">
+                    <i class="fas fa-pencil-alt" style="font-size: 11px; color: #00AAFF;"></i> Edit
+                </button>
+                <button class="post-action-delete" 
+                        data-id="{{ $post->id }}" 
+                        style="display: flex; align-items: center; gap: 8px; width: 100%; border: none; background: none; padding: 10px 16px; font-size: 13px; text-align: left; cursor: pointer; color: #e53e3e; transition: background 0.2s; font-weight: 600;">
+                    <i class="fas fa-trash-alt" style="font-size: 11px; color: #e53e3e;"></i> Delete
+                </button>
+            </div>
+        </div>
+    @endif
+
     <div class="post-top">
         <!-- Avatar with Flex Fallback -->
         <div class="avatar">
@@ -10,9 +35,9 @@
                 👨‍🎓
             @endif
         </div>
-        <div>
+        <div style="flex: 1; padding-right: 24px;">
             <h4>{{ $post->user->name }} <span>{{ $post->user->batch ?? 'Batch' }} | {{ $post->user->department ?? 'Dept' }}</span></h4>
-            <p>{{ $post->content }}</p>
+            <p class="post-text-content">{{ $post->content }}</p>
         </div>
     </div>
 

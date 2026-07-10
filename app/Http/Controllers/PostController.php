@@ -90,4 +90,67 @@ class PostController extends Controller
             'likes_count' => $post->likes()->count(),
         ]);
     }
+
+    /**
+     * Update an existing community post.
+     */
+    public function update(Request $request, Post $post)
+    {
+        if ($post->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
+        }
+
+        $request->validate([
+            'content' => 'required|string|max:1000',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx|max:10240',
+            'type' => 'nullable|string',
+            'action_text' => 'nullable|string|max:50',
+            'action_link' => 'nullable|string|max:255',
+        ]);
+
+        $attachmentPath = $post->attachment;
+
+        if ($request->boolean('remove_attachment')) {
+            $attachmentPath = null;
+        }
+
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = cloudinary()->uploadApi()->upload($request->file('attachment')->getRealPath(), ['folder' => 'posts/attachments'])['secure_url'];
+        }
+
+        $post->update([
+            'content' => $request->input('content'),
+            'attachment' => $attachmentPath,
+            'type' => $request->type ?? 'general',
+            'action_text' => $request->action_text,
+            'action_link' => $request->action_link,
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Post updated successfully!',
+                'post' => $post
+            ]);
+        }
+
+        return redirect()->back()->with('success_post', 'Post updated successfully!');
+    }
+
+    /**
+     * Delete a community post.
+     */
+    public function destroy(Post $post)
+    {
+        if ($post->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
+        }
+
+        $post->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post deleted successfully!'
+        ]);
+    }
 }

@@ -639,6 +639,61 @@
         </div>
     </div>
 
+    <!-- Edit Post Modal -->
+    <div id="edit-post-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 9999; justify-content: center; align-items: center; padding: 15px;">
+        <div style="background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); position: relative; animation: modalZoom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <button id="close-edit-post-modal" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #888;">&times;</button>
+            <h3 style="margin-bottom: 20px; color: #2C3E50; font-weight: 800; display: flex; align-items: center; gap: 8px;"><i class="fas fa-edit" style="color: #00AAFF;"></i> Edit Post</h3>
+
+            <form id="edit-post-form" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <input type="hidden" id="edit-post-id" name="post_id">
+                
+                <div style="margin-bottom: 15px;">
+                    <textarea id="edit-post-content" name="content" rows="4" style="width: 100%; padding: 15px; border: 1px solid #E0E6ED; border-radius: 15px; resize: none; font-size: 14px; font-family: inherit;" required></textarea>
+                </div>
+
+                <div style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 7px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #4A5568;">Attachment (Optional, leave blank to keep current)</label>
+                    <input type="file" name="attachment" style="font-size: 13px; color: #718096; padding: 8px; background: #F7FAFC; border-radius: 10px; border: 1px dashed #CBD5E0;">
+                    <div id="edit-current-attachment-wrapper" style="display: none; align-items: center; gap: 8px; font-size: 12px; color: #4A5568; margin-top: 5px;">
+                        <span>Current file:</span>
+                        <a id="edit-current-attachment" href="#" target="_blank" style="color: #00AAFF; text-decoration: underline; font-weight: 600;">View File</a>
+                        <label style="display: inline-flex; align-items: center; gap: 4px; color: #e53e3e; cursor: pointer; font-weight: 600; margin-left: 15px;">
+                            <input type="checkbox" name="remove_attachment" value="1"> Remove attachment
+                        </label>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label style="font-size: 13px; font-weight: 700; color: #4A5568; display: block; margin-bottom: 5px;">Action Button Text (Optional)</label>
+                        <input type="text" id="edit-post-action-text" name="action_text" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #E0E6ED; font-size: 13px; padding: 10px 12px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 13px; font-weight: 700; color: #4A5568; display: block; margin-bottom: 5px;">Action Link (Optional)</label>
+                        <input type="text" id="edit-post-action-link" name="action_link" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #E0E6ED; font-size: 13px; padding: 10px 12px;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="font-size: 13px; font-weight: 700; color: #4A5568; display: block; margin-bottom: 5px;">Post Type</label>
+                    <select id="edit-post-type" name="type" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #E0E6ED; font-size: 14px; background: white; cursor: pointer;">
+                        <option value="general">📚 General Update</option>
+                        <option value="notes">📝 Notes / Materials</option>
+                        <option value="study_group">🤝 Study Group</option>
+                        <option value="announcement">📢 Advisory / Announcement</option>
+                    </select>
+                </div>
+
+                <button type="submit" style="width: 100%; background: #00AAFF; color: white; border: none; padding: 14px; border-radius: 15px; font-weight: 800; font-size: 15px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 170, 255, 0.3);">
+                    💾 SAVE CHANGES
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Animation View Rules -->
     <style>
         @keyframes modalZoom {

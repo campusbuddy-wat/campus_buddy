@@ -652,6 +652,230 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
+    // ==================== POST ACTIONS (EDIT & DELETE) ====================
+    
+    // Helper to show success alerts
+    function displaySuccessMessage(msg) {
+        const successMsgDiv = document.getElementById('post-success-message');
+        if (successMsgDiv) {
+            successMsgDiv.innerText = msg;
+            successMsgDiv.style.display = 'block';
+            successMsgDiv.style.background = '#c6f6d5';
+            successMsgDiv.style.color = '#22c55e';
+            successMsgDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                successMsgDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+
+    // Toggle post actions dropdown menu
+    document.addEventListener('click', function (e) {
+        const trigger = e.target.closest('.post-actions-trigger');
+        if (trigger) {
+            e.stopPropagation();
+            const dropdown = trigger.nextElementSibling;
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.post-actions-menu').forEach(menu => {
+                if (menu !== dropdown) menu.style.display = 'none';
+            });
+            
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            return;
+        }
+        
+        // Close all dropdowns if clicking elsewhere
+        document.querySelectorAll('.post-actions-menu').forEach(menu => {
+            menu.style.display = 'none';
+        });
+    });
+
+    // AJAX Post Deletion
+    document.addEventListener('click', function (e) {
+        const deleteBtn = e.target.closest('.post-action-delete');
+        if (deleteBtn) {
+            const postId = deleteBtn.dataset.id;
+            if (!confirm('Are you sure you want to delete this post? This will also delete all comments/likes on it.')) return;
+            
+            fetch(`/community/post/${postId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const postCard = document.getElementById(`post-${postId}`);
+                    if (postCard) {
+                        postCard.style.opacity = '0';
+                        postCard.style.transform = 'scale(0.9) translateY(20px)';
+                        setTimeout(() => postCard.remove(), 300);
+                    }
+                    displaySuccessMessage(data.message || 'Post deleted successfully!');
+                } else {
+                    alert(data.message || 'Failed to delete post.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Error deleting post.');
+            });
+        }
+    });
+
+    // Post Edit Modal Trigger
+    const editPostModal = document.getElementById('edit-post-modal');
+    const closeEditPostModalBtn = document.getElementById('close-edit-post-modal');
+    const editPostForm = document.getElementById('edit-post-form');
+    
+    if (closeEditPostModalBtn && editPostModal) {
+        closeEditPostModalBtn.addEventListener('click', () => editPostModal.style.display = 'none');
+        editPostModal.addEventListener('click', (e) => {
+            if (e.target === editPostModal) editPostModal.style.display = 'none';
+        });
+    }
+
+    document.addEventListener('click', function (e) {
+        const editBtn = e.target.closest('.post-action-edit');
+        if (editBtn && editPostModal && editPostForm) {
+            const postId = editBtn.dataset.id;
+            const content = editBtn.dataset.content;
+            const type = editBtn.dataset.type;
+            const actionText = editBtn.dataset.actionText;
+            const actionLink = editBtn.dataset.actionLink;
+            const attachment = editBtn.dataset.attachment;
+            
+            // Populate form fields
+            document.getElementById('edit-post-id').value = postId;
+            document.getElementById('edit-post-content').value = content;
+            document.getElementById('edit-post-type').value = type;
+            document.getElementById('edit-post-action-text').value = actionText && actionText !== 'null' ? actionText : '';
+            document.getElementById('edit-post-action-link').value = actionLink && actionLink !== 'null' ? actionLink : '';
+            
+            // Set action URL
+            editPostForm.setAttribute('action', `/community/post/${postId}`);
+            
+            // Attachment wrapper check
+            const attachmentWrapper = document.getElementById('edit-current-attachment-wrapper');
+            const attachmentLink = document.getElementById('edit-current-attachment');
+            const removeCheckbox = editPostForm.querySelector('input[name="remove_attachment"]');
+            
+            if (removeCheckbox) removeCheckbox.checked = false;
+            
+            if (attachment && attachment !== 'null' && attachment !== '') {
+                attachmentLink.setAttribute('href', attachment);
+                attachmentWrapper.style.display = 'flex';
+            } else {
+                attachmentWrapper.style.display = 'none';
+            }
+            
+            editPostModal.style.display = 'flex';
+        }
+    });
+
+    // AJAX Post Update Submission
+    if (editPostForm) {
+        editPostForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            
+            const formData = new FormData(this);
+            const actionUrl = this.getAttribute('action');
+            const postId = document.getElementById('edit-post-id').value;
+            
+            fetch(actionUrl, {
+                method: 'POST', // We use POST for multipart data, PUT is spoofed inside formData
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network error');
+                return res.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    editPostModal.style.display = 'none';
+                    displaySuccessMessage(data.message || 'Post updated successfully!');
+                    
+                    // Update DOM content immediately
+                    const postCard = document.getElementById(`post-${postId}`);
+                    if (postCard) {
+                        const contentParagraph = postCard.querySelector('.post-text-content');
+                        if (contentParagraph) {
+                            contentParagraph.innerText = data.post.content;
+                        }
+                        
+                        // Update action attributes on edit button so next edits have updated values
+                        const editBtn = postCard.querySelector('.post-action-edit');
+                        if (editBtn) {
+                            editBtn.dataset.content = data.post.content;
+                            editBtn.dataset.type = data.post.type;
+                            editBtn.dataset.actionText = data.post.action_text || '';
+                            editBtn.dataset.actionLink = data.post.action_link || '';
+                            editBtn.dataset.attachment = data.post.attachment || '';
+                        }
+                        
+                        // Handle showing/removing attachment inside post card
+                        let fileLink = postCard.querySelector('a.file');
+                        if (data.post.attachment) {
+                            if (fileLink) {
+                                fileLink.setAttribute('href', data.post.attachment);
+                                fileLink.style.display = 'inline-flex';
+                            } else {
+                                const newFileLink = `<a class="file" href="${data.post.attachment}" target="_blank" style="margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: rgba(0,170,255,0.08); color: #00AAFF; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none;">
+                                    <i class="fas fa-paperclip"></i> View File
+                                </a>`;
+                                postCard.querySelector('.post-top').insertAdjacentHTML('afterend', newFileLink);
+                            }
+                        } else {
+                            if (fileLink) fileLink.remove();
+                        }
+                        
+                        // Handle showing/removing action link inside post card
+                        let joinLink = postCard.querySelector('a.join');
+                        if (data.post.action_text) {
+                            const linkHref = data.post.action_link && data.post.action_link.startsWith('http') ? data.post.action_link : 'http://' + (data.post.action_link || '#');
+                            if (joinLink) {
+                                joinLink.setAttribute('href', linkHref);
+                                joinLink.innerHTML = `<i class="fas fa-external-link-alt"></i> ${data.post.action_text}`;
+                                joinLink.style.display = 'inline-flex';
+                            } else {
+                                const newJoinLink = `<a class="join" href="${linkHref}" target="_blank" style="margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #fff; border: 1.5px solid #1A202C; color: #1A202C; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none; margin-left: 8px; transition: all 0.2s ease;">
+                                    <i class="fas fa-external-link-alt"></i> ${data.post.action_text}
+                                </a>`;
+                                const anchorPoint = postCard.querySelector('a.file') || postCard.querySelector('.post-top');
+                                anchorPoint.insertAdjacentHTML('afterend', newJoinLink);
+                            }
+                        } else {
+                            if (joinLink) joinLink.remove();
+                        }
+                    }
+                } else {
+                    alert(data.message || 'Failed to update post.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('An error occurred while saving.');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+    }
+
     if (deptSearch) deptSearch.addEventListener('input', filterTalents);
     if (skillSearch) skillSearch.addEventListener('input', filterTalents);
 });
