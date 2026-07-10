@@ -370,3 +370,12 @@ graph TD
     *   **API Key Rotation:** Automatically cycles through multiple Groq keys to bypass daily rate limits (HTTP 429).
 *   **Scalability (Decoupled Services & CDN):** Heavy tasks (PDF text extraction, Qdrant search, LLM generations) are decoupled from the Laravel MVC loop. All static media and document attachments are offloaded to Cloudinary CDN, minimizing disk operations.
 
+---
+
+### Q29 — What are the character limits for AI inputs and responses?
+**A:** Character and token limits are enforced to secure the service against abuse, prompt injection, and excessive billing:
+*   **User Message Input (Student & Visitor):** Both chat interfaces enforce a **maximum limit of 2,000 characters** per query (validated on the frontend with the `maxlength` HTML attribute and verified on the backend via Laravel request validation rules).
+*   **Chat History Length:** The backend passes the last 8 to 16 conversation turns (approx. 4,000 - 8,000 characters) to Groq to maintain conversational context.
+*   **AI Response Output:** The response generation limit is capped at **3,072 max tokens** (approx. 12,000 characters) to prevent infinite loops and assure concise, GenZ-slang-appropriate answers.
+
+
