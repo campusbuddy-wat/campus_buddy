@@ -660,7 +660,7 @@
                     </svg>
                 </button>
             </div>
-            <p class="input-info-text">DIU Buddy AI refers to official DIU data. Verify latest dates on daffodilvarsity.edu.bd.</p>
+            <p class="input-info-text">Buddy AI can make mistakes. Verify important info.</p>
         </div>
     </main>
 

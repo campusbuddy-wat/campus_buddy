@@ -351,7 +351,7 @@
             </svg>
           </button>
         </div>
-        <p class="input-info-text">Buddy AI can make mistakes. Check important info.</p>
+        <p class="input-info-text">Buddy AI can make mistakes. Verify important info.</p>
       </div>
 
     </main>
