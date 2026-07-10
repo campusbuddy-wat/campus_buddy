@@ -332,3 +332,41 @@ graph TD
 *   **Operational:** Addresses the high demand for academic resource integration and alumni mentoring. Requires minimal overhead as moderators can manage content via Filament.
 *   **Economic:** Cost-efficient since all development frameworks, database engines, and local embeddings are free and open source. Operates within the free tiers of Groq and Qdrant for LLM operations.
 *   **Legal:** Complies with standard data privacy principles (GDPR/local guidelines) and utilizes an open-source MIT-licensed stack.
+
+---
+
+### Q25 — What are the key objectives of the Campus Buddy project?
+**A:** The platform is built around five core objectives:
+1.  **Centralize Academic Resources:** Consolidate routines, deadlines, exam question banks, and notes in a single modern interface.
+2.  **Enable AI-Driven Study Assistance:** Provide students with automated PDF/notes summarization, midterm/final practice paper builders, and dynamic class routine gap analysis.
+3.  **Bridge the Alumni Gap:** Build a verified mentorship directory where current students can seek guidance and networking directly from graduates.
+4.  **Foster Peer Engagement:** Provide community forums for structured peer-to-peer discussion, academic sharing, and talent showcases.
+5.  **Simplify Guest Admission Inquiries:** Supply an instant admission RAG counselor with GPA waivers calculators for incoming prospects.
+
+---
+
+### Q26 — What real-world campus problems does Campus Buddy solve?
+**A:** We address several key problems faced by students today:
+*   **Information Fragmentation:** Routine updates, course announcements, and deadlines are scattered across emails, chat groups, and portals. *Solution:* A unified dashboard displaying schedules, upcoming deadlines, and announcements.
+*   **Study Materials Accessibility:** Students struggle to locate past question papers and structured slides. *Solution:* A community-driven Question Bank and Notes repository integrated with an AI Summarizer.
+*   **Lack of Alumni Connectivity:** Connecting with seniors/alumni is usually limited to social networks with low response rates. *Solution:* A dedicated, search-filtered Alumni directory with direct contact channels.
+*   **Delayed Admission Inquiries:** Prospective visitors wait hours for manual admission helplines. *Solution:* The 24/7 Visitor AI agent linked directly to crawled university pages.
+
+---
+
+### Q27 — What is the market analysis and demand for this platform?
+**A:** The market demand is driven by the digital evolution of modern education:
+*   **Target Audience:** Initially, Daffodil International University's 20,000+ student body, expandable to other private/public universities.
+*   **Competitive Landscape:** Existing university portals (like BLC/Smart Edu) focus strictly on grading and administrative records, lacking community features and personalized AI tools. Campus Buddy serves as a companion app that complements, rather than competes with, these portals.
+*   **Growth Drivers:** Increased student expectations for GenZ-adapted digital tools, rapid adoption of AI study helpers, and the critical need for post-university career mentorship.
+
+---
+
+### Q28 — How does the architecture ensure Feasibility, Reliability, and Scalability?
+**A:** The system implements modern web engineering practices to guarantee peak performance:
+*   **Feasibility (TALL Stack & FastAPI):** Utilizes lightweight PHP templating combined with an asynchronous Python AI handler, ensuring developers can adapt features without complex infrastructural overhead.
+*   **Reliability (Cache & Rotations):** 
+    *   **Fallback channels:** If the FastAPI RAG service or Groq API faces downtime, the system fails gracefully using local databases and warning prompts instead of crashing.
+    *   **API Key Rotation:** Automatically cycles through multiple Groq keys to bypass daily rate limits (HTTP 429).
+*   **Scalability (Decoupled Services & CDN):** Heavy tasks (PDF text extraction, Qdrant search, LLM generations) are decoupled from the Laravel MVC loop. All static media and document attachments are offloaded to Cloudinary CDN, minimizing disk operations.
+
